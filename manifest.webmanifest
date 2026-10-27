@@ -1,0 +1,16 @@
+{
+  "name": "웃음이 넘치는 교실",
+  "short_name": "우리 반 교실",
+  "description": "자리 바꾸기, 발표자 뽑기, 줄 서기, 모둠, 시간표가 한곳에 있는 교실 도우미",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#e2673b",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
