@@ -100,6 +100,25 @@ body.fs .hint{margin-top:4px}
 .stage-date{text-align:center;color:var(--muted);font-size:14px;margin-bottom:14px}
 .clock{display:flex;justify-content:center;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 14px;font-family:"Jua",sans-serif;line-height:1.1}
 .clock .cd{font-size:clamp(20px,2.2vw,30px);color:var(--muted)}
+.clock.has-annv .cd{cursor:pointer;color:#b4472b}
+.clock .annv{flex-basis:100%;order:3;align-self:center;margin:2px auto 0;border:1px solid #f2b8a6;background:#fff1ec;color:#b4472b;border-radius:999px;padding:3px 14px;font-size:clamp(14px,1.4vw,19px);cursor:pointer;font-family:inherit;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock .annv[hidden]{display:none}
+.clock .annv:hover{background:#ffe3d8}
+body.fs .stage .clock .annv{font-size:2.2vh}
+body.hide-annv #annvBadge{display:none!important}
+body.hide-annv .clock.has-annv .cd{cursor:default;color:var(--muted)}
+.an-row{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.an-row .ad{font-family:"Jua",sans-serif;font-size:16px}
+.an-row .ad small{display:block;font-family:inherit;font-size:11px;color:var(--muted)}
+.an-row .an b{font-size:16px}
+.an-row .an div{font-size:13px;color:#5a5144;margin-top:2px}
+.an-row .an input{width:100%;margin-top:5px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
+.an-row .ab{display:flex;flex-direction:column;gap:4px}
+.an-row .ab button{font-size:13px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;white-space:nowrap}
+.an-row.off{opacity:.45}
+.an-pick{display:flex;flex-direction:column;gap:8px}
+.an-pick button{text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:17px}
+.an-pick button small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .clock .ct{font-size:clamp(28px,3.2vw,46px);color:var(--ink);font-variant-numeric:tabular-nums}
 .clock .cs{font-size:.6em;color:var(--muted);margin-left:2px}
 .stage-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:12px}
@@ -292,6 +311,8 @@ dialog.curtain::backdrop{background:transparent}
 .curtain .valance::after{content:"";position:absolute;left:0;right:0;bottom:2.6vh;height:6px;background:repeating-linear-gradient(90deg,#f3c34a 0 6px,#c8902a 6px 10px)}
 .curtain .cmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ffe9b0;text-align:center;opacity:0;transition:opacity .4s;pointer-events:none;text-shadow:0 3px 12px rgba(0,0,0,.6)}
 .curtain .cclock{font-family:"Jua",sans-serif;font-size:min(18vh,14vw);line-height:1}
+.curtain .csub{font-family:"Jua",sans-serif;font-size:min(7vh,6vw);margin-bottom:1.5vh}
+.curtain .csub:empty{display:none}
 .curtain .chint{font-size:14px;opacity:.55;margin-top:2vh}
 .curtain.shut .cl,.curtain.shut .cr{transform:none}
 .curtain.shut .valance{transform:none;transition-delay:.35s}
@@ -758,7 +779,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
-          <button class="mi" id="openHb">📝 행동특성 문장 만들기 <span class="muted small">(교사용)</span></button>
+          <button class="mi" id="openAnnv">📌 기념일 · 계기교육 영상</button>
           <button class="mi" id="openForm">📄 서류 양식 (이름 자동 넣기)</button>
           <button class="mi" id="openShortcut">📲 앱으로 설치하기</button>
           <div class="msep"></div>
@@ -782,6 +803,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             </select>
           </div>
           <label class="mrow chk"><input type="checkbox" id="flip"> 교사 시점 (칠판이 아래)</label>
+          <label class="mrow chk"><input type="checkbox" id="autoLunch"> 점심시간에 자동으로 가리고 열기</label>
           <div class="msep"></div>
           <div class="mrow" style="font-weight:700">화면 위에 보이기</div>
           <div class="mshow">
@@ -791,6 +813,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
+            <label class="chk"><input type="checkbox" data-show="annv"> 📌 기념일</label>
           </div>
           <button class="mi" id="soundBtn">🔊 소리 켜짐</button>
           <div class="msep"></div>
@@ -903,6 +926,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <p>메인 화면 책상 왼쪽 아래 ✕를 한 번 누르면 결석, 한 번 더 누르면 조퇴로 바뀌고, 누른 날짜·시간·그 시간 과목이 자동으로 저장돼요. 여기서 종류(질병·미인정·기타·출석인정)와 사유를 적을 수 있고, ‘결석/조퇴’ 표시를 눌러 서로 바꿀 수도 있어요. 학생별로 결석·조퇴 횟수도 볼 수 있어요. 깜빡한 날은 ‘지난 결석·조퇴 직접 추가하기’로 넣으면 돼요.</p>
         <h4>🏆 칭찬·경고 기록</h4>
         <p>메인 화면에서 얼굴을 누른 칭찬 횟수와 경고 횟수가 날마다 저장되고, 한 번 한 번 <b>누른 시간과 그 시간 과목</b>(예: 🕘 10:12 · 2교시 수학)도 함께 남아요. 위쪽 ‘🏆 칭찬 / ⚠️ 경고’로 바꿔 볼 수 있고, 칭찬·경고 모두 날짜마다 <b>한 줄 메모</b>를 적을 수 있어요. 오늘·이번 주·이번 달·전체 기간별로 누가 가장 많이 받았는지, 아직 못 받은 친구는 누구인지 볼 수 있어요. 학생 이름을 누르면 그 학생이 몇 월 며칠에 몇 번 받았는지 펼쳐지고, ‘날짜별 기록’에서는 날짜마다 누가 받았는지 볼 수 있어요. 학생별로 ‘메모 모아 복사’를 누르면 통지표 쓸 때 붙여넣기 좋게 모아 줘요.</p>
+        <h4>📝 행동특성 및 종합의견 문장</h4>
+        <p>‘📝 문장 만들기 열기’를 누르면 칭찬·경고 횟수와 한 줄 메모에서 어떤 면(배려·발표·학습·책임·예절·협동 등)이 두드러지는지 파악해서, 통지표에 쓸 수 있는 순화된 문장 세 줄(~함 / ~할 수 있음)을 새로 만들어요. 메모를 그대로 옮기지 않고, 경고가 있으면 마지막 문장을 ‘앞으로 이렇게 하면 성장할 수 있음’처럼 부드럽게 써요. 🔄로 다른 문장을 고르고, 직접 고친 문장은 자동 저장되며, 📋로 바로 복사해요. ‘반 전체’에서는 모든 학생 문장을 한꺼번에 엑셀용으로 복사할 수 있어요. 기록은 인터넷으로 보내지지 않아요.</p>
         <h4>✅ 최근 배치 점검</h4>
         <p>방금 자리 배치에서 조건이 잘 지켜졌는지 ✓(지켜짐) △(조금 가까움) ✕(못 지킴)으로 보여 줘요. 조건끼리 부딪히면 ‘떨어뜨리기’를 가장 먼저 지켜요.</p>
         <h4>💾 저장 · 다른 컴퓨터로 옮기기</h4>
@@ -945,6 +970,12 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="seg" id="psView"><button data-v="rank">학생별 순위</button><button data-v="date">날짜별 기록</button></div></div>
       <div id="psList"></div>
       <div class="row" style="margin-top:12px"><button class="btn danger" id="psReset">칭찬 기록 모두 지우기</button></div>
+    </div>
+
+    <div class="card">
+      <h3>📝 행동특성 및 종합의견 문장 만들기</h3>
+      <div class="muted small" style="margin-bottom:10px">위의 칭찬·경고 횟수와 한 줄 메모를 바탕으로, 통지표에 바로 쓸 수 있는 순화된 문장(~함 / ~할 수 있음) 세 줄을 학생마다 만들어 줘요. 메모를 그대로 옮기지 않고, 복사해서 바로 붙여 넣을 수 있어요.</div>
+      <button class="btn primary" id="openHb">📝 문장 만들기 열기</button>
     </div>
 
     <div class="card">
@@ -1073,7 +1104,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn" id="ttResetTime">기본 시간으로 되돌리기</button>
       <button class="btn danger" id="ttClear">과목 모두 지우기</button>
     </div>
-    <p class="muted small" style="margin-bottom:0">왼쪽 시간을 눌러 우리 학교 시간으로 바꿀 수 있어요. 메인 화면 왼쪽 위에 지금 몇 교시인지와 과목이 시간에 맞춰 자동으로 나와요.</p>
+    <p class="muted small" style="margin-bottom:0">왼쪽 시간을 눌러 우리 학교 시간으로 바꿀 수 있어요. 메인 화면 왼쪽 위에 지금 몇 교시인지와 과목이 시간에 맞춰 자동으로 나와요. 그날 마지막 과목 뒤의 교시가 비어 있으면, 마지막 과목이 끝나면(점심시간이 남았으면 점심시간 뒤에) ‘오늘 수업 끝’으로 바뀌어요.</p>
   </div>
 </dialog>
 <dialog class="sheet mid" id="dlgMeal">
@@ -1262,9 +1293,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="card">
         <h3>⋯ 더보기 메뉴</h3>
         <ul>
-          <li><b>🎭 화면 가리기</b>: 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
+          <li><b>🎭 화면 가리기</b>: 시간표에 점심시간이 있으면 <b>점심시간이 시작될 때 자동으로 커튼이 닫히고, 끝나면 자동으로 열려요</b>(⋯ 더보기에서 끌 수 있어요). 점심시간 중에 직접 열었다 다시 닫은 커튼은 자동으로 열리지 않아요. 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
           <li><b>🧰 유용한 기능 · 📱 QR코드 만들기</b>: ⏲️ 타이머(30초~15분 바로 고르기, ±1분·±10초), ⏱️ 스톱워치(구간 기록), 🧮 계산기, 📱 QR코드가 있어요. QR코드는 주소(설문지·영상 링크 등)를 넣으면 바로 만들어지고, <b>📺 크게 띄우기</b>로 화면 가득 보여 주거나 <b>💾 그림으로 저장</b>할 수 있어요. 최근에 만든 QR은 아래에 남아서 다시 누르면 바로 불러와요. 🔍 크게를 누르면 숫자가 아주 커져요. 창을 닫아도 타이머·스톱워치는 계속 돌고 오른쪽 아래에 작게 보여요(누르면 다시 열려요). 타이머가 끝나면 소리 설정과 상관없이 알람이 울리고 화면에 ‘시간 끝!’이 떠요.</li>
-          <li><b>📝 행동특성 문장 만들기</b>(교사용): 칭찬·경고 횟수와 한 줄 메모를 읽고 어떤 면(배려·발표·학습·책임·예절·협동 등)이 두드러지는지 파악해서, 통지표 행동특성 및 종합의견에 쓸 수 있는 순화된 문장 세 개(~함 / ~할 수 있음)를 새로 만들어요. 메모를 그대로 옮기지 않아요. 경고가 있으면 마지막 문장을 ‘앞으로 이렇게 하면 성장할 수 있음’처럼 부드럽게 써요. 🔄로 다른 문장을 고르고, 직접 고친 문장은 자동 저장되며, 📋로 바로 복사해요. ‘반 전체’에서는 모든 학생 문장을 한 번에 보고 엑셀용으로 한꺼번에 복사할 수 있어요. 학생 기록이 보이니 TV 화면에 띄운 채로 열지 마세요.</li>
+          <li><b>📌 기념일 · 계기교육 영상</b>: 식목일·한글날·독도의 날처럼 계기교육에 쓰는 기념일 30여 개와 설날·추석이 들어 있어요. 그날이 되면 메인 화면 날짜 아래에 <b>📌 오늘은 ○○</b>이 뜨고, 날짜나 그 표시를 누르면 유튜브에서 관련 계기교육 영상을 찾아 새 탭으로 열어 줘요. 기념일이 주말·공휴일이면 바로 앞 등교일에는 ‘○월 ○일은 ○○’로 미리, 바로 뒤 등교일에는 ‘지난 ○월 ○일은 ○○’로 보여 줘요. 이 메뉴에서 자주 쓰는 영상 주소를 저장하면 다음부터 그 영상이 바로 열리고, 개교기념일 같은 우리 학교 기념일이나 재량휴업일도 추가할 수 있어요.</li>
           <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요. 전체 학생 인쇄도 돼요.</li>
           <li><b>📲 앱으로 설치하기</b>: 바탕화면·작업 표시줄에 😊 아이콘이 생기고 프로그램처럼 따로 창으로 열려요. 새 버전은 자동으로 바뀌고, 인터넷이 잠깐 끊겨도 기본 기능은 쓸 수 있어요.</li>
           <li><b>💞 MBTI 궁합 자리</b>: 재미로 해 보는 기능이에요. 친구들 MBTI를 고르고 버튼을 누르면 궁합이 좋은 친구끼리 같은 짝·모둠이 되도록 앉아요. 떨어져야 하는 친구와 지정석은 그대로 지켜요. 지난 자리로 돌아가려면 🕘 지난 배치에서 되돌리면 돼요.</li>
@@ -1470,6 +1501,32 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 <div class="tool-pill" id="toolPill" hidden></div>
+<dialog class="sheet wide" id="dlgAnnv">
+  <div class="sheet-head">
+    <h2>📌 기념일 · 계기교육 영상</h2>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <p class="muted small" style="margin-top:0">기념일이 되면 메인 화면 날짜 아래에 <b>📌 오늘은 ○○의 날</b>이 떠요. 그 날짜나 표시를 누르면 유튜브에서 관련 계기교육 영상을 찾아 열어 줘요. 기념일이 주말·공휴일이면 그 앞뒤 등교일에 미리·다시 보여 줘요. 마음에 드는 영상 주소를 저장해 두면 다음부터는 그 영상이 바로 열려요.</p>
+    <div class="row" style="gap:10px;margin-bottom:6px"><div class="seg" id="anView"><button data-v="soon" class="on">다가오는 기념일</button><button data-v="all">전체 목록</button></div></div>
+    <div id="anList"></div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin-top:0">＋ 우리 학교 · 우리 반 기념일 추가</h3>
+      <div class="row" style="gap:8px">
+        <input type="date" id="anDate">
+        <input id="anName" placeholder="예: 개교기념일, 학예회" maxlength="30" style="flex:1;min-width:160px;padding:8px 10px;border:1px solid var(--line);border-radius:10px">
+        <label class="chk"><input type="checkbox" id="anYearly" checked> 매년</label>
+        <label class="chk"><input type="checkbox" id="anOff"> 쉬는 날(재량휴업일)</label>
+        <button class="btn primary" id="anAdd">추가</button>
+      </div>
+      <p class="muted small" style="margin-bottom:0">‘쉬는 날’로 표시하면 그날은 등교일에서 빠져서, 그날 기념일은 앞뒤 등교일에 보여 줘요.</p>
+    </div>
+  </div>
+</dialog>
+<dialog class="sheet small" id="dlgAnnvPick">
+  <div class="sheet-head"><h2>📌 어떤 영상을 볼까요?</h2><button class="btn x" data-close>닫기</button></div>
+  <div class="sheet-body"><div class="an-pick" id="anPick"></div></div>
+</dialog>
 <dialog class="sheet wide" id="dlgHb">
   <div class="sheet-head">
     <h2>📝 행동특성 및 종합의견</h2>
@@ -1525,7 +1582,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
 </div></dialog>
 <dialog class="curtain" id="curtain" aria-label="화면 가림">
   <div class="cl"></div><div class="cr"></div><div class="valance"></div>
-  <div class="cmsg"><div class="cclock" id="curClock"></div><div class="chint">H 키를 누르거나 화면을 두 번 누르면 열려요</div></div>
+  <div class="cmsg"><div class="csub" id="curSub"></div><div class="cclock" id="curClock"></div><div class="chint">H 키를 누르거나 화면을 두 번 누르면 열려요</div></div>
 </dialog>
 <dialog class="sheet small" id="dlgTask">
   <div class="sheet-head">
@@ -2086,22 +2143,32 @@ function hhmm(d){ d = d || new Date(); return `${String(d.getHours()).padStart(2
 function subjAt(d){
   d = d || new Date(); const dow = d.getDay();
   if (dow === 0 || dow === 6 || !state.periods || !state.periods.length) return '';
-  const m = d.getHours()*60 + d.getMinutes(), idx = classIndexMap();
-  for (let i = 0; i < state.periods.length; i++){
-    const p = state.periods[i];
-    if (m >= toMin(p.start) && m < toMin(p.end)) return p.kind === 'lunch' ? '점심시간' : `${idx[i]+1}교시${subjOf(dow, idx[i]) ? ' ' + subjOf(dow, idx[i]) : ''}`;
+  const m = d.getHours()*60 + d.getMinutes(), P = dayPeriods(dow);
+  if (!P.length) return '';
+  for (const x of P){
+    if (m >= x.s && m < x.e) return x.p.kind === 'lunch' ? '점심시간' : `${x.k+1}교시${subjOf(dow, x.k) ? ' ' + subjOf(dow, x.k) : ''}`;
   }
-  const st = Math.min(...state.periods.map(p => toMin(p.start))), en = Math.max(...state.periods.map(p => toMin(p.end)));
+  const st = Math.min(...P.map(x => x.s)), en = Math.max(...P.map(x => x.e));
   return m >= st && m < en ? '쉬는 시간' : (m < st ? '수업 전' : '방과 후');
 }
 function stampNow(){ const d = new Date(); return {t: hhmm(d), s: subjAt(d)}; }
 function stampTxt(st){ return st && st.t ? `${st.t}${st.s ? ' · ' + st.s : ''}` : ''; }
 function stampHtml(st){ const t = stampTxt(st); return t ? `<span class="stamp">🕘 ${esc(t)}</span>` : ''; }
+function dayPeriods(dow){
+  const idx = classIndexMap();
+  const all = state.periods.map((p,i) => ({p, i, k: idx[i], s: toMin(p.start), e: toMin(p.end)})).sort((a,b) => a.s - b.s);
+  const filled = all.filter(x => x.p.kind === 'class' && subjOf(dow, x.k));
+  if (!filled.length) return all;
+  const lastK = Math.max(...filled.map(x => x.k));
+  return all.filter(x => x.p.kind !== 'class' || x.k <= lastK);
+}
 function nowStatus(){
   const d = new Date(), dow = d.getDay();
   if (dow === 0 || dow === 6 || !state.periods.length) return null;
-  const m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60, idx = classIndexMap();
-  const P = state.periods.map((p,i) => ({p, i, k: idx[i], s: toMin(p.start), e: toMin(p.end)})).sort((a,b) => a.s - b.s);
+  if (typeof isSchoolDay === 'function' && !isSchoolDay(todayStr(d))) return null;
+  const m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+  const P = dayPeriods(dow);
+  if (!P.length) return null;
   const lbl = x => x.p.kind === 'lunch' ? '점심시간' : `${x.k+1}교시`;
   const sub = x => x.p.kind === 'class' ? subjOf(dow, x.k) : '';
   const after = x => { const j = P.indexOf(x) + 1; return P[j] ? {lbl: lbl(P[j]), sub: sub(P[j]), time: P[j].p.start, lunch: P[j].p.kind === 'lunch'} : null; };
@@ -2196,7 +2263,12 @@ function renderClock(){
   renderNow();
   const d = new Date(), h = d.getHours(), ap = h < 12 ? '오전' : '오후', h12 = h % 12 || 12;
   const pad = n => String(n).padStart(2, '0');
-  $('#stageDate').innerHTML = `<span class="cd">${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${'일월화수목금토'[d.getDay()]}요일</span><span class="ct">${ap} ${h12}:${pad(d.getMinutes())}<span class="cs">:${pad(d.getSeconds())}</span></span>`;
+  const el = $('#stageDate');
+  if (!el.querySelector('.cd')) el.innerHTML = '<span class="cd"></span><span class="ct"><span class="ctm"></span><span class="cs"></span></span><button class="annv" id="annvBadge" hidden></button>';
+  const cd = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${'일월화수목금토'[d.getDay()]}요일`;
+  if (el.querySelector('.cd').textContent !== cd){ el.querySelector('.cd').textContent = cd; if (typeof renderAnnv === 'function') renderAnnv(); }
+  el.querySelector('.ctm').textContent = `${ap} ${h12}:${pad(d.getMinutes())}`;
+  el.querySelector('.cs').textContent = `:${pad(d.getSeconds())}`;
 }
 setInterval(renderClock, 1000);
 
@@ -4178,9 +4250,12 @@ ccRender();
 /* ---------- 화면 가리기 (커튼) ---------- */
 let curtainOn = false, curtainBusy = false, curTick = null, curTap = 0;
 function curClock(){ const d = new Date(), h = d.getHours(); $('#curClock').textContent = `${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${String(d.getMinutes()).padStart(2,'0')}`; }
-function toggleCurtain(force){
+let curtainAuto = null;
+function toggleCurtain(force, sub, auto){
   const c = $('#curtain'), want = force != null ? force : !curtainOn;
   if (curtainBusy || want === curtainOn) return;
+  curtainAuto = auto || null;
+  if (want) $('#curSub').textContent = sub || '';
   curtainBusy = true; $('#moreMenu').hidden = true;
   if (want){
     curtainOn = true; curClock(); clearInterval(curTick); curTick = setInterval(curClock, 10000);
@@ -4196,6 +4271,25 @@ function toggleCurtain(force){
 $('#curtain').addEventListener('cancel', e => e.preventDefault());
 $('#curtain').addEventListener('click', () => { const t = Date.now(); if (t - curTap < 450){ curTap = 0; toggleCurtain(false); } else curTap = t; });
 $('#openCurtain').onclick = () => toggleCurtain(true);
+/* 점심시간 자동 커튼 */
+$('#autoLunch').checked = S.autoLunch !== false;
+$('#autoLunch').onchange = e => { S.autoLunch = e.target.checked; save(); toast(e.target.checked ? '점심시간이 되면 커튼이 닫히고, 끝나면 열려요.' : '점심시간 자동 가리기를 껐어요.'); };
+function lunchNow(){
+  const d = new Date(), t = todayStr(d), dw = d.getDay();
+  if (dw === 0 || dw === 6 || !state.periods || !state.periods.length || (typeof isSchoolDay === 'function' && !isSchoolDay(t))) return null;
+  const m = d.getHours()*60 + d.getMinutes();
+  const L = dayPeriods(dw).find(x => x.p.kind === 'lunch' && m >= x.s && m < x.e);
+  return L ? t + ' ' + L.p.start : null;
+}
+function checkAutoLunch(){
+  if (S.autoLunch === false) return;
+  const k = lunchNow();
+  if (curtainOn && curtainAuto && k !== curtainAuto){ toggleCurtain(false); return; }
+  if (!k || S.lunchShut === k) return;
+  S.lunchShut = k; save();
+  if (!curtainOn && !animating) toggleCurtain(true, '🍚 맛있는 점심시간', k);
+}
+setInterval(checkAutoLunch, 5000); setTimeout(checkAutoLunch, 1500);
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
   if (!(e.code === 'KeyH' || e.key === 'h' || e.key === 'H' || e.key === 'ㅗ')) return;
@@ -4517,7 +4611,7 @@ function renderHb(){
   $('#hbList').innerHTML = studs.map(s => { const D = hbData(s.id); return `<div class="hb-row"><div class="nm2">${esc(s.name.trim())}<br><small class="muted" style="font-family:inherit;font-size:11px">칭찬 ${D.pc} · 경고 ${D.wc}</small></div><div class="tx">${esc(hbTextOf(s.id))}${state.hbText[s.id] ? '\n<small>✏️ 고친 문장</small>' : ''}</div><div style="display:flex;flex-direction:column;gap:4px"><button data-cp="${s.id}">📋 복사</button><button data-ed="${s.id}">✏️ 고치기</button></div></div>`; }).join('');
 }
 function hbCountUpd(){ const t = $('#hbText').value.replace(/\s*\n\s*/g, ' ').trim(), by = [...t].reduce((n, c) => n + (c.charCodeAt(0) > 127 ? 3 : 1), 0); $('#hbCount').textContent = `${t.length}자 · 나이스 기준 약 ${by}바이트 (행동특성 최대 1500바이트)`; }
-$('#openHb').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; hbTab = 'one'; renderHb(); openSheet($('#dlgHb')); };
+$('#openHb').onclick = () => { hbTab = 'one'; renderHb(); $('#dlgHb').showModal(); $('#dlgHb').scrollTop = 0; };
 document.querySelectorAll('#hbTab button').forEach(b => b.onclick = () => { hbTab = b.dataset.t; renderHb(); });
 document.querySelectorAll('#hbPeriod button').forEach(b => b.onclick = () => { hbPer = b.dataset.p; renderHb(); });
 document.querySelectorAll('#hbFmt button').forEach(b => b.onclick = () => { hbFmt = b.dataset.f; renderHb(); });
@@ -4537,9 +4631,140 @@ $('#hbList').onclick = e => {
   if (c) hbCopy(hbTextOf(c.dataset.cp).replace(/\s*\n\s*/g, hbFmt === 'para' ? ' ' : '\n'), `${nameOf(c.dataset.cp)} 학생 문장을 복사했어요.`);
   if (ed){ hbSel = ed.dataset.ed; hbTab = 'one'; renderHb(); }
 };
-S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true}, S.show || {});
+
+/* ---------- 기념일 · 계기교육 ---------- */
+const KR_HOLI = {
+  '2026-01-01':'신정','2026-02-16':'설날 연휴','2026-02-17':'설날','2026-02-18':'설날 연휴','2026-03-01':'삼일절','2026-03-02':'대체공휴일','2026-05-01':'노동절','2026-05-05':'어린이날','2026-05-24':'부처님오신날','2026-05-25':'대체공휴일','2026-06-03':'지방선거일','2026-06-06':'현충일','2026-07-17':'제헌절','2026-08-15':'광복절','2026-08-17':'대체공휴일','2026-09-24':'추석 연휴','2026-09-25':'추석','2026-09-26':'추석 연휴','2026-10-03':'개천절','2026-10-05':'대체공휴일','2026-10-09':'한글날','2026-12-25':'성탄절',
+  '2027-01-01':'신정','2027-02-06':'설날 연휴','2027-02-07':'설날','2027-02-08':'설날 연휴','2027-02-09':'대체공휴일','2027-03-01':'삼일절','2027-05-01':'노동절','2027-05-03':'대체공휴일','2027-05-05':'어린이날','2027-05-13':'부처님오신날','2027-06-06':'현충일','2027-07-17':'제헌절','2027-07-19':'대체공휴일','2027-08-15':'광복절','2027-08-16':'대체공휴일','2027-09-14':'추석 연휴','2027-09-15':'추석','2027-09-16':'추석 연휴','2027-10-03':'개천절','2027-10-04':'대체공휴일','2027-10-09':'한글날','2027-10-11':'대체공휴일','2027-12-25':'성탄절','2027-12-27':'대체공휴일',
+  '2028-01-01':'신정','2028-01-26':'설날 연휴','2028-01-27':'설날','2028-01-28':'설날 연휴','2028-03-01':'삼일절','2028-04-12':'국회의원 선거일','2028-05-01':'노동절','2028-05-02':'부처님오신날','2028-05-05':'어린이날','2028-06-06':'현충일','2028-07-17':'제헌절','2028-08-15':'광복절','2028-10-02':'추석 연휴','2028-10-03':'추석·개천절','2028-10-04':'추석 연휴','2028-10-05':'대체공휴일','2028-10-09':'한글날','2028-12-25':'성탄절'
+};
+const ANNV = [
+  ['03-01','삼일절','1919년 3월 1일, 나라를 되찾기 위해 온 국민이 만세를 외친 날이에요.'],
+  ['03-22','세계 물의 날','소중한 물을 아끼고 깨끗하게 지키자는 날이에요.'],
+  ['04-05','식목일','나무를 심고 숲을 가꾸는 날이에요.'],
+  ['04-07','보건의 날','건강한 생활 습관을 생각해 보는 날이에요.'],
+  ['04-16','국민 안전의 날','안전의 소중함을 되새기는 날이에요.','어린이 안전교육'],
+  ['04-20','장애인의 날','장애에 대한 이해를 넓히고 함께 살아가는 법을 배우는 날이에요.'],
+  ['04-21','과학의 날','과학의 소중함과 재미를 느껴 보는 날이에요.'],
+  ['04-22','지구의 날','지구 환경을 지키기 위해 할 수 있는 일을 생각하는 날이에요.'],
+  ['05-05','어린이날','어린이를 소중히 여기고 행복을 바라는 날이에요.'],
+  ['05-08','어버이날','부모님과 어른들께 감사하는 날이에요.'],
+  ['05-15','스승의 날','선생님께 감사한 마음을 전하는 날이에요.'],
+  ['05-18','5·18 민주화 운동 기념일','민주주의를 지키기 위한 시민들의 노력을 기억하는 날이에요.'],
+  ['05-20','세계인의 날','서로 다른 문화를 존중하고 함께 어울리는 날이에요.','다문화 이해 교육'],
+  ['05-31','바다의 날','바다의 소중함을 알고 바다를 지키는 날이에요.'],
+  ['06-05','환경의 날','환경을 보호하기 위해 함께 실천하는 날이에요.'],
+  ['06-06','현충일','나라를 위해 희생하신 분들을 기억하는 날이에요.'],
+  ['06-25','6·25 전쟁일','6·25 전쟁을 기억하고 평화의 소중함을 생각하는 날이에요.','6.25 전쟁 평화'],
+  ['07-17','제헌절','우리나라 헌법을 만든 것을 기념하는 날이에요.'],
+  ['08-15','광복절','일본에게 빼앗긴 나라를 되찾은 날이에요.'],
+  ['09-07','푸른 하늘의 날','맑은 공기와 푸른 하늘을 지키자는 날이에요.','푸른 하늘의 날 미세먼지'],
+  ['10-01','국군의 날','나라를 지키는 국군에게 감사하는 날이에요.'],
+  ['10-02','노인의 날','어르신을 공경하고 감사하는 날이에요.'],
+  ['10-03','개천절','단군이 우리 민족 최초의 나라 고조선을 세운 날이에요.'],
+  ['10-09','한글날','세종대왕이 만든 한글을 기념하는 날이에요.'],
+  ['10-16','세계 식량의 날','음식의 소중함과 굶주리는 이웃을 생각하는 날이에요.'],
+  ['10-24','국제연합일','세계 평화를 위해 만든 국제연합(UN)을 기념하는 날이에요.','국제연합 UN의 날'],
+  ['10-25','독도의 날','우리 땅 독도를 알고 사랑하는 날이에요.'],
+  ['11-03','학생 독립운동 기념일','나라를 위해 일어선 학생들의 용기를 기억하는 날이에요.'],
+  ['11-09','소방의 날','불조심과 화재 안전을 배우는 날이에요.','소방의 날 화재 안전'],
+  ['11-11','농업인의 날','우리 먹거리를 길러 주시는 농업인께 감사하는 날이에요.','농업인의 날 가래떡'],
+  ['11-17','순국선열의 날','나라를 위해 목숨을 바친 분들을 기리는 날이에요.'],
+  ['12-03','세계 장애인의 날','장애인과 함께 살아가는 세상을 생각하는 날이에요.'],
+  ['12-10','세계 인권의 날','모든 사람의 권리가 소중함을 배우는 날이에요.','인권 교육']
+];
+state.annv = Object.assign({videos: {}, hide: {}, custom: []}, state.annv || {});
+function annvLunar(year){
+  const out = [];
+  for (const [d, n] of Object.entries(KR_HOLI)) if (d.startsWith(year + '-') && (n === '설날' || n.startsWith('추석') && !n.includes('연휴'))) out.push([d.slice(5), n.startsWith('추석') ? '추석' : '설날', n === '설날' ? '새해 첫날, 웃어른께 세배하고 떡국을 먹는 우리 명절이에요.' : '한 해 농사에 감사하며 송편을 빚는 우리 명절이에요.']);
+  return out;
+}
+function annvOn(dstr){
+  const y = dstr.slice(0, 4), md = dstr.slice(5), list = [];
+  const push = (name, desc, q, key, custom) => { if (!state.annv.hide[key]) list.push({key, name, desc: desc || '', q: q || '', date: dstr, custom: !!custom}); };
+  ANNV.forEach(([m, n, ds, q]) => { if (m === md) push(n, ds, q, 'b:' + n); });
+  annvLunar(y).forEach(([m, n, ds]) => { if (m === md) push(n, ds, '', 'b:' + n); });
+  state.annv.custom.forEach(c => { if (c.off) return; if (c.yearly ? c.date.slice(5) === md : c.date === dstr) push(c.name, '', '', 'c:' + c.id, true); });
+  return list;
+}
+function isSchoolDay(dstr){
+  const dw = parseDay(dstr).getDay();
+  if (dw === 0 || dw === 6 || KR_HOLI[dstr]) return false;
+  return !state.annv.custom.some(c => c.off && (c.yearly ? c.date.slice(5) === dstr.slice(5) : c.date === dstr));
+}
+const addDays = (dstr, k) => { const d = parseDay(dstr); d.setDate(d.getDate() + k); return todayStr(d); };
+function annvToday(){
+  const t = todayStr(), out = annvOn(t).map(a => Object.assign(a, {rel: 0}));
+  for (let k = 1; k <= 10; k++){ const d = addDays(t, k); if (isSchoolDay(d)) break; annvOn(d).forEach(a => out.push(Object.assign(a, {rel: k}))); }
+  for (let k = 1; k <= 10; k++){ const d = addDays(t, -k); if (isSchoolDay(d)) break; annvOn(d).forEach(a => out.push(Object.assign(a, {rel: -k}))); }
+  const seen = new Set();
+  return out.filter(a => !seen.has(a.key) && seen.add(a.key));
+}
+const mdLabel = dstr => `${+dstr.slice(5, 7)}월 ${+dstr.slice(8)}일`;
+function annvLabel(a){ return a.rel === 0 ? `오늘은 ${a.name}` : a.rel > 0 ? `${mdLabel(a.date)}은 ${a.name}` : `지난 ${mdLabel(a.date)}은 ${a.name}`; }
+function annvUrl(a){ const v = state.annv.videos[a.key]; return v || 'https://www.youtube.com/results?search_query=' + encodeURIComponent(`${a.q || a.name} 계기교육 초등`); }
+function openAnnvVideo(a){ window.open(annvUrl(a), '_blank', 'noopener'); }
+let annvCur = [];
+function renderAnnv(){
+  annvCur = annvToday();
+  const b = $('#annvBadge'), clk = $('#stageDate'); if (!b) return;
+  clk.classList.toggle('has-annv', annvCur.length > 0);
+  if (!annvCur.length){ b.hidden = true; return; }
+  b.hidden = false;
+  b.textContent = `📌 ${annvLabel(annvCur[0])}${annvCur.length > 1 ? ` 외 ${annvCur.length - 1}개` : ''} ▶`;
+  b.title = '눌러서 계기교육 영상 보기';
+}
+function annvClick(){
+  if (!annvCur.length || document.body.classList.contains('hide-annv') || animating) return;
+  if (annvCur.length === 1){ openAnnvVideo(annvCur[0]); return; }
+  $('#anPick').innerHTML = annvCur.map((a, k) => `<button data-k="${k}">▶ ${esc(annvLabel(a))}${a.desc ? `<small>${esc(a.desc)}</small>` : ''}</button>`).join('');
+  $('#dlgAnnvPick').showModal();
+}
+$('#stageDate').addEventListener('click', e => { if (e.target.closest('#annvBadge') || e.target.closest('.cd')) annvClick(); });
+$('#anPick').onclick = e => { const b = e.target.closest('[data-k]'); if (!b) return; openAnnvVideo(annvCur[+b.dataset.k]); $('#dlgAnnvPick').close(); };
+let anView = 'soon';
+function annvListRows(){
+  const rows = [];
+  if (anView === 'soon'){
+    const t = todayStr();
+    for (let k = 0; k <= 60; k++){ const d = addDays(t, k); annvOn(d).forEach(a => rows.push({a, d})); }
+    const hid = []; for (let k = 0; k <= 60; k++){ const d = addDays(t, k), md = d.slice(5); ANNV.forEach(([m, n]) => { if (m === md && state.annv.hide['b:' + n]) hid.push({a: {key: 'b:' + n, name: n, desc: '', date: d}, d, off: true}); }); }
+    return rows.concat(hid).sort((x, y) => x.d < y.d ? -1 : 1);
+  }
+  const y = String(new Date().getFullYear());
+  ANNV.concat(annvLunar(y)).forEach(([m, n, ds, q]) => rows.push({a: {key: 'b:' + n, name: n, desc: ds, q: q || ''}, d: y + '-' + m, off: !!state.annv.hide['b:' + n]}));
+  state.annv.custom.forEach(c => rows.push({a: {key: 'c:' + c.id, name: c.name + (c.off ? ' (쉬는 날)' : ''), desc: c.yearly ? '매년' : '올해만', custom: c}, d: c.yearly ? y + c.date.slice(4) : c.date}));
+  return rows.sort((x, z) => x.d.slice(5) < z.d.slice(5) ? -1 : 1);
+}
+function renderAnnvList(){
+  document.querySelectorAll('#anView button').forEach(b => b.classList.toggle('on', b.dataset.v === anView));
+  const rows = annvListRows();
+  $('#anList').innerHTML = rows.length ? rows.map(({a, d, off}) => {
+    const wd = '일월화수목금토'[parseDay(d).getDay()], sd = isSchoolDay(d);
+    return `<div class="an-row${off ? ' off' : ''}"><div class="ad">${mdLabel(d)} (${wd})<small>${KR_HOLI[d] ? '공휴일' : sd ? '' : '주말·쉬는 날'}</small></div>
+      <div class="an"><b>${esc(a.name)}</b>${a.desc ? `<div>${esc(a.desc)}</div>` : ''}${off || a.custom && a.custom.off ? '' : `<input data-vid="${esc(a.key)}" value="${esc(state.annv.videos[a.key] || '')}" placeholder="자주 쓰는 영상 주소를 붙여 넣으면 다음부터 바로 열려요 (비우면 유튜브 검색)">`}</div>
+      <div class="ab">${off || a.custom && a.custom.off ? '' : `<button data-play="${esc(a.key)}" data-name="${esc(a.name)}" data-q="${esc(a.q || '')}">▶ 영상</button>`}${a.key.startsWith('c:') ? `<button data-del="${esc(a.key.slice(2))}">✕ 지우기</button>` : `<button data-hide="${esc(a.key)}">${off ? '다시 보이기' : '안 보이기'}</button>`}</div></div>`;
+  }).join('') : '<p class="muted small">60일 안에 다가오는 기념일이 없어요.</p>';
+}
+$('#openAnnv').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; anView = 'soon'; $('#anDate').value = todayStr(); renderAnnvList(); openSheet($('#dlgAnnv')); };
+document.querySelectorAll('#anView button').forEach(b => b.onclick = () => { anView = b.dataset.v; renderAnnvList(); });
+$('#anList').addEventListener('change', e => { const i = e.target.closest('[data-vid]'); if (!i) return; const v = i.value.trim(); if (v && !/^https?:\/\//i.test(v)){ toast('영상 주소는 https:// 로 시작해야 해요.'); return; } if (v) state.annv.videos[i.dataset.vid] = v; else delete state.annv.videos[i.dataset.vid]; save(); toast(v ? '영상 주소를 저장했어요. 다음부터 이 영상이 바로 열려요.' : '저장한 영상을 지웠어요. 유튜브 검색으로 열려요.'); });
+$('#anList').addEventListener('click', async e => {
+  const p = e.target.closest('[data-play]'), h = e.target.closest('[data-hide]'), d = e.target.closest('[data-del]');
+  if (p) openAnnvVideo({key: p.dataset.play, name: p.dataset.name.replace(/ \(쉬는 날\)$/, ''), q: p.dataset.q});
+  if (h){ const k = h.dataset.hide; if (state.annv.hide[k]) delete state.annv.hide[k]; else state.annv.hide[k] = 1; save(); renderAnnvList(); renderAnnv(); }
+  if (d){ if (!await askConfirm('이 기념일을 지울까요?')) return; state.annv.custom = state.annv.custom.filter(c => c.id !== d.dataset.del); save(); renderAnnvList(); renderAnnv(); }
+});
+$('#anAdd').onclick = () => {
+  const date = $('#anDate').value, name = $('#anName').value.trim(), off = $('#anOff').checked;
+  if (!date || (!name && !off)){ toast('날짜와 이름을 적어 주세요.'); return; }
+  state.annv.custom.push({id: uid(), date, name: name || '재량휴업일', yearly: $('#anYearly').checked, off});
+  $('#anName').value = ''; $('#anOff').checked = false; save(); anView = 'all'; renderAnnvList(); renderAnnv(); toast('추가했어요.');
+};
+renderAnnv();
+S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true}, S.show || {});
 function applyShow(){
-  ['tt','date','wx','task','notice'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
+  ['tt','date','wx','task','notice','annv'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
 }
 document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
