@@ -148,7 +148,7 @@ body.fs .stage .task-card .tn{font-size:2.6vh}
 .seat .chk{position:absolute;right:5px;top:50%;transform:translateY(-50%);z-index:3;width:28px;height:28px;border-radius:50%;background:#2e7d4f;color:#fff;font-size:17px;display:grid;place-items:center;box-shadow:0 2px 4px rgba(0,0,0,.2);animation:pop .3s ease-out}
 .stage.checking .seat:not(.absent):not(.empty):not(.tok) .desk{outline:3px dashed #f59e0b;outline-offset:1px}
 .stage.checking .seat.tok .desk{filter:saturate(.55) brightness(1.06)}
-.stage.checking .seat.tok .nm{opacity:.55}
+.stage.checking .seat.tok .nm{opacity:.75}
 .stage.checking .seat{cursor:pointer}
 .stage.checking .prbtn,.stage.checking .absbtn{display:none}
 @media (max-width:760px){.task-card{justify-self:center}.head-right{justify-self:center;flex-wrap:wrap;justify-content:center}}
@@ -349,6 +349,23 @@ body.fs .stage .sitter{--s:1.35}
 .stage.flip .seat{flex-direction:column-reverse}
 .stage.flip .seat .chair{margin:0 0 8px;border-radius:10px 10px 4px 4px}
 .seat .nm:empty{display:none}
+.seat .nmw{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;max-width:100%;min-width:0}
+.ttags{display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:0 1 auto;min-width:0}
+.seat.has-tags .nmw .nm{flex:none;white-space:nowrap}
+.seat.has-tags .nm{font-size:clamp(14px,min(1.75vw,3.3vh),34px);padding:2px 7px}
+.seat.has-tags .desk{padding-left:28px;padding-right:4px}
+.stage.checking .seat.has-tags .desk{padding-left:4px}
+.seat.has-tags .nmw{width:100%}
+@media (max-width:760px){.seat.has-tags .desk{padding-left:20px}}
+body.fs .stage .seat.has-tags .nm{font-size:clamp(15px,min(2vw,3.8vh),40px)}
+.ttag{max-width:100%;font-size:clamp(10px,.8vw,14px);line-height:1.2;padding:1px 6px;border-radius:6px;background:#e3f4e7;color:#2e7d4f;border:1px solid #9fd3ad;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.ttag{border-left:3px solid #2e7d4f}
+.ttag.more::before{content:""}
+.ttag.cur{background:#2e7d4f;color:#fff;border-color:#2e7d4f;animation:pop .3s ease-out}
+body.fs .stage .ttag{font-size:clamp(11px,1.6vh,18px)}
+body.hide-task .ttags{display:none}
+.hist-stage .ttags{display:none}
+@media print{.ttags{display:none!important}}
 .seat .nm{position:relative;z-index:1;padding:2px 10px;border-radius:6px;border:1.5px solid rgba(0,0,0,.12);box-shadow:0 1px 2px rgba(0,0,0,.12);max-width:100%}
 .seat .nm{font-family:"Jua",sans-serif;color:var(--ink);font-size:clamp(16px,min(2.4vw,4.4vh),44px);line-height:1.1;text-align:center;word-break:keep-all}
 body.fs .stage .seat{min-height:11vh}
@@ -1106,7 +1123,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>📝 오늘 할 일</b>(위쪽 버튼): 아침 안내사항을 한 줄에 하나씩 적고 저장하면 시계 아래에 번호를 붙여 보여 줘요. 그 줄을 누르거나 ‘📺 크게 보여 주기’를 누르면 화면 가득 크게 보여요. 적은 날짜·시간·과목과 함께 ‘🕘 지난 기록’에 쌓이고, ‘어제 것 가져오기’로 고쳐 쓸 수도 있어요.</li>
           <li><b>날짜·시계</b>(가운데 위): 오늘 날짜와 지금 시각이 나와요.</li>
           <li><b>🌤️ 날씨</b>(오른쪽 위): 지금 기온과 날씨, 오늘 최고·최저 기온이 15분마다 새로 나와요. 기본은 포항이고, 날씨 칸을 누르면 지역을 바꿀 수 있어요.</li>
-          <li><b>✅ 과제 확인</b>(오른쪽 위): 수학 익힘책·글쓰기 같은 과제를 ＋ 추가하고, 과제를 누르면 확인 모드가 돼요. 낸 친구 책상을 누르면 ✓가 붙고, 아직 안 낸 친구 이름이 위에 모여 보여요. 결석한 친구는 빠지고, 다음 날에는 새로 시작해요.</li>
+          <li><b>✅ 과제 확인</b>(오른쪽 위): 수학 익힘책·글쓰기 같은 과제를 ＋ 추가하고, 과제를 누르면 확인 모드가 돼요. 낸 친구 책상을 누르면 이름 오른쪽에 <b>과제 이름</b>(예: 글쓰기)이 붙고, 아직 안 낸 친구 이름이 위에 모여 보여요. 확인을 끝내도 그날 낸 과제 이름은 책상에 계속 보여요(과제가 많으면 ‘외 ○개’로 줄여 보여요). 결석한 친구는 빠지고, 다음 날에는 새로 시작해요.</li>
           <li><b>🍚 오늘 급식</b>: 🍚 급식 창에서 학교를 한 번 찾아 두면 날짜별 급식 메뉴가 나와요. ‘메인 화면에 오늘 급식 보이기’를 켜면 시계 아래에 오늘 급식이 한 줄로 보여요.</li>
           <li><b>결석 · 조퇴 표시</b>: 책상 왼쪽 아래 작은 <b>✕</b>를 한 번 누르면 <b>결석</b>, 한 번 더 누르면 <b>조퇴</b>, 또 누르면 취소예요. 표시된 친구는 발표자 뽑기·무작위 모둠·과제 확인에서 빠지고, 누른 날짜·시간·과목과 함께 기록에 남아요. 다음 날 자동으로 풀려요.</li>
           <li><b>서류 인쇄</b>: 책상 왼쪽 위 작은 <b>🖨</b>를 누르면 서류 양식 목록이 떠요. (아래 ‘📄 서류 양식’ 참고)</li>
@@ -1402,7 +1419,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <input id="taName" placeholder="직접 적기 (예: 국어 활동 3쪽)" maxlength="30" style="flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff">
       <button class="btn primary" id="taAdd">추가</button>
     </div>
-    <p class="muted small" style="margin-bottom:0">추가하면 바로 확인 모드가 돼요. 낸 친구의 책상을 누르면 ✓가 붙고, 화면 위에 아직 안 낸 친구가 보여요. 과제는 그날만 보이고 다음 날에는 새로 시작해요.</p>
+    <p class="muted small" style="margin-bottom:0">추가하면 바로 확인 모드가 돼요. 낸 친구의 책상을 누르면 이름 옆에 과제 이름이 붙고, 화면 위에 아직 안 낸 친구가 보여요. 과제는 그날만 보이고 다음 날에는 새로 시작해요.</p>
   </div>
 </dialog>
 <dialog class="sheet small" id="dlgConfirm">
@@ -2253,9 +2270,12 @@ function renderStage(spinning){
       if (isEarly) el.classList.add('early');
       const tok = checkTask && occ && checkTask.done.includes(occ);
       if (tok) el.classList.add('tok');
+      const doneT = occ && !isAbs ? todayTasks().filter(t => t.done.includes(occ)).sort((a,b) => (checkTask && b.id === checkTask.id) - (checkTask && a.id === checkTask.id)) : [];
+      if (doneT.length) el.classList.add('has-tags');
+      const tags = doneT.length ? `<span class="ttags">${doneT.slice(0, doneT.length > 3 ? 2 : 3).map(t => `<span class="ttag${checkTask && t.id === checkTask.id ? ' cur' : ''}" title="${esc(t.name)} 완료">${esc(t.name)}</span>`).join('')}${doneT.length > 3 ? `<span class="ttag more" title="${esc(doneT.slice(2).map(t => t.name).join(', '))}">외 ${doneT.length - 2}개</span>` : ''}</span>` : '';
       const sitId = spinning ? pid : (state.current && nameOf(state.current[i]) ? state.current[i] : null);
       if (selected === i) el.classList.add('sel');
-      el.innerHTML = `<div class="desk"><span class="nm" style="background:${plate}">${esc(txt)}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}${tok ? '<span class="chk">✓</span>' : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
+      el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
       grid.appendChild(el);
     }
   }
