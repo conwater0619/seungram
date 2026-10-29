@@ -703,6 +703,13 @@ dialog.cam-dlg::backdrop{background:#111}
 .doc-bar button,.doc-bar select{padding:7px 11px;font-size:15px}
 .doc-bar .sep{width:1px;background:rgba(255,255,255,.25);margin:4px 2px}
 .doc-bar .pc{width:34px;padding:0;background:var(--pc)!important;border:3px solid rgba(255,255,255,.7)}
+.doc-rec{position:absolute;top:2vh;left:2vw;display:flex;align-items:center;gap:10px;background:rgba(200,30,30,.92);color:#fff;border-radius:999px;padding:8px 18px;font-family:"Jua",sans-serif;font-size:min(4vh,3.2vw);font-variant-numeric:tabular-nums;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:3}
+.doc-rec[hidden]{display:none}
+.doc-rec .dot{width:.7em;height:.7em;border-radius:50%;background:#fff;animation:recblink 1s steps(1) infinite}
+.doc-rec .snd{font-size:.7em;background:rgba(255,255,255,.22);border-radius:999px;padding:.1em .6em}
+.doc-rec .snd[hidden]{display:none}
+@keyframes recblink{50%{opacity:.25}}
+.doc-bar button#docRec.on{background:#c0392b}
 .doc-zoom{position:absolute;top:2vh;right:2vw;background:rgba(0,0,0,.5);border-radius:999px;padding:4px 12px;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none}
 .doc-zoom.show{opacity:1}
 .cam-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:20px;line-height:1.7;padding:6vw;color:#eee}
@@ -878,7 +885,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <button class="btn" id="moreBtn" aria-haspopup="true">⋯ 더보기</button>
         <div class="more-dim"></div>
         <div class="menu" id="moreMenu" hidden>
-          <button class="mi" id="openDoc">📷 실물화상기</button>
+          <button class="mi" id="openDoc">📷 카메라</button>
           <button class="mi" id="openHelp">📖 사용 설명서</button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
@@ -1402,7 +1409,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="card">
         <h3>⋯ 더보기 메뉴</h3>
         <ul>
-          <li><b>📷 실물화상기</b>(⋯ 더보기 맨 위): USB 실물화상기를 컴퓨터에 꽂고 누르면 화면 가득 크게 보여요. ⟳ 회전(R), 확대·축소(＋/－, 마우스 휠), 확대했을 때 끌어서 옮기기, 맞춤(0), 좌우 반전, ☀ 밝게, 📄 글씨 또렷(흑백·대비), ✏️ 펜으로 화면 위에 쓰기(P, 색 바꾸기·🧽 지우기), ⏸ 멈춤(스페이스), 📸 지금 화면을 사진으로 저장이 있어요. 카메라가 여러 개면 실물화상기를 알아서 먼저 고르고, 고른 카메라·회전·밝기 설정은 기억해 둬요. 영상은 화면에만 보이고 어디로도 보내지지 않아요.</li>
+          <li><b>📷 카메라</b>(⋯ 더보기 맨 위): 전자칠판 카메라, USB 실물화상기, 웹캠 중 연결된 카메라를 화면 가득 크게 보여 줘요(여러 개면 아래 막대에서 골라요). ⟳ 회전(R), 확대·축소(＋/－, 마우스 휠), 확대했을 때 끌어서 옮기기, 맞춤(0), 좌우 반전, ☀ 밝게, 📄 글씨 또렷(흑백·대비), ✏️ 펜으로 화면 위에 쓰기(P, 색 바꾸기·🧽 지우기), ⏸ 멈춤(스페이스), 📸 지금 화면을 사진으로 저장이 있어요. 고른 카메라·회전·밝기 설정은 기억해 둬요. 영상은 화면에만 보이고 어디로도 보내지지 않아요.</li>
+          <li><b>🔴 녹화</b>: 카메라 화면 아래 <b>🔴 녹화</b>를 누르면 실험 과정·발표 같은 수업 장면을 녹화해요. 녹화하는 동안 화면 왼쪽 위에 빨간 <b>🔴 녹화 중</b>과 시간이 크게 떠서 아이들도 녹화 중인 걸 알 수 있어요. <b>⏹ 녹화 끝</b>을 누르면 영상 파일로 바로 내려받아요(이 컴퓨터에만 저장돼요). <b>소리(마이크)도 함께 녹음돼요.</b> 처음 한 번 마이크 허용을 눌러 주세요. 소리가 녹음될 때는 녹화 표시 옆에 <b>🔊 소리</b>가 같이 떠요. 교실 대화가 함께 녹음되니, 아이들 모르게 몰래 녹화하지 않도록 녹화 표시는 끌 수 없게 해 두었어요.</li>
           <li><b>📷 카메라 비추기</b>: 🎤 발표자 뽑기 카드의 <b>📷 카메라로 비추기</b>를 누르면 전자칠판(웹캠) 카메라 화면이 크게 뜨고, 위에 ‘🎤 ○○의 발표’와 발표 시간이 나와요. 아래 단추로 좌우 반전, 확대(＋/－), 화면 멈춤(스페이스), 카메라 고르기를 할 수 있고 <kbd>Esc</kbd>나 ✕로 닫아요. 처음 한 번 ‘카메라 허용’을 눌러 주세요. 영상은 화면에만 보이고 저장되거나 어디로 보내지지 않아요.</li>
           <li><b>🎭 화면 가리기</b>: 시간표에 점심시간이 있으면 <b>점심시간이 시작될 때 자동으로 커튼이 닫히고, 끝나면 자동으로 열려요</b>(⋯ 더보기에서 끌 수 있어요). 점심시간 중에 직접 열었다 다시 닫은 커튼은 자동으로 열리지 않아요. 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
           <li><b>🧰 유용한 기능 · 📱 QR코드 만들기</b>: ⏲️ 타이머(30초~15분 바로 고르기, ±1분·±10초), ⏱️ 스톱워치(구간 기록), 🧮 계산기, 📱 QR코드가 있어요. QR코드는 주소(설문지·영상 링크 등)를 넣으면 바로 만들어지고, <b>📺 크게 띄우기</b>로 화면 가득 보여 주거나 <b>💾 그림으로 저장</b>할 수 있어요. 최근에 만든 QR은 아래에 남아서 다시 누르면 바로 불러와요. 🔍 크게를 누르면 숫자가 아주 커져요. 창을 닫아도 타이머·스톱워치는 계속 돌고 오른쪽 아래에 작게 보여요(누르면 다시 열려요). 타이머가 끝나면 소리 설정과 상관없이 알람이 울리고 화면에 ‘시간 끝!’이 떠요.</li>
@@ -1620,6 +1628,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <canvas class="doc-pen" id="docPen"></canvas>
   <div class="cam-msg" id="docMsg" hidden></div>
   <div class="doc-zoom" id="docZoomLbl"></div>
+  <div class="doc-rec" id="docRecBadge" hidden><span class="dot"></span>녹화 중 <span id="docRecTime">00:00</span><span class="snd" id="docRecSnd">🔊 소리</span></div>
   <div class="cam-bar doc-bar" id="docBar">
     <select id="docSel" title="카메라 고르기"></select>
     <button id="docRot" title="90° 돌리기 (R)">⟳ 회전</button>
@@ -1635,7 +1644,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <button id="docClear" title="펜 글씨 지우기">🧽</button>
     <span class="sep"></span>
     <button id="docFreeze" title="화면 멈추기 (스페이스)">⏸ 멈춤</button>
-    <button id="docShot" title="지금 화면을 사진으로 저장">📸 저장</button>
+    <button id="docShot" title="지금 화면을 사진으로 저장">📸 사진</button>
+    <button id="docRec" title="수업 녹화 시작·멈춤">🔴 녹화</button>
     <button id="docClose" class="cx">✕ 닫기</button>
   </div>
 </dialog>
@@ -5290,7 +5300,7 @@ $('#dlgCam').addEventListener('keydown', e => {
   if (e.key === ' '){ e.preventDefault(); $('#camFreeze').click(); }
 });
 
-/* ---------- 실물화상기 ---------- */
+/* ---------- 카메라 (전자칠판·실물화상기·웹캠) ---------- */
 const DOC = {stream: null, rot: 0, zoom: 1, x: 0, y: 0, mir: false, bright: false, text: false, frozen: false, pen: false, col: 0, drawing: false, last: null};
 const PEN_COLS = ['#e53935', '#1e63d6', '#111111', '#f2a20c'];
 function docMsg(t){ $('#docMsg').innerHTML = t; $('#docMsg').hidden = !t; }
@@ -5309,7 +5319,8 @@ function docApply(showZoom){
   S.doc = {rot: DOC.rot, mir: DOC.mir, bright: DOC.bright, text: DOC.text}; save();
 }
 async function docStart(deviceId){
-  docStop(); docMsg('📷 실물화상기를 켜는 중이에요…');
+  stopDocRec();
+  docStop(); docMsg('📷 카메라를 켜는 중이에요…');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ docMsg('이 화면에서는 카메라를 쓸 수 없어요.<br><small>인터넷 주소(https://…)로 연 앱에서만 켜져요.</small>'); return; }
   try {
     const v = {width: {ideal: 3840}, height: {ideal: 2160}};
@@ -5327,9 +5338,9 @@ async function docStart(deviceId){
   } catch(e){
     const n = e && e.name;
     docMsg(n === 'NotAllowedError' ? '카메라 사용이 막혀 있어요.<br><small>주소창 왼쪽 자물쇠(🔒) → 카메라 → 허용으로 바꾼 뒤 다시 열어 주세요.</small>'
-      : n === 'NotFoundError' || n === 'OverconstrainedError' ? '실물화상기를 찾지 못했어요.<br><small>실물화상기 USB를 컴퓨터에 꽂았는지 확인하고 다시 열어 주세요.</small>'
-      : n === 'NotReadableError' ? '다른 프로그램(실물화상기 전용 프로그램·줌 등)이 카메라를 쓰고 있어요.<br><small>그 프로그램을 끄고 다시 열어 주세요.</small>'
-      : '실물화상기를 켜지 못했어요.');
+      : n === 'NotFoundError' || n === 'OverconstrainedError' ? '카메라를 찾지 못했어요.<br><small>전자칠판 카메라나 실물화상기·웹캠이 이 컴퓨터에 연결돼 있는지 확인하고 다시 열어 주세요.</small>'
+      : n === 'NotReadableError' ? '다른 프로그램(실물화상기 전용 프로그램·줌·화상회의 등)이 카메라를 쓰고 있어요.<br><small>그 프로그램을 끄고 다시 열어 주세요.</small>'
+      : '카메라를 켜지 못했어요.');
     if (deviceId && (n === 'NotFoundError' || n === 'OverconstrainedError')){ delete S.docCamId; save(); }
   }
 }
@@ -5346,7 +5357,58 @@ function openDoc(){
 }
 function docZoom(dz){ DOC.zoom = Math.min(5, Math.max(1, +(DOC.zoom + dz).toFixed(2))); if (DOC.zoom === 1){ DOC.x = 0; DOC.y = 0; } docClearPen(); docApply(true); }
 $('#openDoc').onclick = openDoc;
-$('#dlgDoc').addEventListener('close', () => docStop());
+/* 수업 녹화 (화면에 ‘녹화 중’이 보이게) */
+let docRec = null, docRecChunks = [], docRecT0 = 0, docRecTick = null, docRecName = '', docMicStream = null, docMixStream = null;
+function docRecSupported(){ return typeof MediaRecorder !== 'undefined'; }
+function docRecPick(){
+  for (const t of ['video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']) if (MediaRecorder.isTypeSupported(t)) return t;
+  return '';
+}
+function docRecUpdate(){
+  const on = !!docRec && docRec.state === 'recording';
+  $('#docRecBadge').hidden = !on;
+  $('#docRec').classList.toggle('on', on);
+  $('#docRec').textContent = on ? '⏹ 녹화 끝' : '🔴 녹화';
+}
+function docMicStop(){ if (docMicStream){ docMicStream.getTracks().forEach(t => t.stop()); docMicStream = null; } docMixStream = null; }
+function stopDocRec(){ if (docRec && docRec.state !== 'inactive') docRec.stop(); }
+async function startDocRec(){
+  if (!DOC.stream){ toast('먼저 카메라가 켜져야 녹화할 수 있어요.'); return; }
+  if (!docRecSupported()){ toast('이 브라우저에서는 녹화를 쓸 수 없어요. 크롬·엣지에서 열어 주세요.'); return; }
+  let withSound = false;
+  try {
+    docMicStream = await navigator.mediaDevices.getUserMedia({audio: true});
+    withSound = true;
+  } catch(e){ docMicStream = null; if (e && e.name === 'NotAllowedError'){ if (!await askConfirm('마이크 사용이 막혀 있어요. 소리 없이 영상만 녹화할까요?\n(소리도 녹음하려면 주소창 왼쪽 자물쇠 🔒 → 마이크 → 허용으로 바꾼 뒤 다시 눌러 주세요.)')){ return; } } }
+  const videoTrack = DOC.stream.getVideoTracks()[0];
+  docMixStream = withSound ? new MediaStream([videoTrack, ...docMicStream.getAudioTracks()]) : DOC.stream;
+  const type = docRecPick();
+  try { docRec = type ? new MediaRecorder(docMixStream, {mimeType: type}) : new MediaRecorder(docMixStream); }
+  catch(e){ docMicStop(); toast('녹화를 시작하지 못했어요.'); return; }
+  $('#docRecSnd').hidden = !withSound;
+  docRecChunks = [];
+  const d = new Date(), p2 = n => String(n).padStart(2, '0');
+  const ext = (docRec.mimeType || '').includes('mp4') ? 'mp4' : 'webm';
+  docRecName = `수업녹화_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.${ext}`;
+  docRec.ondataavailable = e => { if (e.data && e.data.size) docRecChunks.push(e.data); };
+  docRec.onstop = () => {
+    clearInterval(docRecTick); docMicStop(); docRecUpdate();
+    if (!docRecChunks.length){ toast('녹화된 내용이 없어요.'); return; }
+    const blob = new Blob(docRecChunks, {type: docRec.mimeType || 'video/webm'}), url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = docRecName; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast('녹화를 저장했어요. 내려받기 폴더를 확인해 주세요.');
+  };
+  docRec.start();
+  docRecT0 = Date.now();
+  const tick = () => { const s2 = Math.floor((Date.now() - docRecT0) / 1000); $('#docRecTime').textContent = `${p2(Math.floor(s2 / 60))}:${p2(s2 % 60)}`; };
+  tick(); docRecTick = setInterval(tick, 500);
+  docRecUpdate();
+  toast(withSound ? '녹화를 시작했어요. 소리도 함께 녹음돼요.' : '소리 없이 영상만 녹화해요.');
+}
+$('#docRec').onclick = () => { if (docRec && docRec.state === 'recording') stopDocRec(); else startDocRec(); };
+
+$('#dlgDoc').addEventListener('close', () => { stopDocRec(); docStop(); });
 $('#docClose').onclick = () => $('#dlgDoc').close();
 $('#docSel').onchange = e => docStart(e.target.value);
 $('#docRot').onclick = () => { DOC.rot = (DOC.rot + 90) % 360; docClearPen(); docApply(true); };
@@ -5372,7 +5434,7 @@ $('#docShot').onclick = () => {
   const g = cv.getContext('2d'); g.filter = $('#docStage').style.filter || 'none';
   g.translate(cv.width / 2, cv.height / 2); g.rotate(DOC.rot * Math.PI / 180); if (DOC.mir) g.scale(-1, 1); g.drawImage(src, -w / 2, -h / 2);
   const d = new Date(), p2 = n => String(n).padStart(2, '0'), a = document.createElement('a');
-  a.download = `실물화상기_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
+  a.download = `카메라_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
   a.href = cv.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); toast('지금 화면을 사진으로 저장했어요.');
 };
 /* 펜 */
