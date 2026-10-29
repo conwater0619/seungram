@@ -677,6 +677,36 @@ dialog.sheet.small{width:min(560px,94vw)}
 .pick-facewrap .face{transform:scale(3);transform-origin:0 0}
 .pick-name{font-family:"Jua",sans-serif;font-size:clamp(60px,9vw,150px);line-height:1.1;color:var(--ink)}
 .pick-hint{font-size:14px;color:var(--muted);margin-top:8px}
+.pick-card .pick-cam{margin-top:12px;font-size:17px;padding:8px 18px}
+dialog.cam-dlg{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#111;overflow:hidden;color:#fff}
+dialog.cam-dlg::backdrop{background:#111}
+#camVid,#camFrz{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform-origin:center;transition:transform .2s}
+.cam-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:2vh 3vw;background:linear-gradient(180deg,rgba(0,0,0,.6),transparent);pointer-events:none}
+.cam-name{font-family:"Jua",sans-serif;font-size:min(6vh,5vw);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.cam-name:empty{display:none}
+.cam-time{font-family:"Jua",sans-serif;font-size:min(5vh,4vw);background:rgba(0,0,0,.45);border-radius:999px;padding:.2em .8em;font-variant-numeric:tabular-nums;pointer-events:auto;cursor:pointer}
+.cam-bar{position:absolute;left:50%;bottom:2.5vh;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.55);padding:8px 10px;border-radius:999px;opacity:.35;transition:opacity .2s;max-width:94vw}
+.cam-bar:hover,.cam-bar:focus-within{opacity:1}
+.cam-bar button,.cam-bar select{border:0;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;font-size:16px;padding:8px 14px;cursor:pointer}
+.cam-bar select{max-width:220px}
+.cam-bar select option{color:#000}
+.cam-bar button:hover{background:rgba(255,255,255,.3)}
+.cam-bar button.on{background:#f2784b}
+.cam-bar .cx{background:#c0392b}
+.doc-stage{position:absolute;inset:0;transform-origin:center;transition:transform .15s}
+.doc-stage video,.doc-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.doc-pen{position:absolute;inset:0;width:100%;height:100%;touch-action:none;pointer-events:none}
+.doc-dlg.pen .doc-pen{pointer-events:auto;cursor:crosshair}
+.doc-dlg.pan .doc-stage{cursor:grab}
+.doc-dlg.panning .doc-stage{cursor:grabbing;transition:none}
+.doc-bar{opacity:.55;gap:5px;padding:6px 8px}
+.doc-bar button,.doc-bar select{padding:7px 11px;font-size:15px}
+.doc-bar .sep{width:1px;background:rgba(255,255,255,.25);margin:4px 2px}
+.doc-bar .pc{width:34px;padding:0;background:var(--pc)!important;border:3px solid rgba(255,255,255,.7)}
+.doc-zoom{position:absolute;top:2vh;right:2vw;background:rgba(0,0,0,.5);border-radius:999px;padding:4px 12px;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none}
+.doc-zoom.show{opacity:1}
+.cam-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:20px;line-height:1.7;padding:6vw;color:#eee}
+.cam-msg[hidden]{display:none}
 @keyframes popin{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes fadein{from{opacity:0}}
 .confetti{position:absolute;top:-40px;font-size:30px;pointer-events:none;z-index:1;animation:fall 2.4s ease-in forwards}
@@ -848,6 +878,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <button class="btn" id="moreBtn" aria-haspopup="true">⋯ 더보기</button>
         <div class="more-dim"></div>
         <div class="menu" id="moreMenu" hidden>
+          <button class="mi" id="openDoc">📷 실물화상기</button>
           <button class="mi" id="openHelp">📖 사용 설명서</button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
@@ -1371,6 +1402,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="card">
         <h3>⋯ 더보기 메뉴</h3>
         <ul>
+          <li><b>📷 실물화상기</b>(⋯ 더보기 맨 위): USB 실물화상기를 컴퓨터에 꽂고 누르면 화면 가득 크게 보여요. ⟳ 회전(R), 확대·축소(＋/－, 마우스 휠), 확대했을 때 끌어서 옮기기, 맞춤(0), 좌우 반전, ☀ 밝게, 📄 글씨 또렷(흑백·대비), ✏️ 펜으로 화면 위에 쓰기(P, 색 바꾸기·🧽 지우기), ⏸ 멈춤(스페이스), 📸 지금 화면을 사진으로 저장이 있어요. 카메라가 여러 개면 실물화상기를 알아서 먼저 고르고, 고른 카메라·회전·밝기 설정은 기억해 둬요. 영상은 화면에만 보이고 어디로도 보내지지 않아요.</li>
+          <li><b>📷 카메라 비추기</b>: 🎤 발표자 뽑기 카드의 <b>📷 카메라로 비추기</b>를 누르면 전자칠판(웹캠) 카메라 화면이 크게 뜨고, 위에 ‘🎤 ○○의 발표’와 발표 시간이 나와요. 아래 단추로 좌우 반전, 확대(＋/－), 화면 멈춤(스페이스), 카메라 고르기를 할 수 있고 <kbd>Esc</kbd>나 ✕로 닫아요. 처음 한 번 ‘카메라 허용’을 눌러 주세요. 영상은 화면에만 보이고 저장되거나 어디로 보내지지 않아요.</li>
           <li><b>🎭 화면 가리기</b>: 시간표에 점심시간이 있으면 <b>점심시간이 시작될 때 자동으로 커튼이 닫히고, 끝나면 자동으로 열려요</b>(⋯ 더보기에서 끌 수 있어요). 점심시간 중에 직접 열었다 다시 닫은 커튼은 자동으로 열리지 않아요. 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
           <li><b>🧰 유용한 기능 · 📱 QR코드 만들기</b>: ⏲️ 타이머(30초~15분 바로 고르기, ±1분·±10초), ⏱️ 스톱워치(구간 기록), 🧮 계산기, 📱 QR코드가 있어요. QR코드는 주소(설문지·영상 링크 등)를 넣으면 바로 만들어지고, <b>📺 크게 띄우기</b>로 화면 가득 보여 주거나 <b>💾 그림으로 저장</b>할 수 있어요. 최근에 만든 QR은 아래에 남아서 다시 누르면 바로 불러와요. 🔍 크게를 누르면 숫자가 아주 커져요. 창을 닫아도 타이머·스톱워치는 계속 돌고 오른쪽 아래에 작게 보여요(누르면 다시 열려요). 타이머가 끝나면 소리 설정과 상관없이 알람이 울리고 화면에 ‘시간 끝!’이 떠요.</li>
           <li><b>🗓️ 날짜별 돌아보기</b>: 메인 화면 날짜 양옆의 작은 <b>◀ ▶</b>를 누르면 어제·내일부터 날짜를 넘겨 가며 그날의 학교 행사·기념일, 시간표, 급식, 오늘 할 일, 과제 확인(안 낸 친구), 칭찬·경고 받은 친구를 한눈에 볼 수 있어요. 키보드 ← → 로도 넘겨요. 결석·조퇴와 한 줄 메모는 교사용 설정에서 볼 수 있어요.</li>
@@ -1582,6 +1615,44 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 <div class="tool-pill" id="toolPill" hidden></div>
+<dialog class="cam-dlg doc-dlg" id="dlgDoc">
+  <div class="doc-stage" id="docStage"><video id="docVid" autoplay playsinline muted></video><canvas id="docFrz" hidden></canvas></div>
+  <canvas class="doc-pen" id="docPen"></canvas>
+  <div class="cam-msg" id="docMsg" hidden></div>
+  <div class="doc-zoom" id="docZoomLbl"></div>
+  <div class="cam-bar doc-bar" id="docBar">
+    <select id="docSel" title="카메라 고르기"></select>
+    <button id="docRot" title="90° 돌리기 (R)">⟳ 회전</button>
+    <button id="docOut" title="작게 (-)">－</button>
+    <button id="docIn" title="크게 (+)">＋</button>
+    <button id="docFit" title="원래 크기">맞춤</button>
+    <button id="docMir" title="좌우 반전">↔</button>
+    <button id="docBright" title="밝게">☀ 밝게</button>
+    <button id="docText" title="글씨가 또렷하게 (흑백·대비)">📄 글씨 또렷</button>
+    <span class="sep"></span>
+    <button id="docPenBtn" title="화면에 펜으로 쓰기 (P)">✏️ 펜</button>
+    <button id="docPenCol" class="pc" title="펜 색 바꾸기" style="--pc:#e53935"></button>
+    <button id="docClear" title="펜 글씨 지우기">🧽</button>
+    <span class="sep"></span>
+    <button id="docFreeze" title="화면 멈추기 (스페이스)">⏸ 멈춤</button>
+    <button id="docShot" title="지금 화면을 사진으로 저장">📸 저장</button>
+    <button id="docClose" class="cx">✕ 닫기</button>
+  </div>
+</dialog>
+<dialog class="cam-dlg" id="dlgCam">
+  <video id="camVid" autoplay playsinline muted></video>
+  <canvas id="camFrz" hidden></canvas>
+  <div class="cam-msg" id="camMsg" hidden></div>
+  <div class="cam-top"><span class="cam-name" id="camName"></span><span class="cam-time" id="camTime" title="눌러서 0초부터 다시">00:00</span></div>
+  <div class="cam-bar">
+    <select id="camSel" title="카메라 고르기"></select>
+    <button id="camFlip" title="좌우 반전">↔ 좌우</button>
+    <button id="camZoomOut" title="작게">－</button>
+    <button id="camZoomIn" title="크게">＋</button>
+    <button id="camFreeze" title="화면 멈추기">⏸ 멈춤</button>
+    <button id="camClose" class="cx">✕ 닫기</button>
+  </div>
+</dialog>
 <dialog class="sheet wide" id="dlgAnnv">
   <div class="sheet-head">
     <h2>📌 기념일 · 계기교육 영상</h2>
@@ -3842,7 +3913,7 @@ $('#pickBtn').onclick = async () => {
   fanfare();
   const ov = document.createElement('div');
   ov.className = 'pick-ov';
-  ov.innerHTML = `<div class="pick-card"><div class="pick-lbl">🎤 발표할 친구는</div><div class="pick-facewrap"><span class="face" style="--c:${kidColor(id)}">${accHtml(id)}</span></div><div class="pick-name">${esc(nameOf(id))}</div><div class="pick-hint">화면을 누르면 닫혀요 · Esc 한 번: 이번 뽑기 취소 · 두 번: 전체 초기화</div></div>`
+  ov.innerHTML = `<div class="pick-card"><div class="pick-lbl">🎤 발표할 친구는</div><div class="pick-facewrap"><span class="face" style="--c:${kidColor(id)}">${accHtml(id)}</span></div><div class="pick-name">${esc(nameOf(id))}</div><button class="btn primary pick-cam">📷 카메라로 비추기</button><div class="pick-hint">화면을 누르면 닫혀요 · Esc 한 번: 이번 뽑기 취소 · 두 번: 전체 초기화</div></div>`
     + Array.from({length:22}, () => `<span class="confetti" style="left:${(Math.random()*100).toFixed(1)}%;animation-delay:${(Math.random()*.6).toFixed(2)}s">${['🎉','✨','⭐','🎊'][rand(4)]}</span>`).join('');
   $('#stage').appendChild(ov);
   const close = undo => {
@@ -3859,6 +3930,7 @@ $('#pickBtn').onclick = async () => {
   };
   const onKey = e => { if (e.key === 'Escape'){ e.preventDefault(); close(true); } else if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); close(false); } };
   ov.onclick = () => close(false);
+  ov.querySelector('.pick-cam').onclick = e => { e.stopPropagation(); close(false); openCam(nameOf(id)); };
   setTimeout(() => document.addEventListener('keydown', onKey), 300);
 };
 
@@ -5159,6 +5231,177 @@ $('#tdPrev').onclick = () => { saveTTDay(true); tdDay = addDays(tdDay, -1); rend
 $('#tdNext').onclick = () => { saveTTDay(true); tdDay = addDays(tdDay, 1); renderTTDay(); };
 $('#tdDate').onchange = e => { if (!e.target.value) return; saveTTDay(true); tdDay = e.target.value; renderTTDay(); };
 $('#dvGrid').addEventListener('click', e => { const b = e.target.closest('[data-ttday]'); if (b) openTTDay(b.dataset.ttday); });
+
+/* ---------- 발표자 카메라 ---------- */
+let camStream = null, camT0 = 0, camTick = null, camZoom = 1, camMirror = true, camFrozen = false;
+function camApply(){ const t = `scale(${camMirror ? -camZoom : camZoom}, ${camZoom})`; $('#camVid').style.transform = t; $('#camFrz').style.transform = t; $('#camFlip').classList.toggle('on', camMirror); }
+function camStop(){ if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; } $('#camVid').srcObject = null; }
+function camShowMsg(t){ $('#camMsg').innerHTML = t; $('#camMsg').hidden = !t; }
+async function camStart(deviceId){
+  camStop(); camShowMsg('📷 카메라를 켜는 중이에요…');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ camShowMsg('이 화면에서는 카메라를 쓸 수 없어요.<br><small>인터넷 주소(https://…)로 연 앱에서만 카메라가 켜져요.</small>'); return; }
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({video: deviceId ? {deviceId: {exact: deviceId}, width: {ideal: 1920}, height: {ideal: 1080}} : {width: {ideal: 1920}, height: {ideal: 1080}}, audio: false});
+    $('#camVid').srcObject = camStream; camShowMsg('');
+    const cur = camStream.getVideoTracks()[0], set = cur && cur.getSettings ? cur.getSettings() : {};
+    if (set.deviceId) S.camId = set.deviceId, save();
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+    $('#camSel').innerHTML = devs.map((d, k) => `<option value="${esc(d.deviceId)}"${d.deviceId === set.deviceId ? ' selected' : ''}>${esc(d.label || '카메라 ' + (k + 1))}</option>`).join('');
+    $('#camSel').hidden = devs.length < 2;
+  } catch(e){
+    const n = e && e.name;
+    camShowMsg(n === 'NotAllowedError' ? '카메라 사용이 막혀 있어요.<br><small>주소창 왼쪽 자물쇠(🔒) → 카메라 → 허용으로 바꾼 뒤 다시 열어 주세요.</small>'
+      : n === 'NotFoundError' || n === 'OverconstrainedError' ? '카메라를 찾지 못했어요.<br><small>전자칠판 카메라가 이 컴퓨터에 연결돼 있는지 확인해 주세요. (일부 전자칠판은 안드로이드 쪽에만 카메라가 연결돼 있어요)</small>'
+      : n === 'NotReadableError' ? '다른 프로그램(줌·화상회의 등)이 카메라를 쓰고 있어요.<br><small>그 프로그램을 끄고 다시 열어 주세요.</small>'
+      : '카메라를 켜지 못했어요.');
+    if (deviceId && (n === 'NotFoundError' || n === 'OverconstrainedError')){ delete S.camId; save(); }
+  }
+}
+function openCam(name){
+  if ($('#dlgCam').open) return;
+  $('#camName').textContent = name ? `🎤 ${name}의 발표` : '';
+  camZoom = 1; camMirror = S.camMirror !== false; camFrozen = false;
+  $('#camFrz').hidden = true; $('#camVid').hidden = false; $('#camFreeze').classList.remove('on'); $('#camFreeze').textContent = '⏸ 멈춤';
+  camApply(); $('#dlgCam').showModal();
+  camT0 = Date.now(); clearInterval(camTick);
+  const tick = () => { const s2 = Math.floor((Date.now() - camT0) / 1000); $('#camTime').textContent = `${String(Math.floor(s2 / 60)).padStart(2, '0')}:${String(s2 % 60).padStart(2, '0')}`; };
+  tick(); camTick = setInterval(tick, 500);
+  camStart(S.camId);
+}
+function closeCam(){ clearInterval(camTick); camStop(); if ($('#dlgCam').open) $('#dlgCam').close(); }
+$('#dlgCam').addEventListener('close', () => { clearInterval(camTick); camStop(); });
+$('#camClose').onclick = closeCam;
+$('#camSel').onchange = e => camStart(e.target.value);
+$('#camFlip').onclick = () => { camMirror = !camMirror; S.camMirror = camMirror; save(); camApply(); };
+$('#camZoomIn').onclick = () => { camZoom = Math.min(3, +(camZoom + .25).toFixed(2)); camApply(); };
+$('#camZoomOut').onclick = () => { camZoom = Math.max(1, +(camZoom - .25).toFixed(2)); camApply(); };
+$('#camTime').onclick = () => { camT0 = Date.now(); };
+$('#camFreeze').onclick = () => {
+  const v = $('#camVid'), c = $('#camFrz');
+  camFrozen = !camFrozen;
+  if (camFrozen && v.videoWidth){ c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); }
+  c.hidden = !camFrozen; v.hidden = camFrozen;
+  $('#camFreeze').classList.toggle('on', camFrozen); $('#camFreeze').textContent = camFrozen ? '▶ 다시' : '⏸ 멈춤';
+};
+$('#dlgCam').addEventListener('keydown', e => {
+  if (e.target.closest('select')) return;
+  if (e.key === '+' || e.key === '='){ e.preventDefault(); $('#camZoomIn').click(); }
+  if (e.key === '-'){ e.preventDefault(); $('#camZoomOut').click(); }
+  if (e.key === ' '){ e.preventDefault(); $('#camFreeze').click(); }
+});
+
+/* ---------- 실물화상기 ---------- */
+const DOC = {stream: null, rot: 0, zoom: 1, x: 0, y: 0, mir: false, bright: false, text: false, frozen: false, pen: false, col: 0, drawing: false, last: null};
+const PEN_COLS = ['#e53935', '#1e63d6', '#111111', '#f2a20c'];
+function docMsg(t){ $('#docMsg').innerHTML = t; $('#docMsg').hidden = !t; }
+function docStop(){ if (DOC.stream){ DOC.stream.getTracks().forEach(t => t.stop()); DOC.stream = null; } $('#docVid').srcObject = null; }
+let docZT = null;
+function docApply(showZoom){
+  const st = $('#docStage'), sx = DOC.mir ? -DOC.zoom : DOC.zoom;
+  st.style.transform = `translate(${DOC.x}px, ${DOC.y}px) rotate(${DOC.rot}deg) scale(${sx}, ${DOC.zoom})`;
+  const f = [DOC.bright ? 'brightness(1.25) contrast(1.05)' : '', DOC.text ? 'grayscale(1) contrast(1.6) brightness(1.1)' : ''].join(' ').trim();
+  st.style.filter = f || 'none';
+  $('#dlgDoc').classList.toggle('pan', DOC.zoom > 1 && !DOC.pen);
+  [['#docMir', DOC.mir], ['#docBright', DOC.bright], ['#docText', DOC.text], ['#docPenBtn', DOC.pen], ['#docFreeze', DOC.frozen]].forEach(([q, on]) => $(q).classList.toggle('on', on));
+  $('#docFreeze').textContent = DOC.frozen ? '▶ 다시' : '⏸ 멈춤';
+  $('#docPenCol').style.setProperty('--pc', PEN_COLS[DOC.col]);
+  if (showZoom){ const z = $('#docZoomLbl'); z.textContent = `${Math.round(DOC.zoom * 100)}% · ${DOC.rot}°`; z.classList.add('show'); clearTimeout(docZT); docZT = setTimeout(() => z.classList.remove('show'), 1200); }
+  S.doc = {rot: DOC.rot, mir: DOC.mir, bright: DOC.bright, text: DOC.text}; save();
+}
+async function docStart(deviceId){
+  docStop(); docMsg('📷 실물화상기를 켜는 중이에요…');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ docMsg('이 화면에서는 카메라를 쓸 수 없어요.<br><small>인터넷 주소(https://…)로 연 앱에서만 켜져요.</small>'); return; }
+  try {
+    const v = {width: {ideal: 3840}, height: {ideal: 2160}};
+    DOC.stream = await navigator.mediaDevices.getUserMedia({video: deviceId ? Object.assign({deviceId: {exact: deviceId}}, v) : v, audio: false});
+    $('#docVid').srcObject = DOC.stream; docMsg('');
+    const tr = DOC.stream.getVideoTracks()[0], set = tr && tr.getSettings ? tr.getSettings() : {};
+    if (set.deviceId){ S.docCamId = set.deviceId; save(); }
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+    $('#docSel').innerHTML = devs.map((d, k) => `<option value="${esc(d.deviceId)}"${d.deviceId === set.deviceId ? ' selected' : ''}>${esc(d.label || '카메라 ' + (k + 1))}</option>`).join('');
+    $('#docSel').hidden = devs.length < 2;
+    if (!deviceId && devs.length > 1){
+      const doc = devs.find(d => /document|visual|presenter|실물|doc|ipevo|elmo|hovercam|okiocam|aver/i.test(d.label));
+      if (doc && doc.deviceId !== set.deviceId){ docStart(doc.deviceId); return; }
+    }
+  } catch(e){
+    const n = e && e.name;
+    docMsg(n === 'NotAllowedError' ? '카메라 사용이 막혀 있어요.<br><small>주소창 왼쪽 자물쇠(🔒) → 카메라 → 허용으로 바꾼 뒤 다시 열어 주세요.</small>'
+      : n === 'NotFoundError' || n === 'OverconstrainedError' ? '실물화상기를 찾지 못했어요.<br><small>실물화상기 USB를 컴퓨터에 꽂았는지 확인하고 다시 열어 주세요.</small>'
+      : n === 'NotReadableError' ? '다른 프로그램(실물화상기 전용 프로그램·줌 등)이 카메라를 쓰고 있어요.<br><small>그 프로그램을 끄고 다시 열어 주세요.</small>'
+      : '실물화상기를 켜지 못했어요.');
+    if (deviceId && (n === 'NotFoundError' || n === 'OverconstrainedError')){ delete S.docCamId; save(); }
+  }
+}
+function docPenSize(){ const c = $('#docPen'), r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1; if (c.width !== Math.round(r.width * dpr)){ c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr); } }
+function docClearPen(){ const c = $('#docPen'); c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+function openDoc(){
+  $('#moreMenu').hidden = true;
+  if ($('#dlgDoc').open) return;
+  const sv = S.doc || {};
+  Object.assign(DOC, {rot: sv.rot || 0, zoom: 1, x: 0, y: 0, mir: !!sv.mir, bright: !!sv.bright, text: !!sv.text, frozen: false, pen: false});
+  $('#docFrz').hidden = true; $('#docVid').hidden = false;
+  $('#dlgDoc').showModal(); docApply(); docPenSize(); docClearPen();
+  docStart(S.docCamId);
+}
+function docZoom(dz){ DOC.zoom = Math.min(5, Math.max(1, +(DOC.zoom + dz).toFixed(2))); if (DOC.zoom === 1){ DOC.x = 0; DOC.y = 0; } docClearPen(); docApply(true); }
+$('#openDoc').onclick = openDoc;
+$('#dlgDoc').addEventListener('close', () => docStop());
+$('#docClose').onclick = () => $('#dlgDoc').close();
+$('#docSel').onchange = e => docStart(e.target.value);
+$('#docRot').onclick = () => { DOC.rot = (DOC.rot + 90) % 360; docClearPen(); docApply(true); };
+$('#docIn').onclick = () => docZoom(.25);
+$('#docOut').onclick = () => docZoom(-.25);
+$('#docFit').onclick = () => { DOC.zoom = 1; DOC.x = 0; DOC.y = 0; docClearPen(); docApply(true); };
+$('#docMir').onclick = () => { DOC.mir = !DOC.mir; docClearPen(); docApply(); };
+$('#docBright').onclick = () => { DOC.bright = !DOC.bright; docApply(); };
+$('#docText').onclick = () => { DOC.text = !DOC.text; docApply(); };
+$('#docPenBtn').onclick = () => { DOC.pen = !DOC.pen; $('#dlgDoc').classList.toggle('pen', DOC.pen); docPenSize(); docApply(); };
+$('#docPenCol').onclick = () => { DOC.col = (DOC.col + 1) % PEN_COLS.length; if (!DOC.pen) $('#docPenBtn').click(); else docApply(); };
+$('#docClear').onclick = docClearPen;
+$('#docFreeze').onclick = () => {
+  const v = $('#docVid'), c = $('#docFrz');
+  DOC.frozen = !DOC.frozen;
+  if (DOC.frozen && v.videoWidth){ c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); }
+  c.hidden = !DOC.frozen; v.hidden = DOC.frozen; docApply();
+};
+$('#docShot').onclick = () => {
+  const src = DOC.frozen ? $('#docFrz') : $('#docVid'), w = src.videoWidth || src.width, h = src.videoHeight || src.height;
+  if (!w){ toast('아직 화면이 없어요.'); return; }
+  const r = DOC.rot % 180 !== 0, cv = document.createElement('canvas'); cv.width = r ? h : w; cv.height = r ? w : h;
+  const g = cv.getContext('2d'); g.filter = $('#docStage').style.filter || 'none';
+  g.translate(cv.width / 2, cv.height / 2); g.rotate(DOC.rot * Math.PI / 180); if (DOC.mir) g.scale(-1, 1); g.drawImage(src, -w / 2, -h / 2);
+  const d = new Date(), p2 = n => String(n).padStart(2, '0'), a = document.createElement('a');
+  a.download = `실물화상기_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
+  a.href = cv.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); toast('지금 화면을 사진으로 저장했어요.');
+};
+/* 펜 */
+const penPt = e => { const c = $('#docPen'), r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.width / r.width, (e.clientY - r.top) * c.height / r.height]; };
+$('#docPen').addEventListener('pointerdown', e => { if (!DOC.pen) return; docPenSize(); DOC.drawing = true; DOC.last = penPt(e); $('#docPen').setPointerCapture(e.pointerId); });
+$('#docPen').addEventListener('pointermove', e => {
+  if (!DOC.drawing) return;
+  const c = $('#docPen'), g = c.getContext('2d'), p = penPt(e), dpr = window.devicePixelRatio || 1;
+  g.strokeStyle = PEN_COLS[DOC.col]; g.lineWidth = 5 * dpr; g.lineCap = 'round'; g.lineJoin = 'round';
+  g.beginPath(); g.moveTo(DOC.last[0], DOC.last[1]); g.lineTo(p[0], p[1]); g.stroke(); DOC.last = p;
+});
+['pointerup', 'pointercancel'].forEach(t => $('#docPen').addEventListener(t, () => { DOC.drawing = false; }));
+/* 확대했을 때 끌어서 옮기기 */
+let docDrag = null;
+$('#docStage').addEventListener('pointerdown', e => { if (DOC.pen || DOC.zoom <= 1) return; docDrag = {x: e.clientX - DOC.x, y: e.clientY - DOC.y}; $('#dlgDoc').classList.add('panning'); $('#docStage').setPointerCapture(e.pointerId); });
+$('#docStage').addEventListener('pointermove', e => { if (!docDrag) return; DOC.x = e.clientX - docDrag.x; DOC.y = e.clientY - docDrag.y; $('#docStage').style.transform = `translate(${DOC.x}px, ${DOC.y}px) rotate(${DOC.rot}deg) scale(${DOC.mir ? -DOC.zoom : DOC.zoom}, ${DOC.zoom})`; });
+['pointerup', 'pointercancel'].forEach(t => $('#docStage').addEventListener(t, () => { if (docDrag){ docDrag = null; $('#dlgDoc').classList.remove('panning'); docClearPen(); } }));
+$('#dlgDoc').addEventListener('wheel', e => { e.preventDefault(); docZoom(e.deltaY < 0 ? .25 : -.25); }, {passive: false});
+$('#dlgDoc').addEventListener('keydown', e => {
+  if (e.target.closest('select')) return;
+  const k = e.key;
+  if (k === '+' || k === '='){ e.preventDefault(); docZoom(.25); }
+  else if (k === '-'){ e.preventDefault(); docZoom(-.25); }
+  else if (k === ' '){ e.preventDefault(); $('#docFreeze').click(); }
+  else if (k === 'r' || k === 'R' || k === 'ㄱ'){ e.preventDefault(); $('#docRot').click(); }
+  else if (k === 'p' || k === 'P' || k === 'ㅔ'){ e.preventDefault(); $('#docPenBtn').click(); }
+  else if (k === '0'){ e.preventDefault(); $('#docFit').click(); }
+});
+window.addEventListener('resize', () => { if ($('#dlgDoc').open){ docPenSize(); } });
 S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
