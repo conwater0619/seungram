@@ -193,12 +193,36 @@ body.fs .stage .wx-card .wd{font-size:1.9vh}
 .task-card .ti.on .tb{background:rgba(255,255,255,.3)}
 .task-card .ti.on .tb i{background:#fff}
 .task-card .tempty{font-size:13px;color:var(--muted);padding:2px 6px}
+.task-card .tod-h{font-size:12.5px;color:#b06a12;margin:6px 6px 0;padding-top:5px;border-top:1px dashed #c6e6cc;display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+.task-card .tod-h .lg{color:var(--muted);font-size:11px;display:inline-flex;align-items:center;gap:3px}
+.task-card .tod-h .lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-left:4px}
+.task-card .tod-h .lg i.o{background:#f0b47a}.task-card .tod-h .lg i.l{background:#9dbbe6}
+.task-card .ti.tod .tn{font-size:clamp(14px,1.3vw,17px);color:#8a5a12}
+.task-card .ti.tod .tn small{font-family:inherit;font-size:11px;color:#b08a5a}
+.task-card .ti.tod .tc{color:#c0392b;font-weight:700}
+.task-card .ti.tod.on{background:#d9822b}
+.task-card .ti.tod.on .tn,.task-card .ti.tod.on .tn small{color:#fff}
+.task-bar.past{background:#c96f1c}
+.ttag.owe{background:#fff0e0;color:#b4560f;border-color:#f0b47a;border-left-color:#e07b1f}
+.ttag.owe::before{content:"";}
+.ttag.late{background:#e8f0ff;color:#2a5a93;border-color:#b9cff0;border-left-color:#3b74c4}
+
+.seat.owes .desk{box-shadow:inset 0 0 0 2px rgba(224,123,31,.55),0 4px 0 #b88b52}
 body.fs .stage .task-card .tn{font-size:2.6vh}
 .task-bar{order:1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:-4px 0 12px;padding:8px 14px;background:#2e7d4f;color:#fff;border-radius:12px;font-size:15px}
 .task-bar[hidden]{display:none}
 .task-bar b{font-family:"Jua",sans-serif;font-weight:400;font-size:19px}
 .task-bar .miss{flex:1;min-width:200px;line-height:1.5}
 .task-bar .miss span{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:0 9px;margin:1px 2px;font-family:"Jua",sans-serif;font-size:16px}
+.task-bar .miss .exb{cursor:pointer}
+.task-bar .miss .exb:hover{background:rgba(255,255,255,.35);text-decoration:line-through}
+.task-bar .miss .exb small{font-family:inherit;font-size:11px;opacity:.85}
+.task-bar .miss .exl{background:none;padding:0;margin-left:8px;font-family:inherit;font-size:13px;opacity:.95}
+.task-bar .miss .exb.ex{background:rgba(0,0,0,.18);text-decoration:line-through;opacity:.85}
+.task-bar .miss .exb.ex:hover{text-decoration:none}
+.task-bar .miss .exh{display:block;background:none;padding:0;margin:2px 0 0;font-family:inherit;font-size:11.5px;opacity:.75}
+.stage.checking .seat.ex .desk{outline:none!important;filter:grayscale(.7) brightness(1.05);opacity:.7}
+.ttag.exm{background:#eceae6;color:#6d665c;border-color:#cfcac1;border-left-color:#8d867b}
 .task-bar button{border:0;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
 .task-bar .tdone{background:#fff;color:#2e7d4f;font-weight:bold}
 .task-bar .tsub{background:rgba(255,255,255,.18);color:#fff}
@@ -281,6 +305,17 @@ body.hide-notice .notice-strip{display:none!important}
 .ttv tr.cur td.todayc{background:#ffe9b8}
 .ttv tr.lunch td.lz{background:#fff3df;color:#b06a12;font-family:"Jua",sans-serif;font-weight:400}
 .ttv .empty{color:#c5ccd6;font-weight:400}
+.ttv td.chg{background:repeating-linear-gradient(135deg,#fff3e6 0 9px,#ffe6c7 9px 18px)!important;color:#b4560f;position:relative}
+.ttv td.chg::after{content:"✏️ 바뀜";position:absolute;top:3px;right:6px;font-size:11px;font-weight:400;color:#b4560f}
+.dv-tt span.chg{background:#fff0e0;color:#b4560f;box-shadow:inset 0 0 0 1px #f0b47a}
+.dv-ttbtn{margin-top:8px;font-size:13px;padding:4px 10px}
+.td-row{display:grid;grid-template-columns:92px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line)}
+.td-row b{font-family:"Jua",sans-serif;font-weight:400;font-size:17px}
+.td-row b small{display:block;font-family:inherit;font-size:11px;color:var(--muted)}
+.td-row input{padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff}
+.td-row.chg input{border-color:#e07b1f;background:#fff8f0}
+.td-row .orig{font-size:12px;color:var(--muted);white-space:nowrap}
+.td-row.lunch{color:#b06a12;font-family:"Jua",sans-serif;grid-template-columns:92px 1fr}
 #dlgTools .sheet-head{flex-wrap:wrap}
 .tl-pane{display:flex;flex-direction:column;align-items:center;gap:14px;padding:6px 0}
 .tl-pane[hidden]{display:none}
@@ -1241,10 +1276,13 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <ul>
           <li><b>맨 위 문구</b>: ‘웃음이 넘치는 우리 반 교실’ 글씨를 누르면 우리 반에 맞는 문구로 바꿀 수 있어요. 색 글씨와 검은 글씨를 따로 적어요.</li>
           <li><b>지금 시간표</b>(왼쪽 위): 🗓️ 시간표에 요일별 과목과 교시 시간을 적어 두면 지금 몇 교시인지, 쉬는 시간·점심시간인지가 시간에 맞춰 나오고, 아래에 다음 교시와 과목도 미리 보여 줘요.</li>
-          <li><b>🗓️ 전체 시간표</b>: 위쪽 🗓️ 시간표 버튼이나 왼쪽 위 시간표 칸을 누르면 일주일 시간표가 크게 떠요. 오늘 요일과 지금 교시가 표시돼요. 고치려면 창 위의 ✏️ 시간표 고치기를 눌러요.</li>
+          <li><b>🗓️ 전체 시간표</b>: 위쪽 🗓️ 시간표 버튼이나 왼쪽 위 시간표 칸을 누르면 일주일 시간표가 크게 떠요. 오늘 요일과 지금 교시가 표시돼요. 기본 시간표를 고치려면 ✏️ 기본 시간표 고치기를 눌러요.</li>
+          <li><b>📅 하루만 시간표 바꾸기</b>: 전체 시간표 창의 <b>📅 오늘만 바꾸기</b>(또는 ◀ ▶ 날짜별 돌아보기의 ‘✏️ 이날만 바꾸기’)에서 그날 과목만 바꿀 수 있어요. 과목을 지우면 ‘수업 없음’, 빈 교시에 넣으면 수업이 생겨요. 바뀐 칸은 주황색으로 표시되고, 메인 화면 시간표·다음 교시·오늘 수업 끝·기록의 과목이 모두 바뀐 시간표를 따라요. 다음 날이 되면 원래 시간표로 돌아가요.</li>
           <li><b>📝 오늘 할 일</b>(위쪽 버튼): 아침 안내사항을 한 줄에 하나씩 적고 저장하면 시계 아래에 번호를 붙여 보여 줘요. 그 줄을 누르거나 ‘📺 크게 보여 주기’를 누르면 화면 가득 크게 보여요. 적은 날짜·시간·과목과 함께 ‘🕘 지난 기록’에 쌓이고, ‘어제 것 가져오기’로 고쳐 쓸 수도 있어요.</li>
           <li><b>날짜·시계</b>(가운데 위): 오늘 날짜와 지금 시각이 나와요.</li>
           <li><b>🌤️ 날씨</b>(오른쪽 위): 지금 기온과 날씨, 오늘 최고·최저 기온이 15분마다 새로 나와요. 기본은 포항이고, 날씨 칸을 누르면 지역을 바꿀 수 있어요.</li>
+          <li><b>🚫 과제에서 제외</b>: 결석했거나 특수반 수업 등으로 그 과제를 안 해도 되는 친구는, 확인 중에 책상을 <b>오른쪽 클릭</b>(태블릿은 <b>길게 누르기</b>)하거나 위 초록 띠의 이름을 누르면 그 과제에서 빠져요(인원 수·안 낸 친구·밀린 과제에서 모두 빠짐). 같은 이름의 과제를 다음에 만들 때도 자동으로 빠지고, 띠의 ‘제외:’ 이름을 누르면 되돌려요.</li>
+          <li><b>⏰ 밀린 과제</b>: 지난 2주 동안 확인한 과제 중 <b>아직 안 낸 친구가 있으면</b> 과제 확인 칸 아래 ‘⏰ 밀린 과제’에 날짜와 인원이 나오고, 그 친구 책상에는 주황 테두리와 주황색 <b>과제 이름</b> 꼬리표가 붙어요. 밀린 과제를 누르고 낸 친구 책상을 누르면 ‘늦게 낸 것’으로 기록되고 꼬리표가 파란색으로 바뀌어요. 끝까지 안 받을 과제는 ‘그만 챙기기’를 누르면 목록에서 빠져요.</li>
           <li><b>✅ 과제 확인</b>(오른쪽 위): 수학 익힘책·글쓰기 같은 과제를 ＋ 추가하고, 과제를 누르면 확인 모드가 돼요. 낸 친구 책상을 누르면 이름 오른쪽에 <b>과제 이름</b>(예: 글쓰기)이 붙고, 아직 안 낸 친구 이름이 위에 모여 보여요. 확인을 끝내도 그날 낸 과제 이름은 책상에 계속 보여요(과제가 많으면 ‘외 ○개’로 줄여 보여요). 결석한 친구는 빠지고, 다음 날에는 새로 시작해요.</li>
           <li><b>🍚 오늘 급식</b>: 🍚 급식 창에서 학교를 한 번 찾아 두면 날짜별 급식 메뉴가 나와요. <b>메뉴 이름을 누르면</b> 위키백과에서 그 음식 사진과 짧은 설명을 찾아 크게 보여 줘요(못 찾으면 구글·네이버 이미지 검색 버튼으로 볼 수 있어요). ‘메인 화면에 오늘 급식 보이기’를 켜면 시계 아래에 오늘 급식이 한 줄로 보여요.</li>
           <li><b>결석 · 조퇴 표시</b>: 책상 왼쪽 아래 작은 <b>✕</b>를 한 번 누르면 <b>결석</b>, 한 번 더 누르면 <b>조퇴</b>, 또 누르면 취소예요. 표시된 친구는 발표자 뽑기·무작위 모둠·과제 확인에서 빠지고, 누른 날짜·시간·과목과 함께 기록에 남아요. 다음 날 자동으로 풀려요.</li>
@@ -1488,7 +1526,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
 <dialog class="sheet wide" id="dlgTTView">
   <div class="sheet-head">
     <h2>🗓️ 우리 반 시간표</h2>
-    <button class="btn" id="ttvEdit">✏️ 시간표 고치기</button>
+    <button class="btn primary" id="ttvDay">📅 오늘만 바꾸기</button>
+    <button class="btn" id="ttvEdit">✏️ 기본 시간표 고치기</button>
     <button class="btn x" data-close>닫기</button>
   </div>
   <div class="sheet-body"><div style="overflow-x:auto"><table class="ttv" id="ttvTable"></table></div></div>
@@ -1563,6 +1602,26 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       </div>
       <p class="muted small" style="margin-bottom:0">‘쉬는 날’로 표시하면 그날은 등교일에서 빠져서, 그날 기념일은 앞뒤 등교일에 보여 줘요.</p>
     </div>
+  </div>
+</dialog>
+<dialog class="sheet mid" id="dlgTTDay">
+  <div class="sheet-head">
+    <h2>📅 하루만 시간표 바꾸기</h2>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="row" style="gap:8px;margin-bottom:10px">
+      <button class="btn" id="tdPrev">◀</button>
+      <input type="date" id="tdDate">
+      <button class="btn" id="tdNext">▶</button>
+      <span class="muted small" id="tdInfo"></span>
+    </div>
+    <div id="tdRows"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" id="tdSave">저장</button>
+      <button class="btn" id="tdReset">원래 시간표로 되돌리기</button>
+    </div>
+    <p class="muted small" style="margin-bottom:0">고른 날짜에만 적용돼요. 과목을 지우면 그 교시는 ‘수업 없음’이 되고, 빈 교시에 과목을 넣으면 수업이 생겨요. 메인 화면 시간표, 다음 교시 미리보기, 오늘 수업 끝, 기록에 남는 과목 모두 바뀐 시간표를 따라요.</p>
   </div>
 </dialog>
 <dialog class="sheet wide" id="dlgDay">
@@ -2212,14 +2271,18 @@ const toMin = t => { const [h,m] = String(t || '0:0').split(':').map(Number); re
 const DOW = ['월','화','수','목','금'];
 function classIndexMap(){ let k = 0; return state.periods.map(p => p.kind === 'class' ? k++ : -1); }
 function subjOf(dow, k){ return ((state.timetable[dow] || [])[k] || '').trim(); }
+state.ttOver = state.ttOver || {};
+const dstrOf = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function ttChanged(dstr){ const o = state.ttOver[dstr]; return !!(o && Object.keys(o).length); }
+function subjOn(dstr, k){ const o = state.ttOver[dstr]; if (o && Object.prototype.hasOwnProperty.call(o, k)) return String(o[k] || '').trim(); const [y,m,dd] = dstr.split('-').map(Number); return subjOf(new Date(y, m-1, dd).getDay(), k); }
 function hhmm(d){ d = d || new Date(); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
 function subjAt(d){
   d = d || new Date(); const dow = d.getDay();
   if (dow === 0 || dow === 6 || !state.periods || !state.periods.length) return '';
-  const m = d.getHours()*60 + d.getMinutes(), P = dayPeriods(dow);
+  const ds = dstrOf(d), m = d.getHours()*60 + d.getMinutes(), P = dayPeriods(dow, ds);
   if (!P.length) return '';
   for (const x of P){
-    if (m >= x.s && m < x.e) return x.p.kind === 'lunch' ? '점심시간' : `${x.k+1}교시${subjOf(dow, x.k) ? ' ' + subjOf(dow, x.k) : ''}`;
+    if (m >= x.s && m < x.e) return x.p.kind === 'lunch' ? '점심시간' : `${x.k+1}교시${subjOn(ds, x.k) ? ' ' + subjOn(ds, x.k) : ''}`;
   }
   const st = Math.min(...P.map(x => x.s)), en = Math.max(...P.map(x => x.e));
   return m >= st && m < en ? '쉬는 시간' : (m < st ? '수업 전' : '방과 후');
@@ -2227,10 +2290,11 @@ function subjAt(d){
 function stampNow(){ const d = new Date(); return {t: hhmm(d), s: subjAt(d)}; }
 function stampTxt(st){ return st && st.t ? `${st.t}${st.s ? ' · ' + st.s : ''}` : ''; }
 function stampHtml(st){ const t = stampTxt(st); return t ? `<span class="stamp">🕘 ${esc(t)}</span>` : ''; }
-function dayPeriods(dow){
-  const idx = classIndexMap();
-  const all = state.periods.map((p,i) => ({p, i, k: idx[i], s: toMin(p.start), e: toMin(p.end)})).sort((a,b) => a.s - b.s);
-  const filled = all.filter(x => x.p.kind === 'class' && subjOf(dow, x.k));
+function dayPeriods(dow, dstr){
+  const idx = classIndexMap(), sj = k => dstr ? subjOn(dstr, k) : subjOf(dow, k);
+  const o = dstr ? state.ttOver[dstr] || {} : {}, dropped = k => Object.prototype.hasOwnProperty.call(o, k) && !String(o[k] || '').trim();
+  const all = state.periods.map((p,i) => ({p, i, k: idx[i], s: toMin(p.start), e: toMin(p.end)})).filter(x => !(x.p.kind === 'class' && dropped(x.k))).sort((a,b) => a.s - b.s);
+  const filled = all.filter(x => x.p.kind === 'class' && sj(x.k));
   if (!filled.length) return all;
   const lastK = Math.max(...filled.map(x => x.k));
   return all.filter(x => x.p.kind !== 'class' || x.k <= lastK);
@@ -2240,10 +2304,10 @@ function nowStatus(){
   if (dow === 0 || dow === 6 || !state.periods.length) return null;
   if (typeof isSchoolDay === 'function' && !isSchoolDay(todayStr(d))) return null;
   const m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
-  const P = dayPeriods(dow);
+  const ds = dstrOf(d), P = dayPeriods(dow, ds);
   if (!P.length) return null;
   const lbl = x => x.p.kind === 'lunch' ? '점심시간' : `${x.k+1}교시`;
-  const sub = x => x.p.kind === 'class' ? subjOf(dow, x.k) : '';
+  const sub = x => x.p.kind === 'class' ? subjOn(ds, x.k) : '';
   const after = x => { const j = P.indexOf(x) + 1; return P[j] ? {lbl: lbl(P[j]), sub: sub(P[j]), time: P[j].p.start, lunch: P[j].p.kind === 'lunch'} : null; };
   const cur = P.find(x => m >= x.s && m < x.e);
   if (cur){
@@ -2288,12 +2352,14 @@ function renderTT(){
 function openTTEdit(){ if (animating) return; if ($('#dlgTTView').open) $('#dlgTTView').close(); renderTT(); openSheet($('#dlgTT')); }
 function renderTTView(){
   const idx = classIndexMap(), now = new Date(), today = now.getDay(), m = now.getHours()*60 + now.getMinutes();
-  let h = `<tr><th></th>${DOW.map((d,j) => `<th class="${today === j+1 ? 'today' : ''}">${d}</th>`).join('')}</tr>`;
+  const mon = new Date(now); mon.setHours(0,0,0,0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+  const wd = DOW.map((_, j) => { const x = new Date(mon); x.setDate(mon.getDate() + j); return dstrOf(x); });
+  let h = `<tr><th></th>${DOW.map((d,j) => `<th class="${today === j+1 ? 'today' : ''}">${d}<small style="display:block;font-size:.55em;opacity:.75">${+wd[j].slice(5,7)}/${+wd[j].slice(8)}${ttChanged(wd[j]) ? ' ✏️' : ''}</small></th>`).join('')}</tr>`;
   state.periods.forEach((p,i) => {
     const isCur = today >= 1 && today <= 5 && m >= toMin(p.start) && m < toMin(p.end);
     const head = `<td class="pc"><b>${p.kind === 'lunch' ? '점심' : (idx[i]+1) + '교시'}</b><small>${p.start}~${p.end}</small></td>`;
     if (p.kind === 'lunch'){ h += `<tr class="lunch${isCur ? ' cur' : ''}">${head}<td class="lz" colspan="5">🍚 점심시간</td></tr>`; return; }
-    h += `<tr class="${isCur ? 'cur' : ''}">${head}${DOW.map((d,j) => { const sj = subjOf(j+1, idx[i]); return `<td class="${today === j+1 ? 'todayc' : ''}">${sj ? esc(sj) : '<span class="empty">·</span>'}</td>`; }).join('')}</tr>`;
+    h += `<tr class="${isCur ? 'cur' : ''}">${head}${DOW.map((d,j) => { const o = state.ttOver[wd[j]] || {}, ch = Object.prototype.hasOwnProperty.call(o, idx[i]), sj = subjOn(wd[j], idx[i]); return `<td class="${today === j+1 ? 'todayc' : ''}${ch ? ' chg' : ''}" title="${ch ? '이날만 바뀜 · 원래: ' + esc(subjOf(j+1, idx[i]) || '없음') : ''}">${sj ? esc(sj) : ch ? '<span class="empty">수업 없음</span>' : '<span class="empty">·</span>'}</td>`; }).join('')}</tr>`;
   });
   $('#ttvTable').innerHTML = h;
 }
@@ -2498,6 +2564,7 @@ function renderStage(spinning){
   renderTitle();
   const L = state.layout, grid = $('#seats'), flip = S.flip, sizes = groupSizes(), pins = getPins();
   const checkTask = curTask();
+  OWED = spinning ? {} : owedBy();
   $('#stage').classList.toggle('checking', !!checkTask && !spinning);
   const doneIds = new Set(state.picked && state.picked.date === todayStr() ? state.picked.ids : []);
   $('#clearPicked').style.display = doneIds.size ? '' : 'none';
@@ -2536,11 +2603,18 @@ function renderStage(spinning){
       const isAbs = occ && absentSet().has(occ), isEarly = isAbs && earlySet().has(occ);
       if (isAbs) el.classList.add('absent');
       if (isEarly) el.classList.add('early');
-      const tok = checkTask && occ && checkTask.done.includes(occ);
+      const tok = checkTask && occ && subm(checkTask, occ);
+      const exd = checkTask && occ && isEx(checkTask, occ);
+      if (exd) el.classList.add('ex');
       if (tok) el.classList.add('tok');
-      const doneT = occ && !isAbs ? todayTasks().filter(t => t.done.includes(occ)).sort((a,b) => (checkTask && b.id === checkTask.id) - (checkTask && a.id === checkTask.id)) : [];
-      if (doneT.length) el.classList.add('has-tags');
-      const tags = doneT.length ? `<span class="ttags">${doneT.slice(0, doneT.length > 3 ? 2 : 3).map(t => `<span class="ttag${checkTask && t.id === checkTask.id ? ' cur' : ''}" title="${esc(t.name)} 완료">${esc(t.name)}</span>`).join('')}${doneT.length > 3 ? `<span class="ttag more" title="${esc(doneT.slice(2).map(t => t.name).join(', '))}">외 ${doneT.length - 2}개</span>` : ''}</span>` : '';
+      const lateT = occ && !isAbs ? overdueAll().filter(t => t.late && t.late[occ] === todayStr()) : [];
+      const doneT = occ && !isAbs ? todayTasks().filter(t => t.done.includes(occ)).concat(lateT).sort((a,b) => (checkTask && b.id === checkTask.id) - (checkTask && a.id === checkTask.id)) : [];
+      const owe = occ && !isAbs && !document.body.classList.contains('hide-task') ? (OWED[occ] || []) : [];
+      if (owe.length) el.classList.add('owes');
+      const tagList = (exd ? [{cls: 'exm', name: '제외', title: `${checkTask.name}에서 제외됨 · 오른쪽 클릭(길게 누르기)으로 되돌리기`}] : []).concat(owe.map(o => ({cls: 'owe', name: o.t.name, title: `⏰ ${mdLabel(o.d)} ${o.t.name} 아직 안 냄`})).concat(doneT.map(t => ({cls: (checkTask && t.id === checkTask.id ? 'cur' : '') + (t.late && t.late[occ] === todayStr() && !t.done.includes(occ) ? ' late' : ''), name: t.name, title: t.name + (t.late && t.late[occ] === todayStr() && !t.done.includes(occ) ? ' 늦게 냄' : ' 완료')}))));
+      const nShow = tagList.length > 3 ? 2 : 3;
+      const tags = tagList.length ? `<span class="ttags">${tagList.slice(0, nShow).map(x => `<span class="ttag ${x.cls}" title="${esc(x.title)}">${esc(x.name)}</span>`).join('')}${tagList.length > 3 ? `<span class="ttag more${tagList.slice(2).some(x => x.cls === 'owe') ? ' owe' : ''}" title="${esc(tagList.slice(2).map(x => x.title).join(', '))}">외 ${tagList.length - 2}개</span>` : ''}</span>` : '';
+      if (tagList.length) el.classList.add('has-tags');
       const sitId = spinning ? pid : (state.current && nameOf(state.current[i]) ? state.current[i] : null);
       if (selected === i) el.classList.add('sel');
       el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
@@ -2550,7 +2624,7 @@ function renderStage(spinning){
   const hint = $('#hint');
   if (spinning) hint.textContent = '';
   else if (pinMode) hint.textContent = '지정석으로 정할 책상을 누르세요. 다 정했으면 ‘📌 지정석’ 버튼을 다시 누르세요.';
-  else if (checkTask) hint.textContent = '낸 친구의 책상을 누르면 ✓ 표시가 돼요. 한 번 더 누르면 취소돼요.';
+  else if (checkTask) hint.textContent = '낸 친구의 책상을 누르면 과제 이름이 붙어요. 한 번 더 누르면 취소돼요. 오른쪽 클릭(태블릿은 길게 누르기)하면 이 과제에서 제외돼요.';
   else if (state.current) hint.textContent = '책상을 누르면 그 자리에 앉을 친구를 고르거나 자리를 바꿀 수 있어요.';
   else if (!state.students.some(s => s.name.trim())) hint.textContent = '처음이라면 ⋯ 더보기 → 📖 사용 설명서를 먼저 읽어 보세요.';
   if (typeof renderDemo === 'function') renderDemo();
@@ -2558,21 +2632,52 @@ function renderStage(spinning){
   if (!spinning && typeof renderTasks === 'function' && $('#taskCard')) renderTasks();
 }
 /* ---------- 오늘의 과제 체크 ---------- */
-let checkId = null;
+let checkId = null, OWED = {};
+function overdueAll(){ const t = todayStr(), from = todayStr(new Date(Date.now() - OVERDUE_DAYS * 864e5)); return Object.keys(state.tasks || {}).filter(d => d < t && d >= from).flatMap(d => state.tasks[d] || []); }
 function todayTasks(){ return state.tasks[todayStr()] || []; }
-function curTask(){ return checkId ? todayTasks().find(t => t.id === checkId) || null : null; }
-function seatedIds(){ return state.current ? [...new Set(Object.values(state.current))].filter(nameOf) : []; }
-function taskStats(t){
-  const abs = absentSet(), ids = seatedIds().filter(id => !abs.has(id));
-  const done = ids.filter(id => t.done.includes(id));
-  return {total: ids.length, done: done.length, miss: ids.filter(id => !t.done.includes(id))};
+const OVERDUE_DAYS = 14;
+function curTask(){
+  if (!checkId) return null;
+  if (checkId.startsWith('P:')){ const [, d, id] = checkId.split(':'); const t = (state.tasks[d] || []).find(x => x.id === id); if (t) t._d = d; return t || null; }
+  return todayTasks().find(t => t.id === checkId) || null;
 }
+function seatedIds(){ return state.current ? [...new Set(Object.values(state.current))].filter(nameOf) : []; }
+const subm = (t, id) => t.done.includes(id) || !!(t.late && t.late[id]);
+const isEx = (t, id) => !!(t.ex && t.ex.includes(id));
+state.taskEx = state.taskEx || {};
+function taskStats(t){
+  const abs = absentSet(), all = seatedIds().filter(id => !abs.has(id)), ids = all.filter(id => !isEx(t, id));
+  const done = ids.filter(id => subm(t, id));
+  return {total: ids.length, done: done.length, miss: ids.filter(id => !subm(t, id)), ex: (t.ex || []).filter(nameOf)};
+}
+function toggleExempt(t, id){
+  t.ex = t.ex || [];
+  const on = !t.ex.includes(id), mem = state.taskEx[t.name] = state.taskEx[t.name] || [];
+  if (on){ t.ex.push(id); t.done = t.done.filter(x => x !== id); if (t.late) delete t.late[id]; if (!mem.includes(id)) mem.push(id); }
+  else { t.ex = t.ex.filter(x => x !== id); state.taskEx[t.name] = mem.filter(x => x !== id); }
+  if (!state.taskEx[t.name].length) delete state.taskEx[t.name];
+  save(); renderStage(); renderTasks();
+  toast(on ? `${nameOf(id)} 학생을 ‘${t.name}’에서 제외했어요. 다음에 같은 이름의 과제를 만들 때도 자동으로 빠져요.` : `${nameOf(id)} 학생 제외를 풀었어요.`);
+}
+/* 밀린 과제: 지난 며칠 동안 확인했는데 아직 안 낸 과제 */
+function overdueTasks(){
+  const t = todayStr(), from = todayStr(new Date(Date.now() - OVERDUE_DAYS * 864e5)), out = [];
+  const studs = state.students.filter(s => s.name.trim() && (!s.added || s.added <= t)).map(s => s.id);
+  Object.keys(state.tasks || {}).filter(d => d < t && d >= from).sort().forEach(d => (state.tasks[d] || []).forEach(x => {
+    if (x.closed) return;
+    const miss = studs.filter(id => !subm(x, id) && !isEx(x, id));
+    if (miss.length && miss.length < studs.length) out.push({d, t: x, miss});
+  }));
+  return out;
+}
+function owedBy(){ const m = {}; overdueTasks().forEach(o => o.miss.forEach(id => (m[id] = m[id] || []).push(o))); return m; }
 function renderTasks(){
   const box = $('#taskCard'), T = todayTasks();
   box.innerHTML = `<div class="th"><span>✅ 과제 확인</span><button id="taskAdd">＋ 추가</button></div>`
     + (T.length ? T.map(t => { const st = taskStats(t), pct = st.total ? st.done/st.total*100 : 0;
         return `<button class="ti${t.id === checkId ? ' on' : ''}${st.total && st.done === st.total ? ' full' : ''}" data-t="${t.id}"><span class="tn">${esc(t.name)}</span><span class="tc">${st.done}/${st.total}</span><span class="tb"><i style="width:${pct.toFixed(1)}%"></i></span></button>`; }).join('')
-      : '<div class="tempty">수학 익힘책 검사처럼<br>확인할 과제를 추가해 보세요.</div>');
+      : '<div class="tempty">수학 익힘책 검사처럼<br>확인할 과제를 추가해 보세요.</div>')
+    + (() => { const O = overdueTasks(); return O.length ? `<div class="tod-h">⏰ 밀린 과제 <span class="lg"><i class="o"></i>안 냄 <i class="l"></i>늦게 냄</span></div>` + O.map(o => { const key = `P:${o.d}:${o.t.id}`; return `<button class="ti tod${key === checkId ? ' on' : ''}" data-t="${key}"><span class="tn">${esc(o.t.name)} <small>${+o.d.slice(5,7)}/${+o.d.slice(8)}</small></span><span class="tc">${o.miss.length}명</span></button>`; }).join('') : ''; })();
   $('#taskAdd').onclick = openTaskAdd;
   box.querySelectorAll('.ti').forEach(b => b.onclick = () => {
     if (animating) return;
@@ -2585,11 +2690,18 @@ function renderTasks(){
   if (!t){ bar.hidden = true; return; }
   const st = taskStats(t);
   bar.hidden = false;
-  bar.innerHTML = `<b>📋 ${esc(t.name)}</b><span>${st.done}/${st.total}명</span>`
-    + `<span class="miss">${st.miss.length ? '아직: ' + st.miss.map(id => `<span>${esc(nameOf(id))}</span>`).join('') : '🎉 모두 확인했어요!'}</span>`
-    + `<button class="tsub" id="taskAll">모두 ✓</button><button class="tsub" id="taskDel">과제 지우기</button><button class="tdone" id="taskEnd">확인 끝</button>`;
+  const past = !!t._d && checkId.startsWith('P:');
+  bar.classList.toggle('past', past);
+  bar.innerHTML = `<b>${past ? `⏰ ${+t._d.slice(5,7)}/${+t._d.slice(8)} ` : '📋 '}${esc(t.name)}</b><span>${st.done}/${st.total}명</span>`
+    + `<span class="miss">${st.miss.length ? (past ? '아직 안 낸 친구: ' : '아직: ') + st.miss.map(id => `<span class="exb" data-ex="${id}" title="눌러서 이 과제에서 제외">${esc(nameOf(id))}${past && ((state.absLog[t._d] || {})[id]) ? ' <small>(그날 결석)</small>' : ''}</span>`).join('') : '🎉 모두 확인했어요!'}${st.ex.length ? `<span class="exl">제외: ${st.ex.map(id => `<span class="exb ex" data-ex="${id}" title="눌러서 제외 풀기">${esc(nameOf(id))}</span>`).join('')}</span>` : ''}<span class="exh">이름을 누르거나 책상을 오른쪽 클릭(길게 누르기)하면 이 과제에서 제외돼요</span></span>`
+    + `<button class="tsub" id="taskAll">모두 ✓</button>${past ? '<button class="tsub" id="taskClose" title="더 이상 밀린 과제로 챙기지 않아요">그만 챙기기</button>' : '<button class="tsub" id="taskDel">과제 지우기</button>'}<button class="tdone" id="taskEnd">확인 끝</button>`;
   $('#taskEnd').onclick = () => { checkId = null; renderStage(); renderTasks(); };
-  $('#taskAll').onclick = () => { const abs = absentSet(); t.done = [...new Set(t.done.concat(seatedIds().filter(id => !abs.has(id))))]; save(); renderStage(); renderTasks(); };
+  bar.querySelectorAll('[data-ex]').forEach(x => x.onclick = () => toggleExempt(t, x.dataset.ex));
+  $('#taskAll').onclick = () => { const abs = absentSet(), ids = seatedIds().filter(id => !abs.has(id));
+    if (past){ t.late = t.late || {}; ids.forEach(id => { if (!subm(t, id)) t.late[id] = todayStr(); }); }
+    else t.done = [...new Set(t.done.concat(ids))];
+    save(); renderStage(); renderTasks(); };
+  if (past){ $('#taskClose').onclick = async () => { if (!await askConfirm(`${+t._d.slice(5,7)}월 ${+t._d.slice(8)}일 ‘${t.name}’을 더 이상 밀린 과제로 보여 주지 않을까요? (기록은 남아요)`)) return; t.closed = true; checkId = null; save(); renderStage(); renderTasks(); }; return; }
   $('#taskDel').onclick = async () => {
     if (!await askConfirm(`오늘의 ‘${t.name}’ 확인을 지울까요?`)) return;
     state.tasks[todayStr()] = todayTasks().filter(x => x !== t);
@@ -2599,8 +2711,16 @@ function renderTasks(){
 }
 function toggleTaskDone(id){
   const t = curTask(); if (!t) return;
-  const i = t.done.indexOf(id);
-  if (i >= 0) t.done.splice(i, 1); else t.done.push(id);
+  let i;
+  if (checkId.startsWith('P:')){
+    if (t.done.includes(id)){ toast(`${nameOf(id)} 학생은 그날 이미 냈어요.`); return; }
+    t.late = t.late || {}; i = t.late[id] ? 0 : -1;
+    if (t.late[id]) delete t.late[id]; else t.late[id] = todayStr();
+    (t.lateAt = t.lateAt || {})[id] = stampNow();
+  } else {
+    i = t.done.indexOf(id);
+    if (i >= 0) t.done.splice(i, 1); else t.done.push(id);
+  }
   save(); renderStage(); renderTasks();
   const st = taskStats(t);
   if (i < 0 && st.total && st.done === st.total){ fanfare(); toast(`🎉 ${t.name} 모두 확인했어요!`); }
@@ -2617,7 +2737,7 @@ function openTaskAdd(){
 }
 function addTask(name){
   name = (name || '').trim(); if (!name){ toast('과제 이름을 적어 주세요.'); return; }
-  const d = todayStr(), t = {id: uid(), name, done: []};
+  const d = todayStr(), t = {id: uid(), name, done: [], ex: (state.taskEx[name] || []).filter(nameOf)};
   (state.tasks[d] = state.tasks[d] || []).push(t);
   for (const k of Object.keys(state.tasks)) if (k < todayStr(new Date(Date.now() - 1000*60*60*24*400))) delete state.tasks[k];
   save(); $('#dlgTask').close();
@@ -2642,9 +2762,14 @@ $('#seats').onclick = e => {
     return;
   }
   if (curTask()){
+    if (longPressed){ longPressed = false; return; }
     const el = e.target.closest('.seat'); if (!el) return;
     const id = state.current && state.current[+el.dataset.i];
-    if (id && nameOf(id) && !absentSet().has(id)) toggleTaskDone(id);
+    if (id && nameOf(id) && !absentSet().has(id)){
+      const t = curTask();
+      if (t && isEx(t, id)){ toast(`${nameOf(id)} 학생은 이 과제에서 제외돼 있어요. 오른쪽 클릭(길게 누르기)이나 위 띠에서 되돌릴 수 있어요.`); return; }
+      toggleTaskDone(id);
+    }
     return;
   }
   const openPop = $('#seatPop'), tgt = e.target.closest('.seat');
@@ -2870,7 +2995,19 @@ function changePraise(sit, delta){
   }
 }
 let pressTimer = null, longPressed = false;
+function exemptAtSeat(el){
+  const t = curTask(); if (!t || !el) return false;
+  const id = state.current && state.current[+el.dataset.i];
+  if (!id || !nameOf(id) || absentSet().has(id)) return true;
+  toggleExempt(t, id); return true;
+}
 $('#seats').addEventListener('pointerdown', e => {
+  if (curTask() && !animating && e.button === 0){
+    const el = e.target.closest('.seat'); if (!el) return;
+    longPressed = false; clearTimeout(pressTimer);
+    pressTimer = setTimeout(() => { longPressed = true; exemptAtSeat(el); }, 650);
+    return;
+  }
   const sit = e.target.closest('.sitter');
   if (!sit || animating || pinMode || e.button !== 0) return;
   longPressed = false; clearTimeout(pressTimer);
@@ -2878,6 +3015,7 @@ $('#seats').addEventListener('pointerdown', e => {
 });
 ['pointerup','pointerleave','pointercancel'].forEach(t => $('#seats').addEventListener(t, () => clearTimeout(pressTimer)));
 $('#seats').addEventListener('contextmenu', e => {
+  if (curTask()){ const el = e.target.closest('.seat'); if (!el) return; e.preventDefault(); if (!longPressed && !animating) exemptAtSeat(el); longPressed = false; return; }
   const sit = e.target.closest('.sitter'); if (!sit) return;
   e.preventDefault();
   if (!longPressed && !animating && !pinMode) changePraise(sit, -1);
@@ -4351,7 +4489,7 @@ function lunchNow(){
   const d = new Date(), t = todayStr(d), dw = d.getDay();
   if (dw === 0 || dw === 6 || !state.periods || !state.periods.length || (typeof isSchoolDay === 'function' && !isSchoolDay(t))) return null;
   const m = d.getHours()*60 + d.getMinutes();
-  const L = dayPeriods(dw).find(x => x.p.kind === 'lunch' && m >= x.s && m < x.e);
+  const L = dayPeriods(dw, t).find(x => x.p.kind === 'lunch' && m >= x.s && m < x.e);
   return L ? t + ' ' + L.p.start : null;
 }
 function checkAutoLunch(){
@@ -4934,9 +5072,9 @@ function dvTimetable(dstr){
   const dw = parseDay(dstr).getDay();
   if (dw === 0 || dw === 6) return dvEmpty('주말이에요.');
   if (!isSchoolDay(dstr)) return dvEmpty('쉬는 날이에요.');
-  const P = dayPeriods(dw).filter(x => x.p.kind === 'class');
-  const items = P.map(x => subjOf(dw, x.k) ? `<span><i>${x.k+1}</i>${esc(subjOf(dw, x.k))}</span>` : '').filter(Boolean);
-  return items.length ? `<div class="dv-tt">${items.join('')}</div>` : dvEmpty('시간표에 적힌 과목이 없어요.');
+  const P = dayPeriods(dw, dstr).filter(x => x.p.kind === 'class'), o = state.ttOver[dstr] || {};
+  const items = P.map(x => { const sj = subjOn(dstr, x.k), ch = Object.prototype.hasOwnProperty.call(o, x.k); return sj || ch ? `<span class="${ch ? 'chg' : ''}" title="${ch ? '이날만 바뀐 시간표 (원래: ' + esc(subjOf(dw, x.k) || '없음') + ')' : ''}"><i>${x.k+1}</i>${sj ? esc(sj) : '수업 없음'}</span>` : ''; }).filter(Boolean);
+  return (items.length ? `<div class="dv-tt">${items.join('')}</div>` : dvEmpty('시간표에 적힌 과목이 없어요.')) + `<button class="btn dv-ttbtn" data-ttday="${dstr}">✏️ 이날만 바꾸기</button>`;
 }
 function dvPraise(dstr){
   const L = (state.praiseLog || {})[dstr] || {}, T = (state.praiseTimes || {})[dstr] || {};
@@ -4950,8 +5088,8 @@ function dvTasks(dstr){
   if (!T.length) return dvEmpty('이날 확인한 과제가 없어요.');
   const abs = new Set(Object.keys((state.absLog || {})[dstr] || {}));
   const studs = state.students.filter(s => s.name.trim() && !abs.has(s.id));
-  return T.map(t => { const done = studs.filter(s => t.done.includes(s.id)), miss = studs.filter(s => !t.done.includes(s.id));
-    return `<div class="dv-task"><span class="tn">✅ ${esc(t.name)}</span> <span class="em">${done.length}/${studs.length}명</span>${miss.length && miss.length < studs.length ? `<div class="who">안 낸 친구: ${miss.map(s => esc(s.name.trim())).join(', ')}</div>` : miss.length ? '' : '<div class="who">🎉 모두 냈어요</div>'}</div>`; }).join('');
+  return T.map(t => { const ex = studs.filter(s => isEx(t, s.id)), st2 = studs.filter(s => !isEx(t, s.id)), done = st2.filter(s => t.done.includes(s.id)), late = st2.filter(s => !t.done.includes(s.id) && t.late && t.late[s.id]), miss = st2.filter(s => !subm(t, s.id));
+    return `<div class="dv-task"><span class="tn">✅ ${esc(t.name)}</span> <span class="em">${done.length}/${st2.length}명</span>${ex.length ? `<div class="who" style="color:var(--muted)">제외: ${ex.map(s => esc(s.name.trim())).join(', ')}</div>` : ''}${late.length ? `<div class="who" style="color:#2a5a93">늦게 낸 친구: ${late.map(s => `${esc(s.name.trim())}(${+t.late[s.id].slice(5,7)}/${+t.late[s.id].slice(8)})`).join(', ')}</div>` : ''}${miss.length && miss.length < st2.length ? `<div class="who">아직 안 낸 친구: ${miss.map(s => esc(s.name.trim())).join(', ')}</div>` : miss.length ? '' : '<div class="who">🎉 모두 냈어요</div>'}</div>`; }).join('');
 }
 function dvNotice(dstr){
   const n = (state.notices || {})[dstr];
@@ -4990,6 +5128,37 @@ $('#dvToday').onclick = () => { dvDay = todayStr(); renderDay(); };
 $('#dvPick').onchange = e => { if (e.target.value){ dvDay = e.target.value; renderDay(); } };
 $('#dlgDay').addEventListener('keydown', e => { if (e.target.closest('input')) return; if (e.key === 'ArrowLeft'){ e.preventDefault(); $('#dvPrev').click(); } if (e.key === 'ArrowRight'){ e.preventDefault(); $('#dvNext').click(); } });
 $('#dvGrid').addEventListener('click', e => { const f = e.target.closest('[data-food]'); if (f) showFood(f.dataset.food); });
+
+/* ---------- 하루만 시간표 바꾸기 ---------- */
+let tdDay = todayStr();
+function renderTTDay(){
+  const d = tdDay, dw = parseDay(d).getDay(), idx = classIndexMap(), o = state.ttOver[d] || {};
+  $('#tdDate').value = d;
+  $('#tdInfo').textContent = `${wdOf(d)}요일${d === todayStr() ? ' · 오늘' : ''}${ttChanged(d) ? ' · ✏️ 바뀐 시간표가 있어요' : ''}${dw === 0 || dw === 6 ? ' · 주말' : ''}`;
+  if (!state.periods.length){ $('#tdRows').innerHTML = '<p class="muted">먼저 기본 시간표에서 교시를 만들어 주세요.</p>'; return; }
+  $('#tdRows').innerHTML = state.periods.map((p,i) => {
+    if (p.kind === 'lunch') return `<div class="td-row lunch"><b>점심<small>${p.start}~${p.end}</small></b><span>🍚 점심시간</span></div>`;
+    const k = idx[i], base = (dw >= 1 && dw <= 5) ? subjOf(dw, k) : '', ch = Object.prototype.hasOwnProperty.call(o, k), v = ch ? o[k] : base;
+    return `<div class="td-row${ch ? ' chg' : ''}"><b>${k+1}교시<small>${p.start}~${p.end}</small></b><input list="subjList" data-k="${k}" data-base="${esc(base)}" value="${esc(v || '')}" placeholder="수업 없음"><span class="orig">${ch ? `원래: ${esc(base || '없음')}` : ''}</span></div>`;
+  }).join('');
+  $('#tdRows').querySelectorAll('input').forEach(inp => inp.oninput = () => { const ch = inp.value.trim() !== inp.dataset.base; inp.closest('.td-row').classList.toggle('chg', ch); inp.nextElementSibling.textContent = ch ? `원래: ${inp.dataset.base || '없음'}` : ''; });
+}
+function saveTTDay(silent){
+  const o = {};
+  $('#tdRows').querySelectorAll('input[data-k]').forEach(inp => { const v = inp.value.trim(); if (v !== inp.dataset.base) o[inp.dataset.k] = v; });
+  if (Object.keys(o).length) state.ttOver[tdDay] = o; else delete state.ttOver[tdDay];
+  const old = todayStr(new Date(Date.now() - 400 * 864e5)); for (const k of Object.keys(state.ttOver)) if (k < old) delete state.ttOver[k];
+  save(); lastNow = ''; renderNow(); if ($('#dlgTTView').open) renderTTView(); if ($('#dlgDay').open) renderDay();
+  if (!silent) toast(Object.keys(o).length ? `${mdLabel(tdDay)} 시간표를 바꿨어요.` : `${mdLabel(tdDay)}은 원래 시간표대로예요.`);
+}
+function openTTDay(d){ tdDay = d || todayStr(); renderTTDay(); $('#dlgTTDay').showModal(); }
+$('#ttvDay').onclick = () => openTTDay(todayStr());
+$('#tdSave').onclick = () => { saveTTDay(); $('#dlgTTDay').close(); };
+$('#tdReset').onclick = () => { delete state.ttOver[tdDay]; save(); lastNow = ''; renderNow(); renderTTDay(); if ($('#dlgTTView').open) renderTTView(); if ($('#dlgDay').open) renderDay(); toast('원래 시간표로 되돌렸어요.'); };
+$('#tdPrev').onclick = () => { saveTTDay(true); tdDay = addDays(tdDay, -1); renderTTDay(); };
+$('#tdNext').onclick = () => { saveTTDay(true); tdDay = addDays(tdDay, 1); renderTTDay(); };
+$('#tdDate').onchange = e => { if (!e.target.value) return; saveTTDay(true); tdDay = e.target.value; renderTTDay(); };
+$('#dvGrid').addEventListener('click', e => { const b = e.target.closest('[data-ttday]'); if (b) openTTDay(b.dataset.ttday); });
 S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
