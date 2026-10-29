@@ -305,7 +305,37 @@ body.fs .stage .meal-strip{font-size:2.6vh}
 .meal-box{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:12px}
 .meal-box h4{margin:0 0 8px;font-family:"Jua",sans-serif;font-weight:400;font-size:18px;color:#b06a12}
 .meal-items{display:flex;flex-wrap:wrap;gap:8px 10px}
-.meal-items span{font-family:"Jua",sans-serif;font-size:clamp(22px,2.6vw,30px);background:#fff6e6;border-radius:12px;padding:4px 14px}
+.meal-items span,.meal-items .food{font-family:"Jua",sans-serif;font-size:clamp(22px,2.6vw,30px);background:#fff6e6;border-radius:12px;padding:4px 14px;border:1px solid transparent;color:inherit}
+.meal-items .food{cursor:pointer;transition:background .15s,border-color .15s}
+.meal-items .food:hover{background:#ffe8c2;border-color:#f0b45a}
+.meal-strip .food{cursor:pointer;border-bottom:1px dashed rgba(176,106,18,.45)}
+.meal-strip .food:hover{color:#b06a12}
+.meal-strip i{font-style:normal;color:#c9a46a}
+dialog.food-dlg{border:0;border-radius:24px;padding:0;width:min(720px,94vw);max-height:92vh;background:var(--paper);box-shadow:0 30px 70px rgba(0,0,0,.35)}
+dialog.food-dlg::backdrop{background:rgba(30,25,15,.55)}
+.food-in{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 22px 18px;max-height:92vh;overflow:auto}
+.food-in h3{margin:0;font-family:"Jua",sans-serif;font-weight:400;font-size:clamp(28px,4vw,44px);text-align:center}
+.food-pic{width:100%;min-height:200px;max-height:58vh;display:grid;place-items:center;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.food-pic img{max-width:100%;max-height:58vh;object-fit:contain;display:block}
+.food-pic .ld{color:var(--muted);padding:40px;text-align:center;font-size:16px;line-height:1.6}
+.food-txt{font-size:clamp(15px,1.6vw,19px);line-height:1.55;text-align:center;color:#3a3226;max-width:620px}
+.food-src{font-size:12px;color:var(--muted)}
+.food-src a{color:inherit}
+.food-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.hb-top{gap:10px;margin-bottom:12px}
+.hb-who{gap:8px;margin-bottom:8px}
+.hb-who select{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:17px;font-family:"Jua",sans-serif;min-width:140px}
+.hb-src{margin:4px 0 10px;font-size:13px}
+.hb-src summary{cursor:pointer;color:var(--blue)}
+.hb-src .sl{margin:4px 0 0 4px;color:#555;line-height:1.6}
+.hb-src .sl b{display:inline-block;min-width:34px;color:#2e7d4f}
+.hb-src .sl.w b{color:var(--red)}
+#hbText{width:100%;font-size:17px;line-height:1.7;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;resize:vertical;font-family:inherit}
+.hb-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:start;padding:8px 0;border-bottom:1px dashed var(--line)}
+.hb-row .nm2{font-family:"Jua",sans-serif;font-size:17px;padding-top:2px}
+.hb-row .tx{font-size:14.5px;line-height:1.6;white-space:pre-wrap}
+.hb-row .tx small{color:var(--muted)}
+.hb-row button{font-size:13px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;white-space:nowrap}
 .meal-cal{margin-top:10px;color:var(--muted);font-size:14px}
 .school-res{display:flex;flex-direction:column;gap:6px;margin-top:10px}
 .school-res button{text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
@@ -378,6 +408,7 @@ body.fs .stage .seat.has-tags .nm{font-size:clamp(15px,min(2vw,3.8vh),40px)}
 .ttag{max-width:100%;font-size:clamp(10px,.8vw,14px);line-height:1.2;padding:1px 6px;border-radius:6px;background:#e3f4e7;color:#2e7d4f;border:1px solid #9fd3ad;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
 .ttag{border-left:3px solid #2e7d4f}
 .ttag.more::before{content:""}
+.gmode{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ttag.cur{background:#2e7d4f;color:#fff;border-color:#2e7d4f;animation:pop .3s ease-out}
 body.fs .stage .ttag{font-size:clamp(11px,1.6vh,18px)}
 body.hide-task .ttags{display:none}
@@ -727,6 +758,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
+          <button class="mi" id="openHb">📝 행동특성 문장 만들기 <span class="muted small">(교사용)</span></button>
           <button class="mi" id="openForm">📄 서류 양식 (이름 자동 넣기)</button>
           <button class="mi" id="openShortcut">📲 앱으로 설치하기</button>
           <div class="msep"></div>
@@ -826,7 +858,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="row" style="gap:18px">
         <span>‘앞자리’는 앞에서 <input type="number" id="frontRows" min="1" max="6"> 줄까지</span>
         <label class="chk"><input type="checkbox" id="avoidRepeat"> 지난번 짝·모둠과 겹치지 않게</label>
-        <label class="chk"><input type="checkbox" id="mixGender"> 짝·모둠에 남녀 섞기 (성별 입력한 학생만)</label>
+        <span class="gmode">짝·모둠 성별 <span class="seg" id="genderMode"><button data-g="mix">남녀 섞기</button><button data-g="any">상관없음</button><button data-g="same">같은 성별끼리</button></span> <span class="muted small">(성별 입력한 학생만)</span></span>
       </div>
     </div>
   </div>
@@ -862,9 +894,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <h4>🔒 이 창은 어떻게 여나요?</h4>
         <p>메인 화면 <b>오른쪽 위 모서리</b>를 누르면 열려요. 아이콘이 없어서 학생들은 이 창이 있는 줄 몰라요. 다른 선생님께 앱을 공유할 때 이 위치를 꼭 알려 주세요.</p>
         <h4>🚫 떨어져야 하는 친구</h4>
-        <p>학생 이름을 눌러 2명 이상 고르고 ‘서로 떨어뜨리기’를 누르면, 그 친구들은 자리 바꾸기와 무작위 모둠에서 <b>절대 같은 짝·모둠이 되지 않아요.</b> 자리는 가까울 수 있어서 학생들이 눈치채기 어려워요. (모둠 없이 혼자 앉는 배치에서는 바로 옆자리를 피해요.)</p>
+        <p>학생 이름을 눌러 2명 이상 고르고 ‘서로 떨어뜨리기’를 누르면, 그 친구들은 자리 바꾸기와 무작위 모둠에서 <b>절대 같은 짝·모둠이 되지 않아요.</b> 자리는 가까울 수 있어서 학생들이 눈치채기 어려워요.<br>‘같은 모둠’은 이렇게 정해요: ① <b>👥 모둠 만들기 → 🪑 자리 보고 정하기</b>로 모둠을 정해 두었으면 그 모둠(앞뒤·대각선 3·4·6명 등 어떤 모양이든)을 기준으로 해요. ② 그게 없으면 <b>교실 배치 → 짝·모둠 묶기</b>로 묶은 책상을 기준으로 해요. ③ 묶음이 하나도 없는 배치(혼자 앉기)에서는 바로 옆자리를 피해요. 어느 경우든 앞뒤·옆으로 붙은 자리도 되도록 피해요.</p>
         <h4>📊 성별 · 학습 수준</h4>
-        <p>성별은 ‘남녀 섞기’를 켰을 때만 쓰여요(교실 배치 → 배치 규칙). 학습 수준(상·중·하)을 넣으면 짝·모둠에 수준이 골고루 섞이고, ‘하’ 수준끼리는 특히 떨어뜨려요. 비워 두어도 괜찮아요.</p>
+        <p>성별은 교실 배치 → 배치 규칙의 ‘짝·모둠 성별’을 <b>남녀 섞기</b>나 <b>같은 성별끼리</b>로 골랐을 때만 쓰여요. ‘상관없음’이면 성별을 보지 않아요. 학습 수준(상·중·하)을 넣으면 짝·모둠에 수준이 골고루 섞이고, ‘하’ 수준끼리는 특히 떨어뜨려요. 비워 두어도 괜찮아요.</p>
         <h4>🔒 숨은 지정석</h4>
         <p>책상을 눌러 학생을 정하면 화면에 아무 표시 없이, 다음 자리 바꾸기 때 다른 친구들과 똑같이 걸어 들어와 그 자리에 앉아요. 화면에 보이는 📌 지정석과는 따로 작동해요.</p>
         <h4>📅 결석 · 조퇴 기록</h4>
@@ -1047,6 +1079,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
 <dialog class="sheet mid" id="dlgMeal">
   <div class="sheet-head">
     <h2>🍚 급식 메뉴</h2>
+    <span class="muted small">메뉴를 누르면 사진이 나와요</span>
     <span class="muted small" id="mealSchool"></span>
     <button class="btn x" data-close>닫기</button>
   </div>
@@ -1142,7 +1175,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>날짜·시계</b>(가운데 위): 오늘 날짜와 지금 시각이 나와요.</li>
           <li><b>🌤️ 날씨</b>(오른쪽 위): 지금 기온과 날씨, 오늘 최고·최저 기온이 15분마다 새로 나와요. 기본은 포항이고, 날씨 칸을 누르면 지역을 바꿀 수 있어요.</li>
           <li><b>✅ 과제 확인</b>(오른쪽 위): 수학 익힘책·글쓰기 같은 과제를 ＋ 추가하고, 과제를 누르면 확인 모드가 돼요. 낸 친구 책상을 누르면 이름 오른쪽에 <b>과제 이름</b>(예: 글쓰기)이 붙고, 아직 안 낸 친구 이름이 위에 모여 보여요. 확인을 끝내도 그날 낸 과제 이름은 책상에 계속 보여요(과제가 많으면 ‘외 ○개’로 줄여 보여요). 결석한 친구는 빠지고, 다음 날에는 새로 시작해요.</li>
-          <li><b>🍚 오늘 급식</b>: 🍚 급식 창에서 학교를 한 번 찾아 두면 날짜별 급식 메뉴가 나와요. ‘메인 화면에 오늘 급식 보이기’를 켜면 시계 아래에 오늘 급식이 한 줄로 보여요.</li>
+          <li><b>🍚 오늘 급식</b>: 🍚 급식 창에서 학교를 한 번 찾아 두면 날짜별 급식 메뉴가 나와요. <b>메뉴 이름을 누르면</b> 위키백과에서 그 음식 사진과 짧은 설명을 찾아 크게 보여 줘요(못 찾으면 구글·네이버 이미지 검색 버튼으로 볼 수 있어요). ‘메인 화면에 오늘 급식 보이기’를 켜면 시계 아래에 오늘 급식이 한 줄로 보여요.</li>
           <li><b>결석 · 조퇴 표시</b>: 책상 왼쪽 아래 작은 <b>✕</b>를 한 번 누르면 <b>결석</b>, 한 번 더 누르면 <b>조퇴</b>, 또 누르면 취소예요. 표시된 친구는 발표자 뽑기·무작위 모둠·과제 확인에서 빠지고, 누른 날짜·시간·과목과 함께 기록에 남아요. 다음 날 자동으로 풀려요.</li>
           <li><b>서류 인쇄</b>: 책상 왼쪽 위 작은 <b>🖨</b>를 누르면 서류 양식 목록이 떠요. (아래 ‘📄 서류 양식’ 참고)</li>
           <li><b>보이기·숨기기</b>: <b>⋯ 더보기 → 화면 위에 보이기</b>에서 시간표·날짜·시계·날씨·과제 확인·오늘 할 일·오늘 급식을 각각 켜고 끌 수 있어요.</li>
@@ -1223,7 +1256,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>빠른 시작</b>: 2인 짝, 4인 모둠, 1인 중에서 고르면 학생 수에 맞게 만들어져요.</li>
           <li><b>책상 놓기·빼기</b>: 빈칸을 누르면 책상이 생기고, 책상을 누르면 없어져요.</li>
           <li><b>짝·모둠 묶기</b>: 같이 앉을 책상을 차례로 눌러 묶어요. 묶인 책상은 이름표 색이 같아요. ‘묶음 풀기’, ‘옆자리끼리 짝 자동 묶기’도 있어요.</li>
-          <li><b>배치 규칙</b>: 앞자리 범위, 지난번 짝·모둠 피하기, 남녀 섞기를 정할 수 있어요.</li>
+          <li><b>배치 규칙</b>: 앞자리 범위, 지난번 짝·모둠 피하기, 짝·모둠 성별(남녀 섞기 · 상관없음 · 같은 성별끼리)을 정할 수 있어요.</li>
         </ul>
       </div>
       <div class="card">
@@ -1231,6 +1264,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <ul>
           <li><b>🎭 화면 가리기</b>: 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
           <li><b>🧰 유용한 기능 · 📱 QR코드 만들기</b>: ⏲️ 타이머(30초~15분 바로 고르기, ±1분·±10초), ⏱️ 스톱워치(구간 기록), 🧮 계산기, 📱 QR코드가 있어요. QR코드는 주소(설문지·영상 링크 등)를 넣으면 바로 만들어지고, <b>📺 크게 띄우기</b>로 화면 가득 보여 주거나 <b>💾 그림으로 저장</b>할 수 있어요. 최근에 만든 QR은 아래에 남아서 다시 누르면 바로 불러와요. 🔍 크게를 누르면 숫자가 아주 커져요. 창을 닫아도 타이머·스톱워치는 계속 돌고 오른쪽 아래에 작게 보여요(누르면 다시 열려요). 타이머가 끝나면 소리 설정과 상관없이 알람이 울리고 화면에 ‘시간 끝!’이 떠요.</li>
+          <li><b>📝 행동특성 문장 만들기</b>(교사용): 칭찬·경고 횟수와 한 줄 메모를 읽고 어떤 면(배려·발표·학습·책임·예절·협동 등)이 두드러지는지 파악해서, 통지표 행동특성 및 종합의견에 쓸 수 있는 순화된 문장 세 개(~함 / ~할 수 있음)를 새로 만들어요. 메모를 그대로 옮기지 않아요. 경고가 있으면 마지막 문장을 ‘앞으로 이렇게 하면 성장할 수 있음’처럼 부드럽게 써요. 🔄로 다른 문장을 고르고, 직접 고친 문장은 자동 저장되며, 📋로 바로 복사해요. ‘반 전체’에서는 모든 학생 문장을 한 번에 보고 엑셀용으로 한꺼번에 복사할 수 있어요. 학생 기록이 보이니 TV 화면에 띄운 채로 열지 마세요.</li>
           <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요. 전체 학생 인쇄도 돼요.</li>
           <li><b>📲 앱으로 설치하기</b>: 바탕화면·작업 표시줄에 😊 아이콘이 생기고 프로그램처럼 따로 창으로 열려요. 새 버전은 자동으로 바뀌고, 인터넷이 잠깐 끊겨도 기본 기능은 쓸 수 있어요.</li>
           <li><b>💞 MBTI 궁합 자리</b>: 재미로 해 보는 기능이에요. 친구들 MBTI를 고르고 버튼을 누르면 궁합이 좋은 친구끼리 같은 짝·모둠이 되도록 앉아요. 떨어져야 하는 친구와 지정석은 그대로 지켜요. 지난 자리로 돌아가려면 🕘 지난 배치에서 되돌리면 돼요.</li>
@@ -1436,6 +1470,59 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 <div class="tool-pill" id="toolPill" hidden></div>
+<dialog class="sheet wide" id="dlgHb">
+  <div class="sheet-head">
+    <h2>📝 행동특성 및 종합의견</h2>
+    <div class="seg" id="hbTab"><button data-t="one" class="on">한 명씩</button><button data-t="all">반 전체</button></div>
+    <span class="muted small">🔒 교사용 · 학생 기록이 보여요</span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="row hb-top">
+      <span>참고할 기간</span>
+      <div class="seg" id="hbPeriod"><button data-p="sem">이번 학기</button><button data-p="s1">1학기</button><button data-p="s2">2학기</button><button data-p="all">전체</button></div>
+      <span>모양</span>
+      <div class="seg" id="hbFmt"><button data-f="line">한 줄씩</button><button data-f="para">한 문단</button></div>
+    </div>
+    <div id="hbOne">
+      <div class="row hb-who">
+        <button class="btn" id="hbPrev">◀</button>
+        <select id="hbStu"></select>
+        <button class="btn" id="hbNext">▶</button>
+        <span class="muted small" id="hbSum"></span>
+      </div>
+      <details class="hb-src"><summary>참고한 기록 보기 (문장에는 그대로 옮기지 않아요)</summary><div id="hbSrc"></div></details>
+      <textarea id="hbText" rows="5"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary" id="hbCopy">📋 복사하기</button>
+        <button class="btn" id="hbRe">🔄 다른 문장으로</button>
+        <span class="muted small" id="hbCount"></span>
+        <span style="flex:1"></span>
+        <span class="muted small" id="hbSaved"></span>
+      </div>
+    </div>
+    <div id="hbAll" hidden>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn primary" id="hbCopyAll">📋 반 전체 복사 (이름 + 문장)</button>
+        <button class="btn" id="hbReAll">🔄 모두 새로 만들기</button>
+        <span class="muted small">엑셀에 붙여넣으면 이름과 문장이 칸별로 들어가요.</span>
+      </div>
+      <div id="hbList"></div>
+    </div>
+    <p class="muted small" style="margin-bottom:0">칭찬·경고 횟수와 한 줄 메모에서 어떤 면이 두드러지는지만 읽어서, 통지표에 쓸 수 있는 순화된 일반 문장(~함 / ~할 수 있음)으로 새로 만들어요. 기록 내용은 인터넷으로 보내지지 않아요. 고친 문장은 자동으로 저장돼요.</p>
+  </div>
+</dialog>
+<dialog class="food-dlg" id="dlgFood"><div class="food-in">
+  <h3 id="fdName"></h3>
+  <div class="food-pic" id="fdPic"></div>
+  <div class="food-txt" id="fdTxt"></div>
+  <div class="food-src" id="fdSrc"></div>
+  <div class="food-btns">
+    <button class="btn" id="fdGoogle">🔎 구글 이미지에서 더 보기</button>
+    <button class="btn" id="fdNaver">🔎 네이버 이미지에서 더 보기</button>
+    <button class="btn primary" id="fdClose">닫기</button>
+  </div>
+</div></dialog>
 <dialog class="curtain" id="curtain" aria-label="화면 가림">
   <div class="cl"></div><div class="cr"></div><div class="valance"></div>
   <div class="cmsg"><div class="cclock" id="curClock"></div><div class="chint">H 키를 누르거나 화면을 두 번 누르면 열려요</div></div>
@@ -1553,7 +1640,8 @@ function geometry(){
   const L = state.layout, desks = [];
   L.cells.forEach((c,i) => { if (c.desk) desks.push(i); });
   const rows = desks.map(i => Math.floor(i / L.cols)), cols = desks.map(i => i % L.cols);
-  const grps = desks.map(i => L.cells[i].group);
+  const mgOn = Object.keys(state.manualG || {}).length > 0;
+  const grps = desks.map(i => mgOn ? ((state.manualG || {})[i] ? 'm' + state.manualG[i] : null) : L.cells[i].group);
   const used = [...new Set(rows)].sort((a,b) => a-b);
   const rank = rows.map(r => used.indexOf(r));
   const D = desks.length, rel = [];
@@ -1626,7 +1714,7 @@ function solve(opts){
   const groups = [...gm.values()].filter(a => a.length > 1);
   const noGroups = !groups.length;
   const W_SAME = 5000, W_ADJ = noGroups ? 2000 : 15, W_DIAG = noGroups ? 6 : 3;
-  const mix = S.mixGender;
+  const gmode = genderMode(), mix = gmode === 'mix', same = gmode === 'same';
   const pos = new Int16Array(N), occ = new Int16Array(D);
   const mb = [];
   if (opts.mbti){
@@ -1650,11 +1738,11 @@ function solve(opts){
         c += 5*(a*(a-1)/2 + m*(m-1)/2 + l*(l-1)/2) + 5*(l*(l-1)/2);
       }
     }
-    if (mix){
+    if (mix || same){
       for (const g of groups){
         let m=0, f=0;
         for (const d of g){ const s = occ[d]; if (s < 0) continue; if (gender[s]==='남') m++; else if (gender[s]==='여') f++; }
-        c += 3*(m*(m-1)/2 + f*(f-1)/2);
+        c += mix ? 3*(m*(m-1)/2 + f*(f-1)/2) : 3*m*f;
       }
     }
     return c;
@@ -1765,7 +1853,7 @@ $('#spAdd').onclick = () => {
 };
 $('#spCancel').onclick = () => { spSelected.clear(); renderSepPairs(); };
 
-function noGroupLayout(){ return !Object.values(groupSizes()).some(n => n > 1); }
+function noGroupLayout(){ const mg = {}; Object.values(state.manualG || {}).forEach(g => mg[g] = (mg[g] || 0) + 1); if (Object.values(mg).some(n => n > 1)) return false; return !Object.values(groupSizes()).some(n => n > 1); }
 function renderReport(){
   const items = evaluate(state.current), el = $('#report');
   if (!items){ el.innerHTML = '<p class="muted small" style="margin:0">아직 자리를 바꾸지 않았어요.</p>'; return; }
@@ -1946,10 +2034,13 @@ $('#autoPair').onclick = () => {
 };
 $('#frontRows').value = S.frontRows;
 $('#avoidRepeat').checked = S.avoidRepeat;
-$('#mixGender').checked = S.mixGender;
+function genderMode(){ return S.genderMode || (S.mixGender ? 'mix' : 'any'); }
+function renderGenderMode(){ document.querySelectorAll('#genderMode button').forEach(b => b.classList.toggle('on', b.dataset.g === genderMode())); }
+document.querySelectorAll('#genderMode button').forEach(b => b.onclick = () => { S.genderMode = b.dataset.g; S.mixGender = b.dataset.g === 'mix'; save(); renderGenderMode(); });
+renderGenderMode();
 $('#frontRows').onchange = e => { S.frontRows = clamp(+e.target.value || 1, 1, 6); e.target.value = S.frontRows; save(); };
 $('#avoidRepeat').onchange = e => { S.avoidRepeat = e.target.checked; save(); };
-$('#mixGender').onchange = e => { S.mixGender = e.target.checked; save(); };
+
 
 /* ---------- 자리 바꾸기 화면 ---------- */
 let animating = false, selected = null;
@@ -2151,7 +2242,7 @@ async function renderMealStrip(){
     const meals = await mealFor(new Date());
     const lunch = meals.find(m => m.type === '중식') || meals[0];
     if (!lunch){ el.hidden = true; return; }
-    $('#mealStripText').textContent = lunch.items.join(' · ');
+    $('#mealStripText').innerHTML = lunch.items.map(x => `<span class="food" data-food="${esc(x)}">${esc(x)}</span>`).join('<i> · </i>');
     el.hidden = false;
   } catch(e){ el.hidden = true; }
 }
@@ -2174,7 +2265,7 @@ async function renderMeal(){
   try {
     const meals = await mealFor(d);
     if (ymd(d) !== ymd(mealDay)) return;
-    body.innerHTML = meals.length ? meals.map(m => `<div class="meal-box"><h4>${esc(m.type)}</h4><div class="meal-items">${m.items.map(x => `<span>${esc(x)}</span>`).join('')}</div>${m.cal ? `<div class="meal-cal">${esc(m.cal)}</div>` : ''}</div>`).join('')
+    body.innerHTML = meals.length ? meals.map(m => `<div class="meal-box"><h4>${esc(m.type)}</h4><div class="meal-items">${m.items.map(x => `<button class="food" data-food="${esc(x)}" title="눌러서 사진 보기">${esc(x)}</button>`).join('')}</div>${m.cal ? `<div class="meal-cal">${esc(m.cal)}</div>` : ''}</div>`).join('')
       : `<p class="muted" style="text-align:center;font-size:18px;padding:20px">${[0,6].includes(d.getDay()) ? '주말이라 급식이 없어요.' : '이 날은 급식 정보가 없어요.'}</p>`;
   } catch(e){
     body.innerHTML = '<p class="muted" style="text-align:center;padding:20px">급식 정보를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.<br>계속 안 되면 ‘학교 바꾸기’에서 나이스 인증키를 넣어 보세요.</p>';
@@ -2188,7 +2279,7 @@ $('#mealShow').onchange = e => { state.meal.show = e.target.checked; save(); ren
 $('#mealChange').onclick = () => { $('#schoolRes').innerHTML = ''; showMealSetup(true); };
 $('#setupCancel').onclick = () => renderMeal();
 $('#neisKey').onchange = e => { state.meal.key = e.target.value.trim(); save(); for (const k in mealCache) delete mealCache[k]; for (const k in mealLoading) delete mealLoading[k]; };
-$('#mealStrip').onclick = () => $('#openMeal').click();
+$('#mealStrip').onclick = e => { const f = e.target.closest('[data-food]'); if (f){ e.stopPropagation(); showFood(f.dataset.food); return; } $('#openMeal').click(); };
 async function findSchool(){
   const q = $('#schoolQ').value.trim(), res = $('#schoolRes');
   if (!q){ toast('학교 이름을 입력해 주세요.'); return; }
@@ -2830,13 +2921,13 @@ function solveGroups(){
   const pairIdx = arr => arr.map(([a,b]) => [idx.get(a), idx.get(b)]).filter(([a,b]) => a != null && b != null);
   const sep = pairIdx(C.sep), tog = pairIdx(C.tog);
   const level = studs.map(s => s.level || ''), gender = studs.map(s => s.gender || '');
-  const useLevel = level.some(Boolean), mix = S.mixGender;
+  const useLevel = level.some(Boolean), gmode = genderMode(), mix = gmode === 'mix', same = gmode === 'same';
   const grp = new Int16Array(N);
   function cost(){
     let c = 0;
     for (const [a,b] of sep) if (grp[a] === grp[b]) c += 5000;
     for (const [a,b] of tog) if (grp[a] !== grp[b]) c += 30;
-    if (useLevel || mix){
+    if (useLevel || mix || same){
       const cnt = Array.from({length:G}, () => [0,0,0,0,0]);
       for (let k=0;k<N;k++){
         const t = cnt[grp[k]];
@@ -2846,6 +2937,7 @@ function solveGroups(){
       for (const t of cnt){
         if (useLevel) c += 5*(t[0]*(t[0]-1)/2 + t[1]*(t[1]-1)/2 + t[2]*(t[2]-1)/2) + 5*(t[2]*(t[2]-1)/2);
         if (mix) c += 3*(t[3]*(t[3]-1)/2 + t[4]*(t[4]-1)/2);
+        if (same) c += 3*t[3]*t[4];
       }
     }
     return c;
@@ -4241,6 +4333,210 @@ $('#qrCopy').onclick = async () => {
   try { await navigator.clipboard.writeText(qrCur.text); toast('주소를 복사했어요.'); } catch(e){ toast('복사가 막혀 있어요. 주소 칸에서 직접 복사해 주세요.'); }
 };
 renderQrRecent();
+
+/* ---------- 급식 메뉴 사진 (위키백과) ---------- */
+state.foodCache = state.foodCache || {};
+const FOOD_PREFIX = /^(수제|친환경|유기농|국내산|한우|한돈|우리밀|우리콩|무농약|저염|저당|오븐|특제|모듬|모둠|즉석|매콤|매운|달콤|새콤달콤|고소한|바삭|홈메이드|통|생|햇)\s*/;
+function foodBase(name){ return String(name).replace(/[\(\[\{<（][^\)\]\}>）]*[\)\]\}>）]/g, '').replace(/[0-9]+(\.[0-9]+)*\s*$/g, '').replace(/[#*~♡★☆@]/g, '').trim(); }
+const FOOD_SPELL = [[/까스/g,'가스'],[/까쓰/g,'가스'],[/쥬스/g,'주스'],[/케잌/g,'케이크'],[/쏘세지|소세지/g,'소시지'],[/쵸코/g,'초코'],[/스파게띠/g,'스파게티'],[/떡볶기/g,'떡볶이'],[/돈육/g,'돼지고기'],[/계란/g,'달걀']];
+const fixSpell = q => FOOD_SPELL.reduce((t,[a,b]) => t.replace(a,b), q);
+function foodQueries(name){
+  const base = foodBase(name), out = [];
+  const add = q => { q = q.trim(); if (q.length < 2) return; [q, fixSpell(q)].forEach(x => { if (!out.includes(x)) out.push(x); }); };
+  const strip = q => { for (let k = 0; k < 3; k++){ const n = q.replace(FOOD_PREFIX, ''); if (n === q) break; q = n; } return q; };
+  add(base);
+  const parts = base.split(/[&\/,+·]| 및 | 와 | 과 /).map(x => x.trim()).filter(x => x.length >= 2);
+  parts.forEach(p => { add(p); add(strip(p)); });
+  return out.slice(0, 6);
+}
+const normT = t => String(t).replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '');
+async function wikiFind(q){
+  const url = 'https://ko.wikipedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:q, gsrlimit:'8', prop:'pageimages|extracts|info', inprop:'url', piprop:'thumbnail', pithumbsize:'800', exintro:'1', explaintext:'1', exsentences:'2', exlimit:'8'});
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 7000);
+  try {
+    const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) throw 0;
+    const j = await r.json(), pages = Object.values((j.query && j.query.pages) || {}).sort((a,b) => a.index - b.index);
+    const qn = normT(q);
+    const ok = pages.filter(p => p.thumbnail && p.thumbnail.source && !/^(파일|분류|틀):/.test(p.title));
+    const exact = ok.find(p => normT(p.title) === qn);
+    const cand = ok.filter(p => { const t = normT(p.title); return t.length >= 2 && (qn.includes(t) || t.includes(qn)); });
+    const suffix = cand.filter(p => qn.endsWith(normT(p.title))).sort((a,b) => normT(b.title).length - normT(a.title).length)[0];
+    const part = cand.sort((a,b) => normT(b.title).length - normT(a.title).length)[0];
+    const p = exact || suffix || part;
+    return p ? {title: p.title, img: p.thumbnail.source, text: (p.extract || '').split('\n')[0].slice(0, 220), url: p.fullurl || ('https://ko.wikipedia.org/wiki/' + encodeURIComponent(p.title))} : null;
+  } finally { clearTimeout(to); }
+}
+let foodReq = 0, foodCur = '';
+async function showFood(name){
+  const d = $('#dlgFood'), my = ++foodReq; foodCur = foodBase(name) || name;
+  $('#fdName').textContent = foodCur; $('#fdTxt').textContent = ''; $('#fdSrc').innerHTML = '';
+  $('#fdPic').innerHTML = '<div class="ld">🔍 사진을 찾고 있어요…</div>';
+  if (!d.open){ d.showModal(); $('#fdClose').focus(); }
+  let hit = state.foodCache[foodCur], err = false;
+  if (hit === undefined){
+    hit = null;
+    for (const q of foodQueries(name)){
+      try { hit = await wikiFind(q); } catch(e){ err = true; break; }
+      if (hit) break;
+    }
+    if (!err){ state.foodCache[foodCur] = hit; const ks = Object.keys(state.foodCache); if (ks.length > 300) delete state.foodCache[ks[0]]; save(); }
+  }
+  if (my !== foodReq) return;
+  if (!hit){
+    $('#fdPic').innerHTML = `<div class="ld">${err ? '인터넷 연결이 안 돼서 사진을 찾지 못했어요.' : '이 메뉴는 사진을 찾지 못했어요. 😅'}<br>아래 버튼으로 이미지 검색을 열어 볼 수 있어요.</div>`;
+    return;
+  }
+  const img = new Image(); img.alt = hit.title; img.referrerPolicy = 'no-referrer';
+  img.onload = () => { if (my === foodReq){ $('#fdPic').innerHTML = ''; $('#fdPic').appendChild(img); } };
+  img.onerror = () => { if (my === foodReq) $('#fdPic').innerHTML = '<div class="ld">사진을 불러오지 못했어요.</div>'; };
+  img.src = hit.img;
+  $('#fdTxt').textContent = hit.text || '';
+  $('#fdSrc').innerHTML = `${normT(hit.title) !== normT(foodCur) ? `가장 비슷한 음식: <b>${esc(hit.title)}</b> · ` : ''}사진·설명: <a href="${esc(hit.url)}" target="_blank" rel="noopener">위키백과</a>`;
+}
+$('#dlgMeal').addEventListener('click', e => { const f = e.target.closest('[data-food]'); if (f) showFood(f.dataset.food); });
+$('#fdClose').onclick = () => $('#dlgFood').close();
+$('#dlgFood').addEventListener('click', e => { if (e.target === $('#dlgFood')) $('#dlgFood').close(); });
+$('#fdGoogle').onclick = () => window.open('https://www.google.com/search?tbm=isch&safe=active&q=' + encodeURIComponent(foodCur + ' 음식'), '_blank', 'noopener');
+$('#fdNaver').onclick = () => window.open('https://search.naver.com/search.naver?where=image&query=' + encodeURIComponent(foodCur), '_blank', 'noopener');
+
+/* ---------- 행동특성 및 종합의견 문장 만들기 ---------- */
+state.hbText = state.hbText || {};
+const HB_P = [
+  ['care',   /도와|도움|배려|양보|친절|챙겨|챙김|위로|나눠|나누|다정|따뜻|감싸|격려|데려다|부축|살펴|보살|빌려/],
+  ['speak',  /발표|손\s?들|의견|질문|대답|말하기|토의|토론|참여/],
+  ['study',  /집중|열심|공부|과제|숙제|문제|풀이|풀었|독서|책|글쓰기|받아쓰기|익힘|복습|이해|학습/],
+  ['duty',   /정리|청소|당번|1인\s?1역|역할|책임|깨끗|정돈|준비물|봉사|쓰레기/],
+  ['manner', /인사|예의|바른|규칙|질서|차례|존댓말|고운\s?말|바르게|약속/],
+  ['team',   /모둠|협동|협력|함께|같이|사이좋|팀/],
+  ['create', /그림|그리|만들|아이디어|창의|표현|노래|상상|꾸미|작품/],
+  ['body',   /체육|운동|달리|급식|골고루|줄넘기|건강|편식/],
+  ['steady', /꾸준|매일|성실|끝까지|노력|포기/]
+];
+const HB_W = [
+  ['fight',  /싸움|싸웠|다툼|다퉜|때리|때림|밀었|밀침|놀리|놀림|욕|비속어|말다툼|화내|짜증/],
+  ['noise',  /장난|떠들|소란|방해|시끄|소리\s?지르|수업\s?중/],
+  ['focus',  /딴짓|졸|집중\s?못|집중하지|멍|산만|낙서/],
+  ['prep',   /숙제\s?안|과제\s?안|준비물|안\s?가져|미제출|안\s?냄|빠뜨/],
+  ['rule',   /뛰|복도|새치기|질서|차례|위험/],
+  ['tidy',   /정리\s?안|어지르|어질|쓰레기|지저분/]
+];
+const HB_S = {
+  care:   ['친구의 어려움을 먼저 살피고 따뜻한 마음으로 배려함.','도움이 필요한 친구에게 먼저 다가가 기꺼이 도움을 주려고 노력함.','친구의 마음을 헤아려 다정하게 말하고 행동함.','어려움을 겪는 친구를 그냥 지나치지 않고 함께 해결하려고 함.'],
+  speak:  ['수업 시간에 자신의 생각을 자신 있게 발표하며 적극적으로 참여함.','궁금한 점을 스스로 질문하고 자신의 의견을 또렷하게 말할 수 있음.','학습 활동에 즐거운 마음으로 참여하며 친구들의 의견도 존중함.','배운 내용을 바탕으로 자신의 생각을 논리적으로 말할 수 있음.'],
+  study:  ['맡은 과제를 끝까지 성실하게 해결하며 배운 내용을 꾸준히 복습함.','수업에 집중하는 태도가 좋아 배운 내용을 정확하게 이해할 수 있음.','어려운 문제도 포기하지 않고 스스로 해결하려고 노력함.','책 읽기를 즐기며 읽은 내용을 바탕으로 생각을 넓혀 가려고 함.'],
+  duty:   ['자신이 맡은 역할을 책임감 있게 해내며 학급을 위해 봉사함.','주변을 깨끗하게 정리하는 습관이 있어 정리 정돈을 꾸준히 실천함.','1인 1역 활동에 성실하게 참여하며 학급 일에 앞장서서 참여함.','맡은 일을 끝까지 책임지고 해내려고 함.'],
+  manner: ['웃어른과 친구에게 바르고 고운 말을 사용하며 예의 바르게 행동함.','학급 규칙을 잘 지키고 차례를 지키며 질서 있게 생활함.','밝게 인사하며 바른 언어 습관을 꾸준히 실천함.','약속과 규칙의 중요성을 알고 스스로 지키려고 노력함.'],
+  team:   ['모둠 활동에서 친구들과 의견을 조율하며 협력하여 과제를 해결함.','친구들과 사이좋게 어울리며 함께하는 활동을 즐거워함.','모둠 안에서 자신의 역할을 성실히 수행하며 친구들과 협동함.','다른 사람의 생각을 존중하며 함께 문제를 해결할 수 있음.'],
+  create: ['새롭고 재미있는 생각을 떠올려 자신만의 방식으로 표현할 수 있음.','그리기와 만들기 활동에서 창의적인 아이디어를 개성 있게 표현함.','상상력이 풍부하여 다양한 방법으로 자신의 생각을 나타낼 수 있음.'],
+  body:   ['체육 활동에 즐겁게 참여하며 규칙을 지켜 친구들과 함께 운동함.','급식을 골고루 먹고 건강한 생활 습관을 지키려고 노력함.','몸을 움직이는 활동에 적극적으로 참여하며 끝까지 최선을 다함.'],
+  steady: ['작은 일도 꾸준히 실천하는 성실한 태도로 학교생활을 함.','무슨 일이든 끝까지 최선을 다해 해내려고 함.','스스로 정한 목표를 이루기 위해 꾸준히 노력함.'],
+  general:['밝고 명랑한 성격으로 학교생활에 즐겁게 참여함.','선생님의 말씀을 귀담아듣고 바르게 실천하려고 노력함.','친구들과 원만하게 지내며 학급 생활에 즐겁게 참여함.','자신의 일을 스스로 해결하려고 노력함.','맡은 일에 성실하게 임하며 바른 생활 태도를 보이려고 함.'],
+  many:   ['바른 생활 태도로 선생님과 친구들에게 자주 칭찬받을 만큼 모범적으로 생활함.','학급의 여러 활동에서 고르게 좋은 모습을 보이며 성실하게 생활함.']
+};
+const HB_G = {
+  fight: ['친구와 의견이 다를 때 자신의 마음을 차분히 말로 표현하는 연습을 꾸준히 하면 더욱 원만한 관계를 맺을 수 있음.','친구의 입장을 한 번 더 생각해 보는 습관을 기르면 더 즐겁게 어울릴 수 있음.'],
+  noise: ['수업 시간에 바른 자세로 참여하려는 노력을 이어 간다면 더욱 성장할 수 있음.','들뜬 마음을 차분하게 다스리는 연습을 꾸준히 하면 수업에 더 잘 집중할 수 있음.'],
+  focus: ['수업에 집중하는 시간을 조금씩 늘려 간다면 학습에서 더 큰 성장을 이룰 수 있음.','한 가지 활동에 끝까지 집중하는 습관을 기르면 자신의 능력을 더 잘 발휘할 수 있음.'],
+  prep:  ['과제와 준비물을 스스로 챙기는 습관을 기르면 학습에 더욱 자신감을 가질 수 있음.','해야 할 일을 미리 확인하고 챙기는 연습을 하면 더욱 알찬 학교생활을 할 수 있음.'],
+  rule:  ['교실과 복도에서 안전 규칙을 스스로 지키려는 노력이 더해지면 더욱 모범적인 생활을 할 수 있음.','차례와 질서를 지키는 습관을 꾸준히 기르면 더욱 바른 생활을 할 수 있음.'],
+  tidy:  ['자기 주변을 스스로 정리하는 습관을 기르면 더욱 알찬 학교생활을 할 수 있음.','물건을 제자리에 두는 습관을 꾸준히 실천하면 더욱 바른 생활을 할 수 있음.'],
+  warn:  ['자신의 행동을 스스로 돌아보고 바르게 고쳐 나가려는 노력을 이어 가면 더욱 성장할 수 있음.','생활 습관을 하나씩 바르게 다듬어 간다면 더욱 의젓하게 성장할 수 있음.'],
+  close: ['앞으로도 지금처럼 꾸준히 노력한다면 더 크게 성장할 수 있음.','자신의 장점을 살려 꾸준히 노력하면 더 큰 성장을 이룰 수 있음.','지금의 좋은 태도를 이어 간다면 더욱 훌륭하게 성장할 수 있음.']
+};
+let hbTab = 'one', hbPer = 'sem', hbFmt = 'line', hbSel = null, hbSeed = {};
+function hbRange(p){
+  const d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
+  const syear = m >= 3 ? y : y - 1;
+  const s1 = [`${syear}-03-01`, `${syear}-08-15`], s2 = [`${syear}-08-16`, `${syear+1}-02-29`];
+  if (p === 's1') return s1; if (p === 's2') return s2; if (p === 'all') return ['0000-00-00', '9999-99-99'];
+  return (m > 8 || (m === 8 && day >= 16) || m <= 2) ? s2 : s1;
+}
+function hbData(id){
+  const [a, b] = hbRange(hbPer), inR = d => d >= a && d <= b;
+  let pc = 0, wc = 0; const pn = [], wn = [];
+  for (const [d, L] of Object.entries(state.praiseLog || {})) if (inR(d)) pc += L[id] || 0;
+  for (const [d, L] of Object.entries(state.warnLog || {})) if (inR(d)) wc += L[id] || 0;
+  for (const [d, N] of Object.entries(state.praiseNotes || {})) if (inR(d) && N[id]) pn.push([d, N[id]]);
+  for (const [d, N] of Object.entries(state.warnNotes || {})) if (inR(d) && N[id]) wn.push([d, N[id]]);
+  pn.sort(); wn.sort();
+  return {pc, wc, pn, wn};
+}
+function hbScore(notes, table){
+  const sc = {};
+  notes.forEach(([, t]) => table.forEach(([k, re]) => { if (re.test(t)) sc[k] = (sc[k] || 0) + 1; }));
+  return Object.entries(sc).sort((x, y) => y[1] - x[1]).map(([k]) => k);
+}
+function hbRand(seed){ let x = seed >>> 0 || 1; return () => { x ^= x << 13; x >>>= 0; x ^= x >> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
+function hbMake(id, seed){
+  const D = hbData(id), R = hbRand((seed || 0) * 7919 + [...String(id)].reduce((a, c) => a + c.charCodeAt(0), 0));
+  const pick = arr => arr[Math.floor(R() * arr.length)];
+  const pk = hbScore(D.pn, HB_P), wk = hbScore(D.wn, HB_W);
+  const allP = state.students.filter(s => s.name.trim()).map(s => hbData(s.id).pc).sort((a, b) => b - a);
+  const top = allP.length && D.pc > 0 && D.pc >= allP[Math.floor(allP.length * 0.3)];
+  const used = new Set(), out = [];
+  const SAL = ['꾸준히','끝까지','스스로','성실','노력','수업 시간에','즐겁게','즐거운','바른','바르게','함께','친구들과','적극적','책임'];
+  const ov = t => SAL.filter(w => t.includes(w) && out.some(o => o.includes(w))).length;
+  const take = list => { let c = list.filter(x => !used.has(x)); if (!c.length) c = list; const m = Math.min(...c.map(ov)); const v = pick(c.filter(x => ov(x) === m)); used.add(v); return v; };
+  const order = pk.length ? pk.slice() : [];
+  if (order.length < 2){
+    const extra = shuffleWith(['care','study','manner','team','steady','duty','speak'].filter(k => !order.includes(k)), R);
+    if (!pk.length) order.push(...(top ? ['many'] : ['general']));
+    order.push(...extra);
+  }
+  out.push(take(HB_S[order[0]] || HB_S.general));
+  out.push(take(HB_S[order[1]] || HB_S.general));
+  if (D.wc > 0) out.push(take(HB_G[wk[0]] || HB_G.warn)); else out.push(take(HB_G.close));
+  return out;
+}
+function shuffleWith(a, R){ for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function hbFormat(lines){ return hbFmt === 'para' ? lines.join(' ') : lines.join('\n'); }
+function hbTextOf(id){ const sv = state.hbText[id]; if (sv && sv.text) return hbFmt === 'para' ? sv.text.replace(/\s*\n\s*/g, ' ') : sv.text; return hbFormat(hbMake(id, hbSeed[id] || 0)); }
+function hbStuds(){ return state.students.filter(s => s.name.trim()).sort((a, b) => a.name.trim().localeCompare(b.name.trim(), 'ko')); }
+async function hbCopy(text, msg){
+  try { await navigator.clipboard.writeText(text); toast(msg || '복사했어요. 붙여넣기 하면 돼요.'); }
+  catch(e){ const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast(msg || '복사했어요.'); } catch(_){ toast('복사가 막혀 있어요. 글을 직접 선택해 복사해 주세요.'); } ta.remove(); }
+}
+function renderHb(){
+  document.querySelectorAll('#hbTab button').forEach(b => b.classList.toggle('on', b.dataset.t === hbTab));
+  document.querySelectorAll('#hbPeriod button').forEach(b => b.classList.toggle('on', b.dataset.p === hbPer));
+  document.querySelectorAll('#hbFmt button').forEach(b => b.classList.toggle('on', b.dataset.f === hbFmt));
+  $('#hbOne').hidden = hbTab !== 'one'; $('#hbAll').hidden = hbTab !== 'all';
+  const studs = hbStuds();
+  if (!studs.length){ $('#hbStu').innerHTML = ''; $('#hbSum').textContent = '학생 정보를 먼저 입력해 주세요.'; $('#hbText').value = ''; $('#hbList').innerHTML = '<p class="muted">학생 정보를 먼저 입력해 주세요.</p>'; return; }
+  if (!hbSel || !studs.some(s => s.id === hbSel)) hbSel = studs[0].id;
+  if (hbTab === 'one'){
+    $('#hbStu').innerHTML = studs.map(s => `<option value="${s.id}"${s.id === hbSel ? ' selected' : ''}>${esc(s.name.trim())}</option>`).join('');
+    const D = hbData(hbSel), [a, b] = hbRange(hbPer);
+    $('#hbSum').textContent = `${hbPer === 'all' ? '전체 기간' : `${a.slice(5).replace('-', '/')}~${b.slice(5).replace('-', '/')}`} · 칭찬 ${D.pc}번 · 경고 ${D.wc}번 · 메모 ${D.pn.length + D.wn.length}개`;
+    $('#hbSrc').innerHTML = (D.pn.map(([d, t]) => `<div class="sl"><b>칭찬</b> ${dayLabel(d)} ${esc(t)}</div>`).join('') + D.wn.map(([d, t]) => `<div class="sl w"><b>경고</b> ${dayLabel(d)} ${esc(t)}</div>`).join('')) || '<div class="sl">이 기간에 적은 메모가 없어요. 칭찬·경고 횟수만 참고해요.</div>';
+    $('#hbText').value = hbTextOf(hbSel);
+    hbCountUpd();
+    $('#hbSaved').textContent = state.hbText[hbSel] ? '✏️ 고친 문장 저장됨' : '';
+    return;
+  }
+  $('#hbList').innerHTML = studs.map(s => { const D = hbData(s.id); return `<div class="hb-row"><div class="nm2">${esc(s.name.trim())}<br><small class="muted" style="font-family:inherit;font-size:11px">칭찬 ${D.pc} · 경고 ${D.wc}</small></div><div class="tx">${esc(hbTextOf(s.id))}${state.hbText[s.id] ? '\n<small>✏️ 고친 문장</small>' : ''}</div><div style="display:flex;flex-direction:column;gap:4px"><button data-cp="${s.id}">📋 복사</button><button data-ed="${s.id}">✏️ 고치기</button></div></div>`; }).join('');
+}
+function hbCountUpd(){ const t = $('#hbText').value.replace(/\s*\n\s*/g, ' ').trim(), by = [...t].reduce((n, c) => n + (c.charCodeAt(0) > 127 ? 3 : 1), 0); $('#hbCount').textContent = `${t.length}자 · 나이스 기준 약 ${by}바이트 (행동특성 최대 1500바이트)`; }
+$('#openHb').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; hbTab = 'one'; renderHb(); openSheet($('#dlgHb')); };
+document.querySelectorAll('#hbTab button').forEach(b => b.onclick = () => { hbTab = b.dataset.t; renderHb(); });
+document.querySelectorAll('#hbPeriod button').forEach(b => b.onclick = () => { hbPer = b.dataset.p; renderHb(); });
+document.querySelectorAll('#hbFmt button').forEach(b => b.onclick = () => { hbFmt = b.dataset.f; renderHb(); });
+$('#hbStu').onchange = e => { hbSel = e.target.value; renderHb(); };
+const hbMove = k => { const st = hbStuds(), i = st.findIndex(s => s.id === hbSel); hbSel = st[(i + k + st.length) % st.length].id; renderHb(); };
+$('#hbPrev').onclick = () => hbMove(-1); $('#hbNext').onclick = () => hbMove(1);
+$('#hbRe').onclick = () => { delete state.hbText[hbSel]; hbSeed[hbSel] = (hbSeed[hbSel] || 0) + 1; save(); renderHb(); };
+$('#hbText').oninput = () => { state.hbText[hbSel] = {text: $('#hbText').value, at: todayStr()}; save(); hbCountUpd(); $('#hbSaved').textContent = '✏️ 고친 문장 저장됨'; };
+$('#hbCopy').onclick = () => hbCopy($('#hbText').value.trim(), `${nameOf(hbSel)} 학생 문장을 복사했어요.`);
+$('#hbCopyAll').onclick = () => { const st = hbStuds(); hbCopy(st.map(s => `${s.name.trim()}\t${hbTextOf(s.id).replace(/\s*\n\s*/g, ' ')}`).join('\n'), `${st.length}명 문장을 복사했어요. 엑셀에 붙여넣어 보세요.`); };
+$('#hbReAll').onclick = async () => {
+  if (Object.keys(state.hbText).length && !await askConfirm('직접 고친 문장도 모두 새 문장으로 바뀌어요. 계속할까요?')) return;
+  state.hbText = {}; hbStuds().forEach(s => hbSeed[s.id] = (hbSeed[s.id] || 0) + 1); save(); renderHb();
+};
+$('#hbList').onclick = e => {
+  const c = e.target.closest('[data-cp]'), ed = e.target.closest('[data-ed]');
+  if (c) hbCopy(hbTextOf(c.dataset.cp).replace(/\s*\n\s*/g, hbFmt === 'para' ? ' ' : '\n'), `${nameOf(c.dataset.cp)} 학생 문장을 복사했어요.`);
+  if (ed){ hbSel = ed.dataset.ed; hbTab = 'one'; renderHb(); }
+};
 S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
