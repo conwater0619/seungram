@@ -101,6 +101,20 @@ body.fs .hint{margin-top:4px}
 .clock{display:flex;justify-content:center;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 14px;font-family:"Jua",sans-serif;line-height:1.1}
 .clock .cd{font-size:clamp(20px,2.2vw,30px);color:var(--muted)}
 .clock.has-annv .cd{cursor:pointer;color:#b4472b}
+.clock .cdrow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;max-width:100%}
+.clock .cev{border:1px solid #b9d3f0;background:#eef5ff;color:#2a5a93;border-radius:999px;padding:3px 12px;font-size:clamp(13px,1.3vw,18px);cursor:pointer;font-family:inherit;max-width:min(560px,90vw);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock .cev[hidden]{display:none}
+.clock .cev:hover{background:#e0edff}
+.clock .cev b{color:#c0392b;font-weight:700}
+body.fs .stage .clock .cev{font-size:2.1vh}
+body.hide-sched #evBadge{display:none!important}
+.ev-list{display:flex;flex-direction:column;gap:2px}
+.ev-wk{font-family:"Jua",sans-serif;font-size:15px;color:var(--muted);margin:12px 0 4px}
+.ev-row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:7px 10px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.ev-row.today{border-color:#f0b45a;background:#fffaf0}
+.ev-row.off .en{color:#c0392b}
+.ev-row .ed{font-family:"Jua",sans-serif}
+.ev-row .en small{display:block;color:var(--muted);font-size:12px}
 .clock .annv{flex-basis:100%;order:3;align-self:center;margin:2px auto 0;border:1px solid #f2b8a6;background:#fff1ec;color:#b4472b;border-radius:999px;padding:3px 14px;font-size:clamp(14px,1.4vw,19px);cursor:pointer;font-family:inherit;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .clock .annv[hidden]{display:none}
 .clock .annv:hover{background:#ffe3d8}
@@ -779,6 +793,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
+          <button class="mi" id="openSched">📅 학교 행사 일정</button>
           <button class="mi" id="openAnnv">📌 기념일 · 계기교육 영상</button>
           <button class="mi" id="openForm">📄 서류 양식 (이름 자동 넣기)</button>
           <button class="mi" id="openShortcut">📲 앱으로 설치하기</button>
@@ -814,6 +829,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
             <label class="chk"><input type="checkbox" data-show="annv"> 📌 기념일</label>
+            <label class="chk"><input type="checkbox" data-show="sched"> 📅 학교 행사</label>
           </div>
           <button class="mi" id="soundBtn">🔊 소리 켜짐</button>
           <div class="msep"></div>
@@ -1295,6 +1311,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <ul>
           <li><b>🎭 화면 가리기</b>: 시간표에 점심시간이 있으면 <b>점심시간이 시작될 때 자동으로 커튼이 닫히고, 끝나면 자동으로 열려요</b>(⋯ 더보기에서 끌 수 있어요). 점심시간 중에 직접 열었다 다시 닫은 커튼은 자동으로 열리지 않아요. 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
           <li><b>🧰 유용한 기능 · 📱 QR코드 만들기</b>: ⏲️ 타이머(30초~15분 바로 고르기, ±1분·±10초), ⏱️ 스톱워치(구간 기록), 🧮 계산기, 📱 QR코드가 있어요. QR코드는 주소(설문지·영상 링크 등)를 넣으면 바로 만들어지고, <b>📺 크게 띄우기</b>로 화면 가득 보여 주거나 <b>💾 그림으로 저장</b>할 수 있어요. 최근에 만든 QR은 아래에 남아서 다시 누르면 바로 불러와요. 🔍 크게를 누르면 숫자가 아주 커져요. 창을 닫아도 타이머·스톱워치는 계속 돌고 오른쪽 아래에 작게 보여요(누르면 다시 열려요). 타이머가 끝나면 소리 설정과 상관없이 알람이 울리고 화면에 ‘시간 끝!’이 떠요.</li>
+          <li><b>📅 학교 행사</b>: 🍚 급식에서 찾아 둔 학교의 <b>나이스 학사일정</b>을 받아 와서, 이번 주 행사(현장체험학습·학예회·재량휴업일 등)를 메인 화면 날짜 오른쪽에 ‘📅 오늘 학예회 · 금 현장체험학습’처럼 보여 줘요. 반 이름에 ‘3학년’처럼 학년을 넣어 두면 다른 학년만의 행사는 빼고 보여 줘요. 누르면 앞으로 10주 일정이 주별로 나와요. 휴업일로 등록된 날은 쉬는 날로 보고 시간표·기념일·점심 커튼에도 반영해요.</li>
           <li><b>📌 기념일 · 계기교육 영상</b>: 식목일·한글날·독도의 날처럼 계기교육에 쓰는 기념일 30여 개와 설날·추석이 들어 있어요. 그날이 되면 메인 화면 날짜 아래에 <b>📌 오늘은 ○○</b>이 뜨고, 날짜나 그 표시를 누르면 유튜브에서 관련 계기교육 영상을 찾아 새 탭으로 열어 줘요. 기념일이 주말·공휴일이면 바로 앞 등교일에는 ‘○월 ○일은 ○○’로 미리, 바로 뒤 등교일에는 ‘지난 ○월 ○일은 ○○’로 보여 줘요. 이 메뉴에서 자주 쓰는 영상 주소를 저장하면 다음부터 그 영상이 바로 열리고, 개교기념일 같은 우리 학교 기념일이나 재량휴업일도 추가할 수 있어요.</li>
           <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요. 전체 학생 인쇄도 돼요.</li>
           <li><b>📲 앱으로 설치하기</b>: 바탕화면·작업 표시줄에 😊 아이콘이 생기고 프로그램처럼 따로 창으로 열려요. 새 버전은 자동으로 바뀌고, 인터넷이 잠깐 끊겨도 기본 기능은 쓸 수 있어요.</li>
@@ -1521,6 +1538,22 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       </div>
       <p class="muted small" style="margin-bottom:0">‘쉬는 날’로 표시하면 그날은 등교일에서 빠져서, 그날 기념일은 앞뒤 등교일에 보여 줘요.</p>
     </div>
+  </div>
+</dialog>
+<dialog class="sheet mid" id="dlgSched">
+  <div class="sheet-head">
+    <h2>📅 학교 행사 일정</h2>
+    <span class="muted small" id="evSchool"></span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="row" style="gap:10px;margin-bottom:4px">
+      <label class="chk"><input type="checkbox" id="evGradeOnly"> 우리 학년 행사만 보기 <span class="muted small" id="evGradeLbl"></span></label>
+      <span style="flex:1"></span>
+      <button class="btn" id="evReload">↻ 새로 불러오기</button>
+    </div>
+    <div id="evList"></div>
+    <p class="muted small" style="margin-bottom:0">나이스 학사일정에서 받아 와요(🍚 급식에서 찾아 둔 학교). 이번 주 행사는 메인 화면 날짜 오른쪽에 떠요. 재량휴업일·방학처럼 ‘휴업일’로 등록된 날은 등교하지 않는 날로 보고, 시간표·기념일·점심 커튼에도 반영해요.</p>
   </div>
 </dialog>
 <dialog class="sheet small" id="dlgAnnvPick">
@@ -2264,9 +2297,9 @@ function renderClock(){
   const d = new Date(), h = d.getHours(), ap = h < 12 ? '오전' : '오후', h12 = h % 12 || 12;
   const pad = n => String(n).padStart(2, '0');
   const el = $('#stageDate');
-  if (!el.querySelector('.cd')) el.innerHTML = '<span class="cd"></span><span class="ct"><span class="ctm"></span><span class="cs"></span></span><button class="annv" id="annvBadge" hidden></button>';
+  if (!el.querySelector('.cd')) el.innerHTML = '<span class="cdrow"><span class="cd"></span><button class="cev" id="evBadge" hidden></button></span><span class="ct"><span class="ctm"></span><span class="cs"></span></span><button class="annv" id="annvBadge" hidden></button>';
   const cd = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${'일월화수목금토'[d.getDay()]}요일`;
-  if (el.querySelector('.cd').textContent !== cd){ el.querySelector('.cd').textContent = cd; if (typeof renderAnnv === 'function') renderAnnv(); }
+  if (el.querySelector('.cd').textContent !== cd){ el.querySelector('.cd').textContent = cd; if (typeof renderAnnv === 'function') renderAnnv(); if (typeof renderSchedBadge === 'function') renderSchedBadge(); }
   el.querySelector('.ctm').textContent = `${ap} ${h12}:${pad(d.getMinutes())}`;
   el.querySelector('.cs').textContent = `:${pad(d.getSeconds())}`;
 }
@@ -2365,7 +2398,7 @@ async function findSchool(){
       state.meal = Object.assign(state.meal, {atpt: r.ATPT_OFCDC_SC_CODE, code: r.SD_SCHUL_CODE, name: r.SCHUL_NM});
       if (state.meal.show === undefined) state.meal.show = true;
       for (const k in mealCache) delete mealCache[k]; for (const k in mealLoading) delete mealLoading[k];
-      save(); toast(`${r.SCHUL_NM}으로 설정했어요.`); mealDay = new Date(); renderMeal(); renderMealStrip();
+      save(); toast(`${r.SCHUL_NM}으로 설정했어요.`); mealDay = new Date(); renderMeal(); renderMealStrip(); if (typeof loadSched === 'function') loadSched(true);
     });
   } catch(e){ res.innerHTML = '<p class="muted small">학교를 찾지 못했어요. 인터넷 연결을 확인하거나 아래에 나이스 인증키를 넣어 보세요.</p>'; }
 }
@@ -4690,6 +4723,7 @@ function annvOn(dstr){
 function isSchoolDay(dstr){
   const dw = parseDay(dstr).getDay();
   if (dw === 0 || dw === 6 || KR_HOLI[dstr]) return false;
+  if (typeof schedOff === 'function' && schedOff(dstr)) return false;
   return !state.annv.custom.some(c => c.off && (c.yearly ? c.date.slice(5) === dstr.slice(5) : c.date === dstr));
 }
 const addDays = (dstr, k) => { const d = parseDay(dstr); d.setDate(d.getDate() + k); return todayStr(d); };
@@ -4762,9 +4796,79 @@ $('#anAdd').onclick = () => {
   $('#anName').value = ''; $('#anOff').checked = false; save(); anView = 'all'; renderAnnvList(); renderAnnv(); toast('추가했어요.');
 };
 renderAnnv();
-S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true}, S.show || {});
+
+/* ---------- 학교 행사 (나이스 학사일정) ---------- */
+state.sched = state.sched || null;
+let schedLoading = false;
+const schedGrade = () => { const m = String(state.className || '').match(/([1-6])\s*학년/); return m ? +m[1] : (S.schedGrade || 0); };
+const GRADE_KEYS = ['ONE_GRADE_EVENT_YN','TW_GRADE_EVENT_YN','THREE_GRADE_EVENT_YN','FR_GRADE_EVENT_YN','FIV_GRADE_EVENT_YN','SIX_GRADE_EVENT_YN'];
+function schedRows(){ return state.sched && state.meal && state.sched.code === state.meal.code ? state.sched.rows : []; }
+function schedOff(dstr){ return schedRows().some(r => r.d === dstr && r.off); }
+async function loadSched(force){
+  if (!state.meal || !state.meal.code || schedLoading) return;
+  const t = todayStr();
+  if (!force && state.sched && state.sched.code === state.meal.code && state.sched.at === t) return;
+  const mon = parseDay(t); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7) - 7);
+  const to = new Date(mon); to.setDate(to.getDate() + 7 * 10);
+  schedLoading = true;
+  try {
+    const rows = await neis('SchoolSchedule', {ATPT_OFCDC_SC_CODE: state.meal.atpt, SD_SCHUL_CODE: state.meal.code, AA_FROM_YMD: ymd(mon), AA_TO_YMD: ymd(to), pSize: 500});
+    const out = rows.map(r => {
+      const d = String(r.AA_YMD || ''), name = String(r.EVENT_NM || '').trim();
+      const g = GRADE_KEYS.map(k => r[k] === 'Y' ? 1 : r[k] === 'N' ? 0 : -1);
+      return {d: `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`, n: name, c: String(r.EVENT_CNTNT || '').trim(), off: /휴업/.test(r.SBTR_DD_SC_NM || '') && !/토요/.test(name), hol: r.SBTR_DD_SC_NM === '공휴일', g};
+    }).filter(r => r.n && !/^토요\s*휴업일$/.test(r.n));
+    state.sched = {code: state.meal.code, at: t, rows: out}; save();
+  } catch(e){ if (force) toast('학사일정을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'); }
+  finally { schedLoading = false; }
+  renderSchedBadge(); if (typeof renderAnnv === 'function') renderAnnv(); if ($('#dlgSched').open) renderSchedList();
+}
+function forGrade(r){ const g = schedGrade(); if (!g || r.g[g-1] === -1) return true; if (r.g[g-1] === 1) return true; return !r.g.some(x => x === 1); }
+function weekEvents(){
+  const t = todayStr(), mon = parseDay(t); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+  const sun = new Date(mon); sun.setDate(sun.getDate() + 6); const end = todayStr(sun);
+  const rows = schedRows().filter(r => r.d >= t && r.d <= end && !r.hol && forGrade(r)).sort((a,b) => a.d < b.d ? -1 : 1);
+  const groups = [];
+  rows.forEach(r => { const g = groups.find(x => x.n === r.n); if (g){ g.last = r.d; } else groups.push({n: r.n, first: r.d, last: r.d, off: r.off}); });
+  return groups;
+}
+const wdOf = d => '일월화수목금토'[parseDay(d).getDay()];
+function evLabel(g){ const t = todayStr(); const a = g.first === t ? '오늘' : wdOf(g.first); return g.last !== g.first ? `${a}~${wdOf(g.last)} ${g.n}` : `${a} ${g.n}`; }
+function renderSchedBadge(){
+  const b = $('#evBadge'); if (!b) return;
+  const W = state.meal && state.meal.code ? weekEvents() : [];
+  if (!W.length){ b.hidden = true; return; }
+  b.hidden = false;
+  b.innerHTML = '📅 ' + W.map(g => g.first === todayStr() ? `<b>${esc(evLabel(g))}</b>` : esc(evLabel(g))).join(' · ');
+  b.title = '이번 주 학교 행사 · 눌러서 전체 일정 보기\n' + W.map(evLabel).join('\n');
+}
+let evGradeOnly = true;
+function renderSchedList(){
+  $('#evSchool').textContent = state.meal && state.meal.name || '';
+  const g = schedGrade(); $('#evGradeLbl').textContent = g ? `(${g}학년)` : '(반 이름에 ‘○학년’을 넣으면 쓸 수 있어요)';
+  $('#evGradeOnly').checked = evGradeOnly && !!g; $('#evGradeOnly').disabled = !g;
+  if (!state.meal || !state.meal.code){ $('#evList').innerHTML = '<p class="muted">🍚 급식 창에서 우리 학교를 먼저 찾아 주세요. 같은 학교 정보로 학사일정을 불러와요.</p>'; return; }
+  const t = todayStr(), rows = schedRows().filter(r => r.d >= t && !r.hol && (!$('#evGradeOnly').checked || forGrade(r))).sort((a,b) => a.d < b.d ? -1 : 1);
+  if (!rows.length){ $('#evList').innerHTML = `<p class="muted">${schedLoading ? '불러오는 중이에요…' : '앞으로 등록된 학교 행사가 없어요.'}</p>`; return; }
+  let wk = '', h = '';
+  rows.forEach(r => {
+    const d = parseDay(r.d), mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    const w = todayStr(mon);
+    if (w !== wk){ wk = w; const tm = parseDay(t); tm.setDate(tm.getDate() - ((tm.getDay() + 6) % 7)); const diff = Math.round((mon - tm) / 864e5 / 7); h += `<div class="ev-wk">${diff === 0 ? '이번 주' : diff === 1 ? '다음 주' : `${mon.getMonth()+1}월 ${mon.getDate()}일 주`}</div>`; }
+    h += `<div class="ev-row${r.d === t ? ' today' : ''}${r.off ? ' off' : ''}"><div class="ed">${mdLabel(r.d)} (${wdOf(r.d)})</div><div class="en">${esc(r.n)}${r.off ? ' <small style="display:inline;color:#c0392b">· 쉬는 날</small>' : ''}${r.c && r.c !== r.n ? `<small>${esc(r.c)}</small>` : ''}</div></div>`;
+  });
+  $('#evList').innerHTML = `<div class="ev-list">${h}</div>`;
+}
+function openSched(){ if (animating) return; $('#moreMenu').hidden = true; renderSchedList(); $('#dlgSched').showModal(); loadSched(); }
+$('#openSched').onclick = openSched;
+$('#stageDate').addEventListener('click', e => { if (e.target.closest('#evBadge')){ e.stopPropagation(); openSched(); } });
+$('#evGradeOnly').onchange = e => { evGradeOnly = e.target.checked; renderSchedList(); };
+$('#evReload').onclick = () => { loadSched(true); toast('학사일정을 다시 불러오는 중이에요.'); };
+renderSchedBadge(); loadSched();
+setInterval(() => loadSched(), 60 * 60 * 1000);
+S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
-  ['tt','date','wx','task','notice','annv'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
+  ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
 }
 document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
