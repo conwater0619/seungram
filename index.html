@@ -4775,25 +4775,29 @@ const FOOD_PREFIX = /^(수제|친환경|유기농|국내산|한우|한돈|우리
 function foodBase(name){ return String(name).replace(/[\(\[\{<（][^\)\]\}>）]*[\)\]\}>）]/g, '').replace(/[0-9]+(\.[0-9]+)*\s*$/g, '').replace(/[#*~♡★☆@]/g, '').trim(); }
 const FOOD_SPELL = [[/까스/g,'가스'],[/까쓰/g,'가스'],[/쥬스/g,'주스'],[/케잌/g,'케이크'],[/쏘세지|소세지/g,'소시지'],[/쵸코/g,'초코'],[/스파게띠/g,'스파게티'],[/떡볶기/g,'떡볶이'],[/돈육/g,'돼지고기'],[/계란/g,'달걀']];
 const fixSpell = q => FOOD_SPELL.reduce((t,[a,b]) => t.replace(a,b), q);
-const FOOD_TYPES = ['비빔밥','볶음밥','주먹밥','유부초밥','김밥','덮밥','볶음면','비빔면','칼국수','잔치국수','콩국수','국수','라면','우동','냉면','수제비','만둣국','떡만둣국','미역국','떡국','계란국','달걀국','뭇국','무국','북엇국','된장국','김칫국','콩나물국','해장국','육개장','설렁탕','삼계탕','갈비탕','감자탕','매운탕','어묵탕','된장찌개','김치찌개','순두부찌개','부대찌개','찌개','전골','볶음','조림','구이','찜','무침','나물','튀김','부침개','부침','강정','스테이크','돈가스','카레','스파게티','파스타','샐러드','샌드위치','햄버거','핫도그','토스트','피자','만두','초밥','김치','깍두기','장아찌','장조림','수프','스프','죽','탕','국','밥','면','떡','빵','케이크','주스','우유','과일'];
-function foodType(base){ let best = ''; for (const t of FOOD_TYPES) if (base.endsWith(t) && t.length > best.length) best = t; return best; }
+const FOOD_TYPES = ['비빔밥','볶음밥','주먹밥','유부초밥','김밥','덮밥','볶음면','비빔면','칼국수','잔치국수','콩국수','국수','라면','우동','냉면','수제비','만둣국','떡만둣국','미역국','떡국','계란국','달걀국','뭇국','무국','북엇국','된장국','김칫국','콩나물국','해장국','냉국','육개장','설렁탕','삼계탕','갈비탕','감자탕','매운탕','어묵탕','된장찌개','김치찌개','순두부찌개','부대찌개','찌개','전골','달걀찜','계란찜','찜','볶음','조림','구이','무침','생채','냉채','겉절이','나물','잡채','숙회','튀김','부침개','부침','강정','스테이크','돈가스','카레','스파게티','파스타','샐러드','샌드위치','햄버거','핫도그','토스트','피자','만두','초밥','김치','깍두기','장아찌','장조림','수프','스프','죽','탕','국','밥','면','떡','빵','케이크','주스','우유','과일'];
+function foodType(str){ let best = ''; for (const t of FOOD_TYPES) if (str.includes(t) && t.length > best.length) best = t; return best; }
+const TYPE_EN = {'국':'korean soup','탕':'korean soup','찌개':'korean stew','전골':'korean hot pot','찜':'korean steamed dish','볶음':'korean stir fry','조림':'korean braised','구이':'korean grilled fish','무침':'korean seasoned vegetables','생채':'korean fresh vegetable salad','나물':'korean namul','잡채':'japchae','김치':'kimchi','깍두기':'kkakdugi','밥':'cooked rice','덮밥':'korean rice bowl','면':'korean noodles','국수':'korean noodles','죽':'rice porridge','떡':'tteok rice cake','빵':'bread','전':'korean pancake jeon','튀김':'korean fried food'};
 function foodQueries(name){
   const base = foodBase(name), out = [];
-  const add = q => { q = q.trim(); if (q.length < 2) return; [q, fixSpell(q)].forEach(x => { if (!out.includes(x)) out.push(x); }); };
+  const add = q => { q = (q || '').trim(); if (q.length < 2) return; [q, fixSpell(q)].forEach(x => { if (!out.includes(x)) out.push(x); }); };
   const strip = q => { for (let k = 0; k < 3; k++){ const n = q.replace(FOOD_PREFIX, ''); if (n === q) break; q = n; } return q; };
   add(base); add(strip(base));
   const parts = base.split(/[&\/,+·]| 및 | 와 | 과 /).map(x => x.trim()).filter(x => x.length >= 2);
   parts.forEach(p => { add(p); add(strip(p)); });
-  const t = foodType(strip(base.split(/[&\/,+·]| 및 | 와 | 과 /)[0].trim()));
-  const ing = t ? strip(base.split(/[&\/,+·]/)[0].trim()).slice(0, -t.length) : '';
-  if (ing.length >= 2){ add(ing + ' ' + t); add(ing); }
-  if (t) add(t);
-  return out.slice(0, 8);
+  const first = strip(parts[0] || base), t = foodType(first);
+  if (t){
+    const i = first.indexOf(t);
+    for (const n of [2, 1, 3]){ if (i - n >= 0) add(first.slice(i - n, i) + t); }
+    add(t);
+    if (TYPE_EN[t]) out.push(TYPE_EN[t]);
+  }
+  return out.slice(0, 9);
 }
 const normT = t => String(t).replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '');
 async function wikiFind(q){
   const url = 'https://ko.wikipedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:q, gsrlimit:'8', prop:'pageimages|extracts|info', inprop:'url', piprop:'thumbnail', pithumbsize:'800', exintro:'1', explaintext:'1', exsentences:'2', exlimit:'8'});
-  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 7000);
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 5000);
   try {
     const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) throw 0;
     const j = await r.json(), pages = Object.values((j.query && j.query.pages) || {}).sort((a,b) => a.index - b.index);
@@ -4810,7 +4814,7 @@ async function wikiFind(q){
 const COMMONS_SKIP = /logo|icon|map|flag|chart|diagram|graph|coat.of.arms|wiki|symbol|배치도|지도|로고/i;
 async function commonsFind(q){
   const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:'filetype:bitmap ' + q, gsrnamespace:'6', gsrlimit:'12', prop:'imageinfo', iiprop:'url|mime|size', iiurlwidth:'800'});
-  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 7000);
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 5000);
   try {
     const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) throw 0;
     const j = await r.json(), pages = Object.values((j.query && j.query.pages) || {}).sort((a,b) => a.index - b.index);
