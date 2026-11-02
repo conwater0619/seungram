@@ -598,6 +598,11 @@ dialog.sheet.wide{width:min(1240px,97vw)}
 .ps-times:empty{display:none}
 .ps-who b{font-weight:400;color:var(--accent)}
 .ps-note{flex:1;min-width:180px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px}
+.ps-nrow.bt .ps-note{border-color:#9fd3ad}
+.ps-btag{font-size:11.5px;background:#e3f4e7;color:#2e7d4f;border-radius:999px;padding:1px 7px}
+.ps-dday{margin:6px 0}
+.ps-ddh{font-size:13px;color:var(--muted);font-family:"Jua",sans-serif;margin:4px 0 2px}
+.ps-nrow .stamp{margin:0}
 .ps-note:focus{outline:2px solid #ffc83d;border-color:transparent}
 .ps-detail{flex-direction:column;align-items:stretch}
 .ps-row.click{cursor:pointer;border-radius:8px}
@@ -937,6 +942,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <button class="btn" id="moreBtn" aria-haspopup="true">⋯ 더보기</button>
         <div class="more-dim"></div>
         <div class="menu" id="moreMenu" hidden>
+          <button class="mi" id="openShortcut">📲 앱으로 설치하기</button>
           <button class="mi" id="openDoc">📷 카메라</button>
           <button class="mi" id="openNoise">🔊 소음 측정기</button>
           <button class="mi" id="openTemp">🌡️ 학급 온도계</button>
@@ -948,7 +954,6 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openSched">📅 학교 행사 일정</button>
           <button class="mi" id="openAnnv">📌 기념일 · 계기교육 영상</button>
           <button class="mi" id="openForm">📄 서류 양식 (이름 자동 넣기)</button>
-          <button class="mi" id="openShortcut">📲 앱으로 설치하기</button>
           <div class="msep"></div>
           <button class="mi" id="openMbti">💞 MBTI 궁합 자리 (재미로)</button>
           <button class="mi" id="openHist">🕘 지난 배치</button>
@@ -1093,7 +1098,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <h4>📅 결석 · 조퇴 기록</h4>
         <p>메인 화면 책상 왼쪽 아래 ✕를 한 번 누르면 결석, 한 번 더 누르면 조퇴로 바뀌고, 누른 날짜·시간·그 시간 과목이 자동으로 저장돼요. 여기서 종류(질병·미인정·기타·출석인정)와 사유를 적을 수 있고, ‘결석/조퇴’ 표시를 눌러 서로 바꿀 수도 있어요. 학생별로 결석·조퇴 횟수도 볼 수 있어요. 깜빡한 날은 ‘지난 결석·조퇴 직접 추가하기’로 넣으면 돼요.</p>
         <h4>🏆 칭찬·경고 기록</h4>
-        <p>메인 화면에서 얼굴을 누른 칭찬 횟수와 경고 횟수가 날마다 저장되고, 한 번 한 번 <b>누른 시간과 그 시간 과목</b>(예: 🕘 10:12 · 2교시 수학)도 함께 남아요. 위쪽 ‘🏆 칭찬 / ⚠️ 경고’로 바꿔 볼 수 있고, 칭찬·경고 모두 날짜마다 <b>한 줄 메모</b>를 적을 수 있어요. 오늘·이번 주·이번 달·전체 기간별로 누가 가장 많이 받았는지, 아직 못 받은 친구는 누구인지 볼 수 있어요. 학생 이름을 누르면 그 학생이 몇 월 며칠에 몇 번 받았는지 펼쳐지고, ‘날짜별 기록’에서는 날짜마다 누가 받았는지 볼 수 있어요. 학생별로 ‘메모 모아 복사’를 누르면 통지표 쓸 때 붙여넣기 좋게 모아 줘요.</p>
+        <p>메인 화면에서 얼굴을 누른 칭찬 횟수와 경고 횟수가 날마다 저장되고, 한 번 한 번 <b>누른 시간과 그 시간 과목</b>(예: 🕘 10:12 · 2교시 수학)도 함께 남아요. 위쪽 ‘🏆 칭찬 / ⚠️ 경고’로 바꿔 볼 수 있고, <b>칭찬·경고마다(그 시간·과목별로) 따로 메모</b>를 적을 수 있어요. 전체 칭찬은 모두 같은 내용이라 <b>한 번만 적으면 그 학생들 모두에게</b> 저장돼요. 오늘·이번 주·이번 달·전체 기간별로 누가 가장 많이 받았는지, 아직 못 받은 친구는 누구인지 볼 수 있어요. 학생 이름을 누르면 그 학생이 몇 월 며칠에 몇 번 받았는지 펼쳐지고, ‘날짜별 기록’에서는 날짜마다 누가 받았는지 볼 수 있어요. 학생별로 ‘메모 모아 복사’를 누르면 통지표 쓸 때 붙여넣기 좋게 모아 줘요.</p>
         <h4>📝 행동특성 및 종합의견 문장</h4>
         <p>‘📝 문장 만들기 열기’를 누르면 칭찬·경고 횟수와 한 줄 메모에서 어떤 면(배려·발표·학습·책임·예절·협동 등)이 두드러지는지 파악해서, 통지표에 쓸 수 있는 순화된 문장 세 줄(~함 / ~할 수 있음)을 새로 만들어요. 메모를 그대로 옮기지 않고, 경고가 있으면 마지막 문장을 ‘앞으로 이렇게 하면 성장할 수 있음’처럼 부드럽게 써요. 🔄로 다른 문장을 고르고, 직접 고친 문장은 자동 저장되며, 📋로 바로 복사해요. ‘반 전체’에서는 모든 학생 문장을 한꺼번에 엑셀용으로 복사할 수 있어요. 기록은 인터넷으로 보내지지 않아요.</p>
         <h4>✅ 최근 배치 점검</h4>
@@ -1953,6 +1958,7 @@ state.sepPairs = state.sepPairs || [];
 state.tasks = state.tasks || {};
 state.wx = state.wx || {name:'포항', lat:36.019, lon:129.343};
 state.praiseNotes = state.praiseNotes || {};
+state.batchNotes = state.batchNotes || {};
 state.warnLog = state.warnLog || {};
 state.warnNotes = state.warnNotes || {};
 state.students.forEach(x => { delete x.note; });
@@ -3035,10 +3041,17 @@ function sitterId(sit){
   return (state.current && state.current[ci]) || getPins()[ci] || null;
 }
 function logTime(store, id, d){
+  const nStore = store === 'warnTimes' ? 'warnNotes' : 'praiseNotes';
   const t = todayStr(), T = state[store] = state[store] || {}, D = T[t] = T[t] || {}, a = D[id] = D[id] || [];
-  if (d > 0) a.push(stampNow()); else a.pop();
-  if (!a.length) delete D[id];
+  const N = state[nStore] = state[nStore] || {}, ND = N[t] = N[t] || {};
+  if (typeof ND[id] === 'string') ND[id] = ND[id] ? [ND[id]] : [];
+  let na = ND[id] = ND[id] || [];
+  while (na.length < a.length) na.push('');
+  while (na.length > a.length) na.pop();
+  if (d > 0){ a.push(stampNow()); na.push(''); } else { a.pop(); na.pop(); }
+  if (!a.length){ delete D[id]; delete ND[id]; }
   if (!Object.keys(D).length) delete T[t];
+  if (!Object.keys(ND).length) delete N[t];
 }
 function logWarn(id, d){
   logTime('warnTimes', id, d);
@@ -3071,17 +3084,38 @@ function periodStart(p){
 }
 let psKind = 'praise';
 const LOG = () => psKind === 'warn' ? state.warnLog : state.praiseLog;
-const NOTES = () => psKind === 'warn' ? state.warnNotes : state.praiseNotes;
+const NOTES = () => psKind === 'warn' ? (state.warnNotes = state.warnNotes || {}) : (state.praiseNotes = state.praiseNotes || {});
 const KW = () => psKind === 'warn' ? '경고' : '칭찬';
 const TIMES = () => (psKind === 'warn' ? state.warnTimes : state.praiseTimes) || {};
-const timesHtml = (d, id) => ((TIMES()[d] || {})[id] || []).map(stampHtml).join('');
-function noteOf(d, id){ return ((NOTES()[d] || {})[id] || ''); }
-function setNote(d, id, txt){
-  txt = txt.trim();
-  const N = NOTES()[d] = NOTES()[d] || {};
-  if (txt) N[id] = txt; else delete N[id];
-  if (!Object.keys(N).length) delete NOTES()[d];
+function occsOf(d, id){ return (TIMES()[d] || {})[id] || []; }
+function occNote(d, id, i, st){
+  if (st && st.b) return state.batchNotes[st.b] || '';
+  const nd = (NOTES()[d] || {})[id];
+  if (typeof nd === 'string') return i === 0 ? nd : '';
+  return (nd || [])[i] || '';
+}
+function setOccNote(d, id, i, st, txt){
+  txt = (txt || '').trim();
+  if (st && st.b){ if (txt) state.batchNotes[st.b] = txt; else delete state.batchNotes[st.b]; save(); return; }
+  const N = NOTES(), ND = N[d] = N[d] || {};
+  let na = ND[id]; if (typeof na === 'string') na = na ? [na] : []; na = ND[id] = na || [];
+  while (na.length <= i) na.push('');
+  na[i] = txt;
+  if (!na.some(x => x)) delete ND[id];
+  if (!Object.keys(ND).length) delete N[d];
   save();
+}
+function anyNote(d, id){ const occs = occsOf(d, id); if (occs.some((st, i) => occNote(d, id, i, st))) return true; const nd = (NOTES()[d] || {})[id]; return typeof nd === 'string' ? !!nd : false; }
+const NOTE_PH = () => psKind === 'warn' ? '메모 (예: 수업 중 친구와 장난침)' : '메모 (예: 모둠 활동에서 친구를 잘 도와줌)';
+function occNoteInp(d, id, i, st){ return `<input class="ps-note" data-d="${d}" data-id="${esc(id)}" data-i="${i}"${st && st.b ? ` data-b="${esc(st.b)}"` : ''} value="${esc(occNote(d, id, i, st))}" placeholder="${NOTE_PH()}" maxlength="120">`; }
+function stTag(st){ return st && st.b ? ' <span class="ps-btag">😎 전체</span>' : ''; }
+function dayItems(d){
+  const T = TIMES()[d] || {}, items = [], batch = {};
+  for (const id of Object.keys(T)){ if (!nameOf(id)) continue; (T[id] || []).forEach((st, i) => { if (st && st.b){ (batch[st.b] = batch[st.b] || {st, n: 0}).n++; } else items.push({single: true, id, i, st}); }); }
+  for (const b of Object.keys(batch)) items.push({single: false, b, st: batch[b].st, n: batch[b].n});
+  // legacy days: count exists but no time stamps
+  for (const id of Object.keys((LOG()[d] || {}))){ if (!nameOf(id)) continue; if (!(T[id] || []).length && ((LOG()[d] || {})[id])) items.push({single: true, id, i: 0, st: null, legacy: true}); }
+  return items.sort((a, z) => ((a.st && a.st.t) || '~').localeCompare((z.st && z.st.t) || '~'));
 }
 function renderPraiseStats(){
   document.querySelectorAll('#psPeriod button').forEach(b => b.classList.toggle('on', b.dataset.p === psPeriod));
@@ -3101,15 +3135,15 @@ function renderPraiseStats(){
   if (!studs.length){ box.innerHTML = '<p class="muted small">학생을 먼저 입력해 주세요.</p>'; return; }
   const days = [...new Set(Object.keys(LOG()).concat(Object.keys(NOTES())))].filter(d => d >= from).sort().reverse();
   const cntOf = (d,id) => (LOG()[d] || {})[id] || 0;
-  const noteInp = (d,id) => `<input class="ps-note" data-d="${d}" data-id="${id}" value="${esc(noteOf(d,id))}" placeholder="${psKind === 'warn' ? '한 줄 메모 (예: 수업 중 친구와 장난침)' : '한 줄 메모 (예: 모둠 활동에서 친구를 잘 도와줌)'}" maxlength="120">`;
   if (psView === 'date'){
-    box.innerHTML = days.length ? days.map(d => {
-      const ids = [...new Set(Object.keys(LOG()[d] || {}).concat(Object.keys(NOTES()[d] || {})))].filter(id => nameOf(id)).sort((a,b) => cntOf(d,b) - cntOf(d,a));
-      if (!ids.length) return '';
-      const t = ids.reduce((a,id) => a + cntOf(d,id), 0);
-      return `<div class="ps-day"><h5>${dayLabel(d)} <span class="muted small" style="font-family:inherit">총 ${t}번</span></h5>${ids.map(id => `<div class="ps-nrow"><span class="ps-who">${esc(nameOf(id))} <b>${cntOf(d,id)}번</b></span>${noteInp(d,id)}<div class="ps-times">${timesHtml(d,id)}</div></div>`).join('')}</div>`;
-    }).join('') : `<p class="muted small" style="margin-top:10px">이 기간에는 ${KW()} 기록이 없어요.</p>`;
-    if (days.length) box.innerHTML = `<p class="small" style="margin:10px 0">${KW()}한 날 ${days.length}일 · 총 ${sum}번</p>` + box.innerHTML;
+    const html = days.map(d => {
+      const items = dayItems(d); if (!items.length) return '';
+      const rows = items.map(it => it.single
+        ? `<div class="ps-nrow"><span class="ps-who"><span class="stamp">🕘 ${esc(it.legacy ? dayLabel(d).replace(/^.*\(/, '').replace(')', '') + ' (시간 기록 없음)' : stampTxt(it.st))}</span> ${esc(nameOf(it.id))}</span>${occNoteInp(d, it.id, it.i, it.st)}</div>`
+        : `<div class="ps-nrow bt"><span class="ps-who"><span class="stamp">🕘 ${esc(stampTxt(it.st))}</span> 😎 전체 칭찬 <b>${it.n}명</b></span><input class="ps-note" data-b="${esc(it.b)}" value="${esc(state.batchNotes[it.b] || '')}" placeholder="전체 칭찬 메모 (한 번 적으면 ${it.n}명 모두 기록)" maxlength="120"></div>`).join('');
+      return `<div class="ps-day"><h5>${dayLabel(d)} <span class="muted small" style="font-family:inherit">총 ${items.reduce((a, it) => a + (it.single ? 1 : it.n), 0)}번</span></h5>${rows}</div>`;
+    }).join('');
+    box.innerHTML = (days.length ? `<p class="small" style="margin:10px 0">${KW()}한 날 ${days.length}일 · 총 ${sum}번</p>` : '') + (html || `<p class="muted small" style="margin-top:10px">이 기간에는 ${KW()} 기록이 없어요.</p>`);
     return;
   }
   const max = Math.max(1, ...rows.map(r => r.n));
@@ -3123,7 +3157,12 @@ function renderPraiseStats(){
         const badge = psKind === 'warn' ? (r.n ? '⚠️' : '–') : (r.n && rank <= 3 ? medal[rank-1] : (r.n ? rank : '–'));
         let det = '';
         if (psOpen === r.id){
-          const mine = days.filter(d => cntOf(d, r.id) || noteOf(d, r.id)).map(d => `<div class="ps-nrow"><span class="ps-who">${dayLabel(d)} <b>${cntOf(d, r.id)}번</b></span>${noteInp(d, r.id)}<div class="ps-times">${timesHtml(d, r.id)}</div></div>`);
+          const mine = days.filter(d => cntOf(d, r.id) || anyNote(d, r.id)).map(d => {
+            const occs = occsOf(d, r.id);
+            const rows = occs.length ? occs.map((st, i) => `<div class="ps-nrow${st && st.b ? ' bt' : ''}"><span class="ps-who"><span class="stamp">🕘 ${esc(stampTxt(st))}</span>${stTag(st)}</span>${occNoteInp(d, r.id, i, st)}</div>`).join('')
+              : `<div class="ps-nrow"><span class="ps-who"><span class="stamp">🕘 시간 기록 없음</span> <b>${cntOf(d, r.id)}번</b></span>${occNoteInp(d, r.id, 0, null)}</div>`;
+            return `<div class="ps-dday"><div class="ps-ddh">${dayLabel(d)} <span class="muted small" style="font-family:inherit">${cntOf(d, r.id)}번</span></div>${rows}</div>`;
+          });
           det = `<div class="ps-detail">${mine.length ? mine.join('') + `<div class="row" style="margin-top:6px"><button class="btn ps-copy" data-id="${r.id}" style="padding:5px 12px;font-size:14px">📋 메모 모아 복사 (통지표 참고용)</button></div>` : '<span class="muted">이 기간에는 기록이 없어요.</span>'}</div>`;
         }
         return `<div class="ps-row click${r.n ? '' : ' zero'}" data-id="${r.id}" title="눌러서 날짜별 보기"><span class="ps-rank">${badge}</span><span class="ps-name">${esc(r.name)} ${psOpen === r.id ? '▾' : '▸'}</span><span class="ps-bar"><i style="width:${(r.n/max*100).toFixed(1)}%"></i></span><span class="ps-n">${r.n}번</span></div>${det}`;
@@ -3133,12 +3172,24 @@ function renderPraiseStats(){
 document.querySelectorAll('#psPeriod button').forEach(b => b.onclick = () => { psPeriod = b.dataset.p; renderPraiseStats(); });
 document.querySelectorAll('#psView button').forEach(b => b.onclick = () => { psView = b.dataset.v; renderPraiseStats(); });
 document.querySelectorAll('#psKind button').forEach(b => b.onclick = () => { psKind = b.dataset.k; psOpen = null; renderPraiseStats(); });
-$('#psList').addEventListener('input', e => { const inp = e.target.closest('.ps-note'); if (inp) setNote(inp.dataset.d, inp.dataset.id, inp.value); });
+$('#psList').addEventListener('input', e => {
+  const inp = e.target.closest('.ps-note'); if (!inp) return;
+  const {d, id, i, b} = inp.dataset;
+  if (b){ if (inp.value.trim()) state.batchNotes[b] = inp.value.trim(); else delete state.batchNotes[b]; save(); return; }
+  const st = (occsOf(d, id) || [])[+i || 0] || null;
+  setOccNote(d, id, +i || 0, st, inp.value);
+});
 $('#psList').addEventListener('click', async e => {
   const cp = e.target.closest('.ps-copy');
   if (cp){
     const id = cp.dataset.id, from = periodStart(psPeriod);
-    const lines = Object.keys(NOTES()).filter(d => d >= from && noteOf(d, id)).sort().map(d => `${dayLabel(d)} ${noteOf(d, id)}`);
+    const lines = [];
+    const alldays = [...new Set(Object.keys(TIMES()).concat(Object.keys(NOTES())))].filter(d => d >= from).sort();
+    alldays.forEach(d => {
+      const occs = occsOf(d, id);
+      if (occs.length) occs.forEach((st, i) => { const n = occNote(d, id, i, st); if (n) lines.push(`${dayLabel(d)} ${stampTxt(st)}${st && st.b ? ' (전체 칭찬)' : ''} ${n}`); });
+      else { const nd = (NOTES()[d] || {})[id]; if (typeof nd === 'string' && nd) lines.push(`${dayLabel(d)} ${nd}`); }
+    });
     if (!lines.length){ toast('적어 둔 메모가 없어요.'); return; }
     const text = `[${nameOf(id)}] ${KW()} 메모\n` + lines.join('\n');
     try { await navigator.clipboard.writeText(text); toast(`메모 ${lines.length}개를 복사했어요. 붙여넣기 하면 돼요.`); }
@@ -3149,7 +3200,7 @@ $('#psList').addEventListener('click', async e => {
 $('#psReset').onclick = async () => {
   if (!Object.keys(LOG()).length && !Object.keys(NOTES()).length){ toast('지울 기록이 없어요.'); return; }
   if (!await askConfirm(`모든 ${KW()} 기록(누적 횟수와 한 줄 메모)을 지울까요? 되돌릴 수 없어요.`)) return;
-  if (psKind === 'warn'){ state.warnLog = {}; state.warnNotes = {}; state.warnTimes = {}; } else { state.praiseLog = {}; state.praiseNotes = {}; state.praiseTimes = {}; }
+  if (psKind === 'warn'){ state.warnLog = {}; state.warnNotes = {}; state.warnTimes = {}; } else { state.praiseLog = {}; state.praiseNotes = {}; state.praiseTimes = {}; state.batchNotes = {}; }
   save(); renderPraiseStats();
 };
 function changePraise(sit, delta){
@@ -3212,7 +3263,8 @@ async function praiseAll(){
   if (!ids.length){ toast('칭찬할 학생이 없어요.'); return; }
   if (!up.length){ toast('모두 이미 최고 단계(🌸)예요.'); return; }
   if (!await askConfirm(`반 전체 ${up.length}명을 칭찬할까요? (이미 🌸 단계인 친구는 그대로예요)`)) return;
-  up.forEach(id => { const after = Math.min(3, praiseOf(id) + 1); logPraise(id, 1); state.praise[id] = after; });
+  const bid = 'b' + Date.now();
+  up.forEach(id => { const after = Math.min(3, praiseOf(id) + 1); logPraise(id, 1); state.praise[id] = after; const arr = (state.praiseTimes[todayStr()] || {})[id]; if (arr && arr.length) arr[arr.length - 1].b = bid; });
   save(); renderStage(); updatePraiseBtn(); fanfare();
   document.querySelectorAll('#seats .sitter').forEach(sit => {
     const id = sitterId(sit); if (!id || !up.includes(id)) return;
