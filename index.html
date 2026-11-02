@@ -4777,7 +4777,24 @@ const FOOD_SPELL = [[/까스/g,'가스'],[/까쓰/g,'가스'],[/쥬스/g,'주스
 const fixSpell = q => FOOD_SPELL.reduce((t,[a,b]) => t.replace(a,b), q);
 const FOOD_TYPES = ['비빔밥','볶음밥','주먹밥','유부초밥','김밥','덮밥','볶음면','비빔면','칼국수','잔치국수','콩국수','국수','라면','우동','냉면','수제비','만둣국','떡만둣국','미역국','떡국','계란국','달걀국','뭇국','무국','북엇국','된장국','김칫국','콩나물국','해장국','냉국','육개장','설렁탕','삼계탕','갈비탕','감자탕','매운탕','어묵탕','된장찌개','김치찌개','순두부찌개','부대찌개','찌개','전골','달걀찜','계란찜','찜','볶음','조림','구이','무침','생채','냉채','겉절이','나물','잡채','숙회','튀김','부침개','부침','강정','스테이크','돈가스','카레','스파게티','파스타','샐러드','샌드위치','햄버거','핫도그','토스트','피자','만두','초밥','김치','깍두기','장아찌','장조림','수프','스프','죽','탕','국','밥','면','떡','빵','케이크','주스','우유','과일'];
 function foodType(str){ let best = ''; for (const t of FOOD_TYPES) if (str.includes(t) && t.length > best.length) best = t; return best; }
-const TYPE_EN = {'국':'korean soup','탕':'korean soup','찌개':'korean stew','전골':'korean hot pot','찜':'korean steamed dish','볶음':'korean stir fry','조림':'korean braised','구이':'korean grilled fish','무침':'korean seasoned vegetables','생채':'korean fresh vegetable salad','나물':'korean namul','잡채':'japchae','김치':'kimchi','깍두기':'kkakdugi','밥':'cooked rice','덮밥':'korean rice bowl','면':'korean noodles','국수':'korean noodles','죽':'rice porridge','떡':'tteok rice cake','빵':'bread','전':'korean pancake jeon','튀김':'korean fried food'};
+const DISH_EN = {
+  '미역국':'seaweed soup','된장국':'korean soybean paste soup','김칫국':'kimchi soup','콩나물국':'bean sprout soup','북엇국':'dried pollock soup','떡국':'rice cake soup tteokguk','만둣국':'dumpling soup','육개장':'yukgaejang spicy beef soup','삼계탕':'samgyetang chicken soup','갈비탕':'galbitang short rib soup','감자탕':'gamjatang pork bone soup','설렁탕':'seolleongtang ox bone soup','매운탕':'spicy fish stew','어묵탕':'fish cake soup','김치찌개':'kimchi stew','된장찌개':'soybean paste stew doenjang jjigae','순두부찌개':'soft tofu stew sundubu','부대찌개':'budae jjigae army stew',
+  '비빔밥':'bibimbap','볶음밥':'korean fried rice','김밥':'gimbap','유부초밥':'inari sushi','주먹밥':'rice ball',
+  '달걀찜':'korean steamed egg','계란찜':'korean steamed egg',
+  '제육볶음':'spicy pork stir fry jeyuk','오징어볶음':'stir fried squid','낙지볶음':'stir fried octopus','김치볶음':'stir fried kimchi','어묵볶음':'stir fried fish cake','멸치볶음':'stir fried anchovies',
+  '잡채':'japchae glass noodles','불고기':'bulgogi','떡볶이':'tteokbokki','탕수육':'sweet and sour pork','돈가스':'pork cutlet tonkatsu','카레':'curry rice','김치':'kimchi','깍두기':'kkakdugi radish kimchi','만두':'korean dumpling mandu','칼국수':'kalguksu noodle soup','냉면':'naengmyeon cold noodles','비빔면':'spicy mixed noodles','잔치국수':'janchi guksu noodles',
+  '미트볼':'meatball','함박스테이크':'hamburg steak','스테이크':'steak','피자':'pizza','햄버거':'hamburger','핫도그':'corn dog','샌드위치':'sandwich','토스트':'toast','스파게티':'spaghetti','파스타':'pasta','샐러드':'salad',
+  '유산슬':'korean chinese stir fry','마파두부':'mapo tofu'
+};
+const TYPE_EN = {'국':'korean soup','탕':'korean soup','찌개':'korean stew','전골':'korean hot pot','찜':'korean steamed dish','볶음':'korean stir fry dish','조림':'korean braised dish','구이':'korean grilled dish','무침':'korean seasoned vegetable salad','생채':'korean fresh vegetable salad','냉채':'korean cold salad','겉절이':'fresh kimchi','나물':'korean namul vegetables','잡채':'japchae','튀김':'korean fried food','전':'korean pancake jeon','부침개':'korean pancake','부침':'korean pancake','강정':'korean sweet crispy','밥':'korean rice dish','덮밥':'korean rice bowl','면':'korean noodles','국수':'korean noodles','죽':'korean rice porridge','떡':'tteok rice cake','빵':'bread','케이크':'cake','만두':'korean dumpling','초밥':'sushi','김치':'kimchi','깍두기':'kkakdugi','장아찌':'korean pickle','장조림':'soy braised beef','수프':'soup','스프':'soup','주스':'fruit juice','우유':'milk','과일':'fruit platter'};
+function foodEnQueries(name){
+  const base = foodBase(name), first = base.split(/[&\/,+·]| 및 | 와 | 과 /)[0].replace(FOOD_PREFIX, '').trim(), out = [];
+  let dish = ''; for (const k in DISH_EN) if ((first.includes(k) || base.includes(k)) && k.length > dish.length) dish = k;
+  if (dish) out.push(DISH_EN[dish]);
+  const t = foodType(first); if (t && TYPE_EN[t] && !out.includes(TYPE_EN[t])) out.push(TYPE_EN[t]);
+  out.push('korean food');
+  return out.filter((q, i) => out.indexOf(q) === i);
+}
 function foodQueries(name){
   const base = foodBase(name), out = [];
   const add = q => { q = (q || '').trim(); if (q.length < 2) return; [q, fixSpell(q)].forEach(x => { if (!out.includes(x)) out.push(x); }); };
@@ -4790,9 +4807,8 @@ function foodQueries(name){
     const i = first.indexOf(t);
     for (const n of [2, 1, 3]){ if (i - n >= 0) add(first.slice(i - n, i) + t); }
     add(t);
-    if (TYPE_EN[t]) out.push(TYPE_EN[t]);
   }
-  return out.slice(0, 9);
+  return out.slice(0, 8);
 }
 const normT = t => String(t).replace(/\s*\(.*?\)\s*/g, '').replace(/\s+/g, '');
 async function wikiFind(q){
@@ -4811,9 +4827,9 @@ async function wikiFind(q){
     return p ? {title: p.title, img: p.thumbnail.source, text: (p.extract || '').split('\n')[0].slice(0, 220), url: p.fullurl || ('https://ko.wikipedia.org/wiki/' + encodeURIComponent(p.title))} : null;
   } finally { clearTimeout(to); }
 }
-const COMMONS_SKIP = /logo|icon|map|flag|chart|diagram|graph|coat.of.arms|wiki|symbol|배치도|지도|로고/i;
+const COMMONS_SKIP = /logo|icon|\bmap\b|flag|chart|diagram|graph|coat.of.arms|wikidata|symbol|배치도|지도|로고|\.svg$/i;
 async function commonsFind(q){
-  const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:'filetype:bitmap ' + q, gsrnamespace:'6', gsrlimit:'12', prop:'imageinfo', iiprop:'url|mime|size', iiurlwidth:'800'});
+  const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:q, gsrnamespace:'6', gsrlimit:'15', prop:'imageinfo', iiprop:'url|mime|size', iiurlwidth:'800'});
   const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 5000);
   try {
     const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) throw 0;
@@ -4821,8 +4837,8 @@ async function commonsFind(q){
     for (const p of pages){
       const ii = p.imageinfo && p.imageinfo[0]; if (!ii) continue;
       if (!/^image\/(jpeg|png|webp)$/.test(ii.mime || '')) continue;
-      if (ii.width && ii.height && Math.max(ii.width, ii.height) / Math.min(ii.width, ii.height) > 2.6) continue;
       if (COMMONS_SKIP.test(p.title)) continue;
+      if (ii.width && ii.height && Math.max(ii.width, ii.height) / Math.min(ii.width, ii.height) > 3) continue;
       return {title: q, img: ii.thumburl || ii.url, url: 'https://commons.wikimedia.org/wiki/' + encodeURIComponent(p.title), commons: true};
     }
   } finally { clearTimeout(to); }
@@ -4842,7 +4858,7 @@ async function showFood(name){
     const qs = foodQueries(name);
     try {
       for (const q of qs){ hit = await wikiFind(q); if (hit) break; }
-      if (!hit){ for (const q of qs){ hit = await commonsFind(q); if (hit) break; } }
+      if (!hit){ for (const q of foodEnQueries(name)){ hit = await commonsFind(q); if (hit) break; } }
     } catch(e){ err = true; }
     if (!err){ state.foodCache[foodCur] = hit; const ks = Object.keys(state.foodCache); if (ks.length > 300) delete state.foodCache[ks[0]]; save(); }
   }
