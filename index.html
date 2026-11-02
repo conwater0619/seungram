@@ -4792,7 +4792,7 @@ function foodEnQueries(name){
   let dish = ''; for (const k in DISH_EN) if ((first.includes(k) || base.includes(k)) && k.length > dish.length) dish = k;
   if (dish) out.push(DISH_EN[dish]);
   const t = foodType(first); if (t && TYPE_EN[t] && !out.includes(TYPE_EN[t])) out.push(TYPE_EN[t]);
-  out.push('korean food');
+  out.push('korean cuisine');
   return out.filter((q, i) => out.indexOf(q) === i);
 }
 function foodQueries(name){
@@ -4844,6 +4844,16 @@ async function commonsFind(q){
   } finally { clearTimeout(to); }
   return null;
 }
+async function wikiFindEn(q){
+  const url = 'https://en.wikipedia.org/w/api.php?' + new URLSearchParams({action:'query', format:'json', origin:'*', generator:'search', gsrsearch:q, gsrlimit:'6', prop:'pageimages|info', inprop:'url', piprop:'thumbnail', pithumbsize:'800'});
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 5000);
+  try {
+    const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) throw 0;
+    const j = await r.json(), pages = Object.values((j.query && j.query.pages) || {}).sort((a,b) => a.index - b.index);
+    const p = pages.find(x => x.thumbnail && x.thumbnail.source && !/^(File|Category|Template|List of)/i.test(x.title));
+    return p ? {title: p.title, img: p.thumbnail.source, url: p.fullurl || ('https://en.wikipedia.org/wiki/' + encodeURIComponent(p.title)), enwiki: true} : null;
+  } finally { clearTimeout(to); }
+}
 const gwa = w => { const c = String(w).trim().slice(-1).charCodeAt(0); return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0) ? '과' : '와'; };
 function loadImg(src){ return new Promise((res, rej) => { const im = new Image(); im.referrerPolicy = 'no-referrer'; im.onload = () => res(im); im.onerror = rej; im.src = src; }); }
 let foodReq = 0, foodCur = '';
@@ -4858,7 +4868,9 @@ async function showFood(name){
     const qs = foodQueries(name);
     try {
       for (const q of qs){ hit = await wikiFind(q); if (hit) break; }
-      if (!hit){ for (const q of foodEnQueries(name)){ hit = await commonsFind(q); if (hit) break; } }
+      const enq = foodEnQueries(name);
+      if (!hit){ for (const q of enq){ hit = await wikiFindEn(q); if (hit) break; } }
+      if (!hit){ for (const q of enq){ hit = await commonsFind(q); if (hit) break; } }
     } catch(e){ err = true; }
     if (!err){ state.foodCache[foodCur] = hit; const ks = Object.keys(state.foodCache); if (ks.length > 300) delete state.foodCache[ks[0]]; save(); }
   }
@@ -4871,8 +4883,9 @@ async function showFood(name){
     const img = await loadImg(hit.img); if (my !== foodReq) return;
     img.alt = hit.title; $('#fdPic').innerHTML = ''; $('#fdPic').appendChild(img);
   } catch(e){ if (my === foodReq) $('#fdPic').innerHTML = '<div class="ld">사진을 불러오지 못했어요.</div>'; return; }
-  $('#fdTxt').textContent = hit.text || (hit.commons ? '‘' + foodCur + '’' + gwa(foodCur) + ' 비슷한 사진이에요.' : '');
-  $('#fdSrc').innerHTML = hit.commons ? `비슷한 사진 · <a href="${esc(hit.url)}" target="_blank" rel="noopener">위키미디어 공용</a>`
+  $('#fdTxt').textContent = hit.text || ((hit.commons || hit.enwiki) ? '‘' + foodCur + '’' + gwa(foodCur) + ' 비슷한 사진이에요.' : '');
+  $('#fdSrc').innerHTML = hit.enwiki ? `비슷한 사진 · <a href="${esc(hit.url)}" target="_blank" rel="noopener">위키백과(영어)</a>`
+    : hit.commons ? `비슷한 사진 · <a href="${esc(hit.url)}" target="_blank" rel="noopener">위키미디어 공용</a>`
     : `${normT(hit.title) !== normT(foodCur) ? `가장 비슷한 음식: <b>${esc(hit.title)}</b> · ` : ''}사진·설명: <a href="${esc(hit.url)}" target="_blank" rel="noopener">위키백과</a>`;
 }
 $('#dlgMeal').addEventListener('click', e => { const f = e.target.closest('[data-food]'); if (f) showFood(f.dataset.food); });
