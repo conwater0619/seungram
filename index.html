@@ -31,7 +31,17 @@ h1,h2,h3{font-family:"Jua","Gowun Dodum",sans-serif;font-weight:400}
 .wrap{max-width:1600px;margin:0 auto;padding:0 16px}
 
 /* 상단 */
-.top{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 16px 6px}
+.top{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 16px 6px;flex-wrap:wrap}
+.temp-mini{display:flex;align-items:center;gap:8px;border:1px solid #f0c2bd;background:#fff6f5;border-radius:999px;padding:5px 12px 5px 10px;cursor:pointer;font-family:"Jua",sans-serif;max-width:min(42vw,420px)}
+.temp-mini[hidden]{display:none}
+.temp-mini .ic{font-size:18px;flex:none}
+.temp-mini .bar{position:relative;width:clamp(90px,16vw,220px);height:16px;background:#f1e3e1;border-radius:999px;overflow:hidden;flex:none}
+.temp-mini .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#f7a35c,#e3453a);border-radius:999px;transition:width .35s ease}
+.temp-mini .pt{color:#e3453a;font-size:15px;flex:none}
+.temp-mini .nx{color:#8a7a78;font-size:12.5px;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+body.fs .temp-mini .bar{width:16vw;height:2vh}
+body.fs .temp-mini{font-size:2vh}
+@media (max-width:620px){.temp-mini .nx{display:none}}
 .top h1{margin:0;font-size:clamp(22px,2.4vw,30px);letter-spacing:-.5px;text-align:center;cursor:pointer;padding:2px 12px;border-radius:12px;transition:background .15s}
 .lk-chosen{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:38px;margin-bottom:12px}
 .lk-chosen span{background:#ecfdf3;border:1px solid #a7e3bd;color:#166534;border-radius:999px;padding:5px 14px;font-family:"Jua",sans-serif;font-size:18px}
@@ -662,6 +672,26 @@ dialog.sheet.small{width:min(560px,94vw)}
 .pick-name{font-family:"Jua",sans-serif;font-size:clamp(60px,9vw,150px);line-height:1.1;color:var(--ink)}
 .pick-hint{font-size:14px;color:var(--muted);margin-top:8px}
 .pick-card .pick-cam{margin-top:12px;font-size:17px;padding:8px 18px}
+.temp-wrap{display:flex;gap:20px;align-items:stretch;flex-wrap:wrap}
+.temp-gauge{flex:none}
+.temp-gauge svg{display:block;height:min(56vh,420px);width:auto}
+.temp-side{flex:1;min-width:230px}
+.temp-pts{font-family:"Jua",sans-serif;display:flex;align-items:baseline;gap:6px}
+.temp-pts b{font-size:48px;color:#e3453a}
+.temp-pts span{font-size:20px;color:var(--muted)}
+.temp-next{font-size:15px;color:#5a5144;min-height:1.4em}
+.temp-rewards{display:flex;flex-direction:column;gap:5px}
+.temp-rw{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}
+.temp-rw.hit{background:#eafaef;border-color:#9fd3ad}
+.temp-rw .at{font-family:"Jua",sans-serif;min-width:54px}
+.temp-rw .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.temp-rw .del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:15px}
+.temp-rw .ck{color:#2e7d4f}
+.temp-ov{position:fixed;inset:0;z-index:95;background:rgba(227,69,58,.95);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;cursor:pointer;animation:fadein .2s;text-align:center;padding:5vw}
+.temp-ov .b{font-family:"Jua",sans-serif;font-size:min(16vh,13vw);line-height:1}
+.temp-ov .r{font-family:"Jua",sans-serif;font-size:min(8vh,7vw)}
+.temp-ov .h{font-size:2.2vh;opacity:.85;margin-top:2vh}
+@media (max-width:620px){.temp-gauge svg{height:40vh}}
 dialog.noise-dlg{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#13202b;overflow:hidden;color:#fff}
 dialog.noise-dlg::backdrop{background:#13202b}
 .nz-main{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh;padding:5vh 5vw;transition:background .3s}
@@ -884,6 +914,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
 <div class="wrap">
   <header class="top">
     <h1 id="appTitle" title="눌러서 문구 바꾸기"><span>웃음이 넘치는</span> 우리 반 교실</h1>
+    <button class="temp-mini" id="tempMini" hidden title="학급 온도계 열기"></button>
   </header>
 
   <main>
@@ -908,6 +939,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <div class="menu" id="moreMenu" hidden>
           <button class="mi" id="openDoc">📷 카메라</button>
           <button class="mi" id="openNoise">🔊 소음 측정기</button>
+          <button class="mi" id="openTemp">🌡️ 학급 온도계</button>
+          <button class="mi" id="praiseAll">😎 반 전체 칭찬 (+1)</button>
           <button class="mi" id="openHelp">📖 사용 설명서</button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
@@ -1431,6 +1464,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <h3>⋯ 더보기 메뉴</h3>
         <ul>
           <li><b>📷 카메라</b>(⋯ 더보기 맨 위): 전자칠판 카메라, USB 실물화상기, 웹캠 중 연결된 카메라를 화면 가득 크게 보여 줘요(여러 개면 아래 막대에서 골라요). ⟳ 회전(R), 확대·축소(＋/－, 마우스 휠), 확대했을 때 끌어서 옮기기, 맞춤(0), 좌우 반전, ☀ 밝게, 📄 글씨 또렷(흑백·대비), ✏️ 펜으로 화면 위에 쓰기(P, 색 바꾸기·🧽 지우기), ⏸ 멈춤(스페이스), 📸 지금 화면을 사진으로 저장이 있어요. 고른 카메라·회전·밝기 설정은 기억해 둬요. 영상은 화면에만 보이고 어디로도 보내지지 않아요.</li>
+          <li><b>😎 반 전체 칭찬</b>(⋯ 더보기): 누르면 자리에 앉은 친구들을 <b>한 번에 한 단계씩</b> 칭찬해요(결석·이미 🌸 단계인 친구는 빼요). 학급 온도계도 함께 올라가고, 한 친구당 하루 3점 상한은 그대로 지켜져요. 우리 반이 다 함께 잘했을 때 쓰기 좋아요.</li>
+          <li><b>🌡️ 학급 온도계</b>: 학생 얼굴을 눌러 칭찬할 때마다 <b>반 전체 점수가 1점씩</b> 올라가요. 오른쪽 클릭(길게 누르기)으로 <b>경고</b>를 주면 1점 내려가요(칭찬·경고를 되돌리면 점수도 되돌아와요). 칭찬은 하루 3단계라, <b>한 친구가 하루에 올릴 수 있는 점수는 3점까지</b>예요(올렸다 내렸다 해도 넘지 않아요). 다음 날이 되면 다시 올릴 수 있어요. 보상을 하나라도 정하면 맨 위 교실 이름 옆에 <b>가로 온도계</b>가 실시간으로 떠서, 지금 몇 점인지·다음 보상이 뭔지 바로 보여요(눌러서 큰 온도계를 열 수 있어요). ⋯ 더보기 → 🌡️ 학급 온도계를 열면 세로 온도계 그림으로 크게 볼 수 있어요. ‘🎁 보상 정하기’에서 ‘50점 사탕 파티’처럼 점수와 보상을 정하면 온도계에 눈금으로 표시되고, 그 점수를 넘으면 자동으로 축하 창이 떠요. 점수는 ＋1·＋5·－1로 손봐도 되고 ‘0점으로’ 되돌릴 수 있어요. 쓰지 않을 거면 그냥 열지 않으면 돼요(메인 화면에는 안 나와요).</li>
           <li><b>🔊 소음 측정기</b>: 마이크로 교실 소리 크기를 재서 0~100 숫자와 신호등(초록·노랑·빨강), 표정으로 크게 보여 줘요. 기준선을 넘으면 화면이 빨갛게 깜빡여서 ‘조금 조용히’ 신호를 줘요. 아래 막대에서 민감도(마이크·교실마다 달라요)와 기준선을 맞추고, ⛶ 크게로 전체 화면으로 띄워요. 실제 데시벨(dB)을 정확히 재는 건 아니고, 교실 안에서 비교하는 상대적인 크기예요. 소리는 측정에만 쓰이고 저장·전송되지 않아요.</li>
           <li><b>🔴 녹화</b>: 카메라 화면 아래 <b>🔴 녹화</b>를 누르면 실험 과정·발표 같은 수업 장면을 녹화해요. 녹화하는 동안 화면 왼쪽 위에 빨간 <b>🔴 녹화 중</b>과 시간이 크게 떠서 아이들도 녹화 중인 걸 알 수 있어요. <b>⏹ 녹화 끝</b>을 누르면 영상 파일로 바로 내려받아요(이 컴퓨터에만 저장돼요). <b>소리(마이크)도 함께 녹음돼요.</b> 처음 한 번 마이크 허용을 눌러 주세요. 소리가 녹음될 때는 녹화 표시 옆에 <b>🔊 소리</b>가 같이 떠요. 교실 대화가 함께 녹음되니, 아이들 모르게 몰래 녹화하지 않도록 녹화 표시는 끌 수 없게 해 두었어요.</li>
           <li><b>📷 카메라 비추기</b>: 🎤 발표자 뽑기 카드의 <b>📷 카메라로 비추기</b>를 누르면 전자칠판(웹캠) 카메라 화면이 크게 뜨고, 위에 ‘🎤 ○○의 발표’와 발표 시간이 나와요. 아래 단추로 좌우 반전, 확대(＋/－), 화면 멈춤(스페이스), 카메라 고르기를 할 수 있고 <kbd>Esc</kbd>나 ✕로 닫아요. 처음 한 번 ‘카메라 허용’을 눌러 주세요. 영상은 화면에만 보이고 저장되거나 어디로 보내지지 않아요.</li>
@@ -1645,6 +1680,37 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 <div class="tool-pill" id="toolPill" hidden></div>
+<dialog class="sheet mid" id="dlgTemp">
+  <div class="sheet-head">
+    <h2>🌡️ 학급 온도계</h2>
+    <span class="muted small">칭찬할 때마다 반 점수가 1점씩 올라요</span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="temp-wrap">
+      <div class="temp-gauge" id="tempGauge"></div>
+      <div class="temp-side">
+        <div class="temp-pts"><b id="tempPts">0</b><span>점</span></div>
+        <div class="temp-next" id="tempNext"></div>
+        <div class="row" style="gap:6px;margin:10px 0">
+          <button class="btn" id="tempMinus">－1</button>
+          <button class="btn primary" id="tempPlus">＋1</button>
+          <button class="btn" id="tempPlus5">＋5</button>
+          <span style="flex:1"></span>
+          <button class="btn danger" id="tempReset">0점으로</button>
+        </div>
+        <h4 style="margin:8px 0 4px">🎁 보상 정하기</h4>
+        <div class="temp-rewards" id="tempRewards"></div>
+        <div class="row" style="gap:6px;margin-top:8px">
+          <input type="number" id="tempAt" min="1" max="9999" placeholder="점수" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:8px">
+          <input id="tempName" maxlength="30" placeholder="보상 (예: 사탕 파티)" style="flex:1;min-width:120px;padding:8px;border:1px solid var(--line);border-radius:8px">
+          <button class="btn primary" id="tempAdd">추가</button>
+        </div>
+      </div>
+    </div>
+    <p class="muted small" style="margin-bottom:0">보상 점수에 다다르면 온도계에 눈금과 🎁가 표시되고, 그 점수를 넘으면 자동으로 축하 창이 떠요. 온도계를 안 쓰실 거면 그냥 열지 않으면 돼요(점수는 쌓이기만 해요).</p>
+  </div>
+</dialog>
 <dialog class="noise-dlg" id="dlgNoise">
   <div class="nz-msg" id="nzMsg" hidden></div>
   <div class="nz-main" id="nzMain" hidden>
@@ -2980,15 +3046,19 @@ function logWarn(id, d){
   L[id] = Math.max(0, (L[id] || 0) + d);
   if (!L[id]) delete L[id];
   if (!Object.keys(L).length) delete state.warnLog[t];
+  if (typeof tempApply === 'function') tempApply(id, -d);
   save();
 }
 function logPraise(id, d){
   logTime('praiseTimes', id, d);
+  state.temp = state.temp || {pts: 0, rewards: [], done: 0};
+  if (typeof tempApply === 'function') tempApply(id, d);
   const t = todayStr(), L = state.praiseLog[t] = state.praiseLog[t] || {};
   L[id] = Math.max(0, (L[id] || 0) + d);
   if (!L[id]) delete L[id];
   if (!Object.keys(L).length) delete state.praiseLog[t];
   save();
+  if (typeof renderTempMini === 'function') renderTempMini();
 }
 let psPeriod = 'week', psView = 'rank', psOpen = null;
 function dayLabel(d){ const [y,m,dd] = d.split('-').map(Number); return `${y !== new Date().getFullYear() ? y + '년 ' : ''}${m}월 ${dd}일 (${weekday(d)})`; }
@@ -3089,7 +3159,7 @@ function changePraise(sit, delta){
   let after = before, spark = '';
   if (delta > 0 && before >= 3) return;
   if (delta > 0){
-    if (before < 0) after = 0;
+    if (before < 0){ after = 0; tempApply(id, 1); }
     else { after = Math.min(3, before + 1); logPraise(id, 1); spark = after === 3 ? '🌸' : after === 2 ? '🎩' : '✨'; }
   } else {
     if (before > 0){ after = before - 1; logPraise(id, -1); }
@@ -3133,6 +3203,27 @@ $('#seats').addEventListener('contextmenu', e => {
   if (!longPressed && !animating && !pinMode) changePraise(sit, -1);
 });
 function updatePraiseBtn(){ $('#clearPraise').style.display = Object.keys(state.praise).length ? '' : 'none'; }
+async function praiseAll(){
+  $('#moreMenu').hidden = true;
+  if (animating) return;
+  if (!state.current){ toast('먼저 자리를 바꿔 주세요.'); return; }
+  if (resetPraiseIfNewDay()) renderStage();
+  const abs = absentSet(), ids = seatedIds().filter(id => !abs.has(id)), up = ids.filter(id => praiseOf(id) < 3);
+  if (!ids.length){ toast('칭찬할 학생이 없어요.'); return; }
+  if (!up.length){ toast('모두 이미 최고 단계(🌸)예요.'); return; }
+  if (!await askConfirm(`반 전체 ${up.length}명을 칭찬할까요? (이미 🌸 단계인 친구는 그대로예요)`)) return;
+  up.forEach(id => { const after = Math.min(3, praiseOf(id) + 1); logPraise(id, 1); state.praise[id] = after; });
+  save(); renderStage(); updatePraiseBtn(); fanfare();
+  document.querySelectorAll('#seats .sitter').forEach(sit => {
+    const id = sitterId(sit); if (!id || !up.includes(id)) return;
+    const lv = praiseOf(id), sp = document.createElement('span'); sp.className = 'spark';
+    sp.textContent = lv >= 3 ? '🌸' : lv === 2 ? '🎩' : '✨';
+    sit.parentElement.appendChild(sp); setTimeout(() => sp.remove(), 950);
+    sit.classList.remove('yay'); void sit.offsetWidth; sit.classList.add('yay');
+  });
+  toast(`😎 반 전체를 칭찬했어요! (${up.length}명)`);
+}
+$('#praiseAll').onclick = praiseAll;
 $('#clearPraise').onclick = async () => {
   if (animating) return;
   if (!await askConfirm('모든 학생의 칭찬·경고 표시(선글라스·모자·꽃·울상 얼굴)를 지울까요? 기록은 남아요.')) return;
@@ -5508,6 +5599,98 @@ $('#dlgDoc').addEventListener('keydown', e => {
   else if (k === '0'){ e.preventDefault(); $('#docFit').click(); }
 });
 window.addEventListener('resize', () => { if ($('#dlgDoc').open){ docPenSize(); } });
+
+/* ---------- 학급 온도계 ---------- */
+state.temp = Object.assign({pts: 0, rewards: [], done: 0}, state.temp || {});
+function tempRewards(){ return (state.temp.rewards || []).slice().sort((a, b) => a.at - b.at); }
+function tempGoal(){ const r = tempRewards(); return r.length ? r[r.length - 1].at : 100; }
+function tempGauge(){
+  const pts = state.temp.pts || 0, goal = tempGoal(), f = Math.max(0, Math.min(1, pts / goal));
+  const Y0 = 36, Y1 = 300, H = Y1 - Y0, top = Y1 - f * H, rew = tempRewards();
+  const ticks = rew.map(r => { const y = Y1 - Math.min(1, r.at / goal) * H, hit = pts >= r.at; return `<line x1="60" y1="${y.toFixed(1)}" x2="70" y2="${y.toFixed(1)}" stroke="${hit ? '#2e7d4f' : '#b9b2a6'}" stroke-width="2"/><text x="74" y="${(y + 5).toFixed(1)}" font-size="15" fill="${hit ? '#2e7d4f' : '#7a7266'}" font-family="Jua, sans-serif">${hit ? '✅' : '🎁'} ${r.at}점 ${esc(r.name)}</text>`; }).join('');
+  return `<svg viewBox="0 0 300 348" xmlns="http://www.w3.org/2000/svg">
+    <rect x="38" y="${Y0 - 6}" width="24" height="${H + 12}" rx="12" fill="#eee" stroke="#cfc8bc" stroke-width="2"/>
+    <circle cx="50" cy="318" r="26" fill="#f3d9d6" stroke="#cfc8bc" stroke-width="2"/>
+    <rect x="43" y="${top.toFixed(1)}" width="14" height="${(Y1 - top + 6).toFixed(1)}" rx="7" fill="#e3453a"/>
+    <circle cx="50" cy="318" r="20" fill="#e3453a"/>
+    ${ticks}
+  </svg>`;
+}
+function renderTempMini(){
+  const el = $('#tempMini'); if (!el) return;
+  const rew = tempRewards(), pts = state.temp.pts || 0;
+  if (!rew.length){ el.hidden = true; return; }
+  const goal = tempGoal(), f = Math.max(0, Math.min(1, pts / goal)), next = rew.find(r => r.at > pts);
+  el.innerHTML = `<span class="ic">🌡️</span><span class="bar"><i style="width:${(f*100).toFixed(1)}%"></i></span><span class="pt">${pts}점</span><span class="nx">${next ? `🎁 ${esc(next.name)} ${next.at}점` : '🎉 목표 달성!'}</span>`;
+  el.hidden = false;
+}
+function renderTemp(){
+  const pts = state.temp.pts || 0, rew = tempRewards();
+  $('#tempGauge').innerHTML = tempGauge();
+  $('#tempPts').textContent = pts;
+  const next = rew.find(r => r.at > pts);
+  $('#tempNext').innerHTML = next ? `다음 보상까지 <b>${next.at - pts}점</b> — ${next.at}점 🎁 ${esc(next.name)}` : rew.length ? '🎉 모든 보상 점수를 넘었어요!' : '아래에서 보상 점수를 정해 보세요.';
+  $('#tempRewards').innerHTML = rew.length ? rew.map((r, k) => `<div class="temp-rw${pts >= r.at ? ' hit' : ''}"><span class="at">${r.at}점</span><span class="nm">${pts >= r.at ? '<span class="ck">✅</span> ' : '🎁 '}${esc(r.name)}</span><button class="del" data-del="${k}" title="지우기">✕</button></div>`).join('') : '<p class="muted small" style="margin:0">아직 보상이 없어요. 예) 50점 사탕 파티, 100점 다 함께 영화 보기</p>';
+  renderTempMini();
+}
+const TEMP_DAY_CAP = 3;
+function tempApply(id, d){
+  if (!state.temp || !d) return;
+  const t = todayStr();
+  if (!state.temp.day || state.temp.day.date !== t) state.temp.day = {date: t, c: {}};
+  const cur = state.temp.day.c[id] || 0, want = Math.max(-TEMP_DAY_CAP, Math.min(TEMP_DAY_CAP, cur + d)), nd = want - cur;
+  if (!nd) return;
+  state.temp.day.c[id] = want;
+  state.temp.pts = Math.max(0, (state.temp.pts || 0) + nd);
+  if (nd > 0) tempCheck(); else { const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at); state.temp.done = reached.length ? Math.max(...reached) : 0; }
+  save(); if ($('#dlgTemp').open) renderTemp(); renderTempMini();
+}
+function tempBump(d){
+  if (!state.temp) return;
+  state.temp.pts = Math.max(0, (state.temp.pts || 0) + d);
+  const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at);
+  state.temp.done = reached.length ? Math.max(...reached) : 0;
+  save(); if ($('#dlgTemp').open) renderTemp(); renderTempMini();
+}
+function tempCheck(){
+  const pts = state.temp.pts || 0, rew = tempRewards();
+  const reached = rew.filter(r => r.at <= pts).map(r => r.at);
+  const top = reached.length ? Math.max(...reached) : 0;
+  if (top > (state.temp.done || 0)){
+    state.temp.done = top; save();
+    const r = rew.find(x => x.at === top);
+    if (r) tempCelebrate(r);
+  } else if (top < (state.temp.done || 0)){ state.temp.done = top; save(); }
+  if ($('#dlgTemp').open) renderTemp();
+  renderTempMini();
+}
+function tempCelebrate(r){
+  fanfare();
+  const ov = document.createElement('div'); ov.className = 'temp-ov';
+  ov.innerHTML = `<div class="b">🌡️ ${r.at}점!</div><div class="r">🎁 ${esc(r.name)}</div><div class="h">화면을 누르면 닫혀요</div>`
+    + Array.from({length: 24}, () => `<span class="confetti" style="left:${(Math.random()*100).toFixed(1)}%;animation-delay:${(Math.random()*.6).toFixed(2)}s">${['🎉','✨','⭐','🎊'][Math.floor(Math.random()*4)]}</span>`).join('');
+  const close = () => { ov.remove(); document.removeEventListener('keydown', k, true); };
+  const k = e => { if (e.key === 'Escape' || e.key === 'Enter'){ e.preventDefault(); e.stopPropagation(); close(); } };
+  ov.onclick = close; document.addEventListener('keydown', k, true);
+  document.body.appendChild(ov);
+}
+function tempAdjust(d){ state.temp.pts = Math.max(0, (state.temp.pts || 0) + d); save(); if (d > 0) tempCheck(); else { const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at); state.temp.done = reached.length ? Math.max(...reached) : 0; save(); } renderTemp(); }
+$('#openTemp').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; renderTemp(); openSheet($('#dlgTemp')); };
+$('#tempMini').onclick = () => $('#openTemp').click();
+renderTempMini();
+$('#tempPlus').onclick = () => tempAdjust(1);
+$('#tempPlus5').onclick = () => tempAdjust(5);
+$('#tempMinus').onclick = () => tempAdjust(-1);
+$('#tempReset').onclick = async () => { if (!await askConfirm('학급 온도계 점수를 0점으로 되돌릴까요? (보상 설정은 그대로 남아요)')) return; state.temp.pts = 0; state.temp.done = 0; save(); renderTemp(); };
+$('#tempAdd').onclick = () => {
+  const at = parseInt($('#tempAt').value, 10), name = $('#tempName').value.trim();
+  if (!at || at < 1){ toast('보상 점수를 적어 주세요.'); return; }
+  if (!name){ toast('보상 이름을 적어 주세요.'); return; }
+  state.temp.rewards = (state.temp.rewards || []).filter(r => r.at !== at).concat([{at, name}]);
+  $('#tempAt').value = ''; $('#tempName').value = ''; save(); tempCheck(); renderTemp();
+};
+$('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
+$('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
 S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
