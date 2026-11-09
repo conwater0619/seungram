@@ -604,6 +604,8 @@ dialog.sheet.wide{width:min(1240px,97vw)}
 .ps-ddh{font-size:13px;color:var(--muted);font-family:"Jua",sans-serif;margin:4px 0 2px}
 .ps-nrow .stamp{margin:0}
 .ps-note:focus{outline:2px solid #ffc83d;border-color:transparent}
+.ps-del{flex:0 0 auto;width:32px;height:32px;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff;color:#c0392b;font-size:16px;line-height:1;cursor:pointer}
+.ps-del:hover{background:#fdecea;border-color:#e6b0aa}
 .ps-detail{flex-direction:column;align-items:stretch}
 .ps-row.click{cursor:pointer;border-radius:8px}
 .ps-row.click:hover{background:var(--gray-soft)}
@@ -1479,7 +1481,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>🗓️ 날짜별 돌아보기</b>: 메인 화면 날짜 양옆의 작은 <b>◀ ▶</b>를 누르면 어제·내일부터 날짜를 넘겨 가며 그날의 학교 행사·기념일, 시간표, 급식, 오늘 할 일, 과제 확인(안 낸 친구), 칭찬·경고 받은 친구를 한눈에 볼 수 있어요. 키보드 ← → 로도 넘겨요. 결석·조퇴와 한 줄 메모는 교사용 설정에서 볼 수 있어요.</li>
           <li><b>📅 학교 행사</b>: 🍚 급식에서 찾아 둔 학교의 <b>나이스 학사일정</b>을 받아 와서, 이번 주 행사(현장체험학습·학예회·재량휴업일 등)를 메인 화면 날짜 오른쪽에 ‘📅 오늘 학예회 · 금 현장체험학습’처럼 보여 줘요. 반 이름에 ‘3학년’처럼 학년을 넣어 두면 다른 학년만의 행사는 빼고 보여 줘요. 누르면 앞으로 10주 일정이 주별로 나와요. 휴업일로 등록된 날은 쉬는 날로 보고 시간표·기념일·점심 커튼에도 반영해요.</li>
           <li><b>📌 기념일 · 계기교육 영상</b>: 식목일·한글날·독도의 날처럼 계기교육에 쓰는 기념일 30여 개와 설날·추석이 들어 있어요. 그날이 되면 메인 화면 날짜 아래에 <b>📌 오늘은 ○○</b>이 뜨고, 날짜나 그 표시를 누르면 유튜브에서 관련 계기교육 영상을 찾아 새 탭으로 열어 줘요. 기념일이 주말·공휴일이면 바로 앞 등교일에는 ‘○월 ○일은 ○○’로 미리, 바로 뒤 등교일에는 ‘지난 ○월 ○일은 ○○’로 보여 줘요. 이 메뉴에서 자주 쓰는 영상 주소를 저장하면 다음부터 그 영상이 바로 열리고, 개교기념일 같은 우리 학교 기념일이나 재량휴업일도 추가할 수 있어요.</li>
-          <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요. 전체 학생 인쇄도 돼요.</li>
+          <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요(기본 양식 두 개는 날짜를 넣지 않고, 직접 올린 양식은 날짜 칸을 정해 두면 인쇄하는 날의 날짜가 들어가요). 전체 학생 인쇄도 돼요.</li>
           <li><b>📲 앱으로 설치하기</b>: 바탕화면·작업 표시줄에 😊 아이콘이 생기고 프로그램처럼 따로 창으로 열려요. 새 버전은 자동으로 바뀌고, 인터넷이 잠깐 끊겨도 기본 기능은 쓸 수 있어요.</li>
           <li><b>💞 MBTI 궁합 자리</b>: 재미로 해 보는 기능이에요. 친구들 MBTI를 고르고 버튼을 누르면 궁합이 좋은 친구끼리 같은 짝·모둠이 되도록 앉아요. 떨어져야 하는 친구와 지정석은 그대로 지켜요. 지난 자리로 돌아가려면 🕘 지난 배치에서 되돌리면 돼요.</li>
           <li><b>🕘 지난 배치</b>: 지금까지의 자리 배치 기록을 날짜별로 보고, 사진 저장하거나 그 배치로 되돌릴 수 있어요.</li>
@@ -3030,6 +3032,9 @@ function resetPraiseIfNewDay(){
   return false;
 }
 function praiseOf(id){ return clamp(state.praise[id] | 0, -1, 3); }
+const DAY_CAP = 3;
+function pCountToday(id){ return ((state.praiseTimes[todayStr()] || {})[id] || []).length; }
+function wCountToday(id){ return ((state.warnTimes[todayStr()] || {})[id] || []).length; }
 const EYES = '<span class="eye l"></span><span class="eye r"></span>';
 function accHtml(id){
   const p = praiseOf(id);
@@ -3106,6 +3111,30 @@ function setOccNote(d, id, i, st, txt){
   save();
 }
 function anyNote(d, id){ const occs = occsOf(d, id); if (occs.some((st, i) => occNote(d, id, i, st))) return true; const nd = (NOTES()[d] || {})[id]; return typeof nd === 'string' ? !!nd : false; }
+// 얼굴 표정을 오늘 기록 기준으로 다시 계산 (가장 최근 동작 반영)
+function faceFromToday(id){
+  const t = todayStr();
+  const ps = (state.praiseTimes[t] || {})[id] || [], ws = (state.warnTimes[t] || {})[id] || [];
+  if (!ps.length && !ws.length){ delete state.praise[id]; return; }
+  const lastP = ps.length ? ps[ps.length - 1].t : '', lastW = ws.length ? ws[ws.length - 1].t : '';
+  state.praise[id] = (ws.length && lastW >= lastP) ? -1 : Math.min(3, ps.length);
+}
+// 특정 칭찬/경고 기록 1건 삭제 (되돌리기)
+function removeOcc(d, id, i){
+  const times = psKind === 'warn' ? (state.warnTimes = state.warnTimes || {}) : (state.praiseTimes = state.praiseTimes || {});
+  const notes = NOTES(), L = LOG();
+  const arr = (times[d] || {})[id]; if (!arr || i < 0 || i >= arr.length) return;
+  arr.splice(i, 1);
+  let na = (notes[d] || {})[id];
+  if (typeof na === 'string') na = na ? [na] : [];
+  if (Array.isArray(na)){ na.splice(i, 1); if (notes[d]){ if (na.some(x => x)) notes[d][id] = na; else delete notes[d][id]; } }
+  if (!arr.length && times[d]) delete times[d][id];
+  if (times[d] && !Object.keys(times[d]).length) delete times[d];
+  if (notes[d] && !Object.keys(notes[d]).length) delete notes[d];
+  if (L[d]){ L[d][id] = Math.max(0, (L[d][id] || 0) - 1); if (!L[d][id]) delete L[d][id]; if (!Object.keys(L[d]).length) delete L[d]; }
+  if (d === todayStr()){ if (typeof tempSync === 'function') tempSync(id); faceFromToday(id); if (typeof updatePraiseBtn === 'function') updatePraiseBtn(); if (!animating && typeof renderStage === 'function') renderStage(); }
+  save();
+}
 const NOTE_PH = () => psKind === 'warn' ? '메모 (예: 수업 중 친구와 장난침)' : '메모 (예: 모둠 활동에서 친구를 잘 도와줌)';
 function occNoteInp(d, id, i, st){ return `<input class="ps-note" data-d="${d}" data-id="${esc(id)}" data-i="${i}"${st && st.b ? ` data-b="${esc(st.b)}"` : ''} value="${esc(occNote(d, id, i, st))}" placeholder="${NOTE_PH()}" maxlength="120">`; }
 function stTag(st){ return st && st.b ? ' <span class="ps-btag">😎 전체</span>' : ''; }
@@ -3135,11 +3164,12 @@ function renderPraiseStats(){
   if (!studs.length){ box.innerHTML = '<p class="muted small">학생을 먼저 입력해 주세요.</p>'; return; }
   const days = [...new Set(Object.keys(LOG()).concat(Object.keys(NOTES())))].filter(d => d >= from).sort().reverse();
   const cntOf = (d,id) => (LOG()[d] || {})[id] || 0;
+  const delBtn = (d,id,i) => `<button class="ps-del" data-d="${d}" data-id="${esc(id)}" data-i="${i}" title="이 ${KW()} 기록 1건 삭제">↩</button>`;
   if (psView === 'date'){
     const html = days.map(d => {
       const items = dayItems(d); if (!items.length) return '';
       const rows = items.map(it => it.single
-        ? `<div class="ps-nrow"><span class="ps-who"><span class="stamp">🕘 ${esc(it.legacy ? dayLabel(d).replace(/^.*\(/, '').replace(')', '') + ' (시간 기록 없음)' : stampTxt(it.st))}</span> ${esc(nameOf(it.id))}</span>${occNoteInp(d, it.id, it.i, it.st)}</div>`
+        ? `<div class="ps-nrow"><span class="ps-who"><span class="stamp">🕘 ${esc(it.legacy ? dayLabel(d).replace(/^.*\(/, '').replace(')', '') + ' (시간 기록 없음)' : stampTxt(it.st))}</span> ${esc(nameOf(it.id))}</span>${occNoteInp(d, it.id, it.i, it.st)}${it.legacy ? '' : delBtn(d, it.id, it.i)}</div>`
         : `<div class="ps-nrow bt"><span class="ps-who"><span class="stamp">🕘 ${esc(stampTxt(it.st))}</span> 😎 전체 칭찬 <b>${it.n}명</b></span><input class="ps-note" data-b="${esc(it.b)}" value="${esc(state.batchNotes[it.b] || '')}" placeholder="전체 칭찬 메모 (한 번 적으면 ${it.n}명 모두 기록)" maxlength="120"></div>`).join('');
       return `<div class="ps-day"><h5>${dayLabel(d)} <span class="muted small" style="font-family:inherit">총 ${items.reduce((a, it) => a + (it.single ? 1 : it.n), 0)}번</span></h5>${rows}</div>`;
     }).join('');
@@ -3159,7 +3189,7 @@ function renderPraiseStats(){
         if (psOpen === r.id){
           const mine = days.filter(d => cntOf(d, r.id) || anyNote(d, r.id)).map(d => {
             const occs = occsOf(d, r.id);
-            const rows = occs.length ? occs.map((st, i) => `<div class="ps-nrow${st && st.b ? ' bt' : ''}"><span class="ps-who"><span class="stamp">🕘 ${esc(stampTxt(st))}</span>${stTag(st)}</span>${occNoteInp(d, r.id, i, st)}</div>`).join('')
+            const rows = occs.length ? occs.map((st, i) => `<div class="ps-nrow${st && st.b ? ' bt' : ''}"><span class="ps-who"><span class="stamp">🕘 ${esc(stampTxt(st))}</span>${stTag(st)}</span>${occNoteInp(d, r.id, i, st)}${delBtn(d, r.id, i)}</div>`).join('')
               : `<div class="ps-nrow"><span class="ps-who"><span class="stamp">🕘 시간 기록 없음</span> <b>${cntOf(d, r.id)}번</b></span>${occNoteInp(d, r.id, 0, null)}</div>`;
             return `<div class="ps-dday"><div class="ps-ddh">${dayLabel(d)} <span class="muted small" style="font-family:inherit">${cntOf(d, r.id)}번</span></div>${rows}</div>`;
           });
@@ -3180,6 +3210,15 @@ $('#psList').addEventListener('input', e => {
   setOccNote(d, id, +i || 0, st, inp.value);
 });
 $('#psList').addEventListener('click', async e => {
+  const del = e.target.closest('.ps-del');
+  if (del){
+    e.stopPropagation();
+    const {d, id} = del.dataset, i = +del.dataset.i || 0;
+    const st = (occsOf(d, id) || [])[i] || null;
+    if (!await askConfirm(`${nameOf(id)} · ${dayLabel(d)}${st ? ' ' + stampTxt(st) : ''}의 ${KW()} 기록 1건을 삭제할까요?`)) return;
+    removeOcc(d, id, i); renderPraiseStats(); toast(`${KW()} 기록 1건을 삭제했어요.`);
+    return;
+  }
   const cp = e.target.closest('.ps-copy');
   if (cp){
     const id = cp.dataset.id, from = periodStart(psPeriod);
@@ -3206,20 +3245,21 @@ $('#psReset').onclick = async () => {
 function changePraise(sit, delta){
   if (resetPraiseIfNewDay()) renderStage();
   const id = sitterId(sit); if (!id) return;
-  const before = praiseOf(id);
-  let after = before, spark = '';
-  if (delta > 0 && before >= 3) return;
-  if (delta > 0){
-    if (before < 0){ after = 0; tempApply(id, 1); }
-    else { after = Math.min(3, before + 1); logPraise(id, 1); spark = after === 3 ? '🌸' : after === 2 ? '🎩' : '✨'; }
-  } else {
-    if (before > 0){ after = before - 1; logPraise(id, -1); }
-    else if (before === 0){ after = -1; logWarn(id, 1); spark = '😢'; beep(196, .18, .06); }
+  let after, spark = '';
+  if (delta > 0){                                   // 칭찬 — 항상 칭찬 1번 기록 (하루 3번까지)
+    if (pCountToday(id) >= DAY_CAP){ toast('오늘 칭찬은 최대 3번까지예요.'); return; }
+    logPraise(id, 1);
+    const pc = pCountToday(id);                      // 기록 후 오늘 칭찬 횟수
+    after = Math.min(3, pc);
+    spark = pc >= 3 ? '🌸' : pc === 2 ? '🎩' : '✨';
+  } else {                                           // 경고 — 항상 경고 1번 기록 (하루 3번까지)
+    if (wCountToday(id) >= DAY_CAP){ toast('오늘 경고는 최대 3번까지예요.'); return; }
+    logWarn(id, 1);
+    after = -1;
+    spark = '😢'; beep(196, .18, .06);
   }
-  if (after !== before){
-    if (after) state.praise[id] = after; else delete state.praise[id];
-    save(); sit.innerHTML = accHtml(id); updatePraiseBtn();
-  }
+  if (after) state.praise[id] = after; else delete state.praise[id];
+  save(); sit.innerHTML = accHtml(id); updatePraiseBtn();
   sit.classList.remove('drop', 'yay', 'shake'); void sit.offsetWidth; sit.classList.add(after < 0 ? 'shake' : 'yay');
   if (spark){
     const sp = document.createElement('span'); sp.className = 'spark';
@@ -3259,12 +3299,12 @@ async function praiseAll(){
   if (animating) return;
   if (!state.current){ toast('먼저 자리를 바꿔 주세요.'); return; }
   if (resetPraiseIfNewDay()) renderStage();
-  const abs = absentSet(), ids = seatedIds().filter(id => !abs.has(id)), up = ids.filter(id => praiseOf(id) < 3);
+  const abs = absentSet(), ids = seatedIds().filter(id => !abs.has(id)), up = ids.filter(id => pCountToday(id) < DAY_CAP);
   if (!ids.length){ toast('칭찬할 학생이 없어요.'); return; }
-  if (!up.length){ toast('모두 이미 최고 단계(🌸)예요.'); return; }
-  if (!await askConfirm(`반 전체 ${up.length}명을 칭찬할까요? (이미 🌸 단계인 친구는 그대로예요)`)) return;
+  if (!up.length){ toast('모두 오늘 칭찬 3번을 받았어요.'); return; }
+  if (!await askConfirm(`반 전체 ${up.length}명에게 칭찬 1번씩 줄까요? (오늘 칭찬 3번을 채운 친구는 그대로예요)`)) return;
   const bid = 'b' + Date.now();
-  up.forEach(id => { const after = Math.min(3, praiseOf(id) + 1); logPraise(id, 1); state.praise[id] = after; const arr = (state.praiseTimes[todayStr()] || {})[id]; if (arr && arr.length) arr[arr.length - 1].b = bid; });
+  up.forEach(id => { logPraise(id, 1); const pc = pCountToday(id); state.praise[id] = Math.min(3, pc); const arr = (state.praiseTimes[todayStr()] || {})[id]; if (arr && arr.length) arr[arr.length - 1].b = bid; });
   save(); renderStage(); updatePraiseBtn(); fanfare();
   document.querySelectorAll('#seats .sitter').forEach(sit => {
     const id = sitterId(sit); if (!id || !up.includes(id)) return;
@@ -3638,14 +3678,10 @@ state.forms = state.forms || [];
    예) {id:'b-absence', name:'결석신고서', url:'forms/absence.pdf', page:1, x:.40, y:.21, size:14, dpage:1, dx:.55, dy:.88, dsize:14, dfmt:'ko'} */
 const BUILTIN_FORMS = [
   {id:'b-absence', name:'결석신고서', url:'forms/absence.pdf', fields:[
-    {t:'name',  page:1, x:.4802, y:.3734, size:13, align:'center'},
-    {t:'month', page:1, x:.4597, y:.7673, size:11, align:'center'},
-    {t:'day',   page:1, x:.5244, y:.7673, size:11, align:'center'}
+    {t:'name',  page:1, x:.4802, y:.3734, size:13, align:'center'}
   ]},
   {id:'b-parent', name:'학부모의견서', url:'forms/parent-opinion.pdf', fields:[
-    {t:'name',  page:1, x:.6200, y:.3753, size:12, align:'left'},
-    {t:'month', page:1, x:.4894, y:.6376, size:12, align:'center'},
-    {t:'day',   page:1, x:.5449, y:.6376, size:12, align:'center'}
+    {t:'name',  page:1, x:.6200, y:.3753, size:12, align:'left'}
   ]}
 ];
 state.formOverrides = state.formOverrides || {};
@@ -3713,7 +3749,7 @@ function fmtDate(fmt, d){
   return fmt === 'dot' ? `${y}. ${m}. ${dd}.` : fmt === 'dash' ? `${y}-${String(m).padStart(2,'0')}-${String(dd).padStart(2,'0')}` : fmt === 'md' ? `${m}월 ${dd}일` : `${y}년 ${m}월 ${dd}일`;
 }
 async function renderFixedForm(v, f){
-  v.innerHTML = `<div class="muted small" style="margin-bottom:8px">✅ 모든 선생님이 함께 쓰는 <b>기본 양식</b>이에요. 이름과 날짜(월·일) 칸이 미리 맞춰져 있어서, 책상의 🖨 버튼으로 바로 인쇄하면 돼요. 날짜는 인쇄하는 날로 들어가요.</div>
+  v.innerHTML = `<div class="muted small" style="margin-bottom:8px">✅ 모든 선생님이 함께 쓰는 <b>기본 양식</b>이에요. 이름 칸이 미리 맞춰져 있어서, 책상의 🖨 버튼으로 바로 인쇄하면 돼요. 기본 양식에는 날짜를 넣지 않으니 인쇄한 뒤 손으로 적어 주세요.</div>
     <div class="fm-tools"><span>미리 보기 이름 <input type="text" id="fmSample" value="${esc(fmSample)}"></span></div>
     <div class="fm-canvas" id="fmCanvas" style="cursor:default"><canvas></canvas></div>
     <div class="fm-act"><button class="btn primary" id="fmAll">🖨️ 전체 학생 인쇄</button><button class="btn" id="fmTest">미리 보기 이름으로 1장 인쇄</button></div>`;
@@ -5695,6 +5731,20 @@ function tempApply(id, d){
   state.temp.day.c[id] = want;
   state.temp.pts = Math.max(0, (state.temp.pts || 0) + nd);
   if (nd > 0) tempCheck(); else { const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at); state.temp.done = reached.length ? Math.max(...reached) : 0; }
+  save(); if ($('#dlgTemp').open) renderTemp(); renderTempMini();
+}
+// 오늘 한 학생의 온도계 기여분을 실제 칭찬·경고 횟수에 맞춰 다시 맞춤 (기록 되돌리기용)
+function tempSync(id){
+  if (!state.temp) return;
+  const t = todayStr();
+  if (!state.temp.day || state.temp.day.date !== t) state.temp.day = {date: t, c: {}};
+  const want = Math.max(-TEMP_DAY_CAP, Math.min(TEMP_DAY_CAP, pCountToday(id) - wCountToday(id)));
+  const cur = state.temp.day.c[id] || 0, nd = want - cur;
+  if (!nd) return;
+  if (want) state.temp.day.c[id] = want; else delete state.temp.day.c[id];
+  state.temp.pts = Math.max(0, (state.temp.pts || 0) + nd);
+  const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at);
+  state.temp.done = reached.length ? Math.max(...reached) : 0;
   save(); if ($('#dlgTemp').open) renderTemp(); renderTempMini();
 }
 function tempBump(d){
