@@ -5802,6 +5802,7 @@ $('#nzThresh').oninput = e => { S.nzThresh = +e.target.value; save(); };
 $('#nzFs').onclick = () => { const d = $('#dlgNoise'); if (!document.fullscreenElement) d.requestFullscreen && d.requestFullscreen().catch(() => {}); else document.exitFullscreen && document.exitFullscreen(); };
 
 /* 수업 녹화 (화면에 ‘녹화 중’이 보이게) */
+let docRecCv = null, docRecDraw = 0;
 let docRec = null, docRecChunks = [], docRecT0 = 0, docRecTick = null, docRecName = '', docMicStream = null, docMixStream = null;
 function docRecSupported(){ return typeof MediaRecorder !== 'undefined'; }
 function docRecPick(){
@@ -5815,7 +5816,8 @@ function docRecUpdate(){
   $('#docRec').textContent = on ? '⏹ 녹화 끝' : '🔴 녹화';
 }
 function docMicStop(){ if (docMicStream){ docMicStream.getTracks().forEach(t => t.stop()); docMicStream = null; } docMixStream = null; }
-function stopDocRec(){ if (docRec && docRec.state !== 'inactive') docRec.stop(); }
+function docRecDrawStop(){ clearInterval(docRecDraw); docRecDraw = 0; docRecCv = null; }
+function stopDocRec(){ if (docRec && docRec.state !== 'inactive') docRec.stop(); else docRecDrawStop(); }
 async function startDocRec(){
   if (!DOC.stream){ toast('먼저 카메라가 켜져야 녹화할 수 있어요.'); return; }
   if (!docRecSupported()){ toast('이 브라우저에서는 녹화를 쓸 수 없어요. 크롬·엣지에서 열어 주세요.'); return; }
@@ -5824,11 +5826,16 @@ async function startDocRec(){
     docMicStream = await navigator.mediaDevices.getUserMedia({audio: true});
     withSound = true;
   } catch(e){ docMicStream = null; if (e && e.name === 'NotAllowedError'){ if (!await askConfirm('마이크 사용이 막혀 있어요. 소리 없이 영상만 녹화할까요?\n(소리도 녹음하려면 주소창 왼쪽 자물쇠 🔒 → 마이크 → 허용으로 바꾼 뒤 다시 눌러 주세요.)')){ return; } } }
-  const videoTrack = DOC.stream.getVideoTracks()[0];
-  docMixStream = withSound ? new MediaStream([videoTrack, ...docMicStream.getAudioTracks()]) : DOC.stream;
+  /* 화면에 보이는 그대로(확대·회전·펜 글씨 포함) 그려서 녹화해요 */
+  const dlg = $('#dlgDoc'), W0 = dlg.clientWidth, H0 = dlg.clientHeight, kk = Math.min(1920 / W0, 1080 / H0);
+  docRecCv = document.createElement('canvas'); docRecCv.width = Math.max(2, Math.round(W0 * kk / 2) * 2); docRecCv.height = Math.max(2, Math.round(H0 * kk / 2) * 2);
+  const rcv = docRecCv, drawRec = () => { const v = docView(); if (v){ v.crop = {x: 0, y: 0, w: v.W0, h: v.H0}; docCompose(rcv, v, 1); } };
+  drawRec(); docRecDraw = setInterval(drawRec, 33);
+  const vTrack = docRecCv.captureStream(30).getVideoTracks()[0];
+  docMixStream = new MediaStream([vTrack, ...(withSound ? docMicStream.getAudioTracks() : [])]);
   const type = docRecPick();
   try { docRec = type ? new MediaRecorder(docMixStream, {mimeType: type}) : new MediaRecorder(docMixStream); }
-  catch(e){ docMicStop(); toast('녹화를 시작하지 못했어요.'); return; }
+  catch(e){ docRecDrawStop(); docMicStop(); toast('녹화를 시작하지 못했어요.'); return; }
   $('#docRecSnd').hidden = !withSound;
   docRecChunks = [];
   const d = new Date(), p2 = n => String(n).padStart(2, '0');
@@ -5836,7 +5843,7 @@ async function startDocRec(){
   docRecName = `수업녹화_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.${ext}`;
   docRec.ondataavailable = e => { if (e.data && e.data.size) docRecChunks.push(e.data); };
   docRec.onstop = () => {
-    clearInterval(docRecTick); docMicStop(); docRecUpdate();
+    clearInterval(docRecTick); docRecDrawStop(); docMicStop(); docRecUpdate();
     if (!docRecChunks.length){ toast('녹화된 내용이 없어요.'); return; }
     const blob = new Blob(docRecChunks, {type: docRec.mimeType || 'video/webm'}), url = URL.createObjectURL(blob), a = document.createElement('a');
     a.href = url; a.download = docRecName; document.body.appendChild(a); a.click(); a.remove();
@@ -5848,7 +5855,7 @@ async function startDocRec(){
   const tick = () => { const s2 = Math.floor((Date.now() - docRecT0) / 1000); $('#docRecTime').textContent = `${p2(Math.floor(s2 / 60))}:${p2(s2 % 60)}`; };
   tick(); docRecTick = setInterval(tick, 500);
   docRecUpdate();
-  toast(withSound ? '녹화를 시작했어요. 소리도 함께 녹음돼요.' : '소리 없이 영상만 녹화해요.');
+  toast((withSound ? '녹화를 시작했어요. 소리도 함께 녹음돼요.' : '소리 없이 영상만 녹화해요.') + ' 확대한 화면 그대로 담겨요. 녹화 중에는 이 화면을 띄워 두세요.');
 }
 $('#docRec').onclick = () => { if (docRec && docRec.state === 'recording') stopDocRec(); else startDocRec(); };
 
@@ -5882,12 +5889,38 @@ $('#docFreeze').onclick = () => {
   if (DOC.frozen && v.videoWidth){ c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); }
   c.hidden = !DOC.frozen; v.hidden = DOC.frozen; docApply();
 };
+/* 화면에 보이는 그대로(확대·옮기기·회전·좌우반전·밝게/글씨 또렷·펜 글씨)를 그려 주는 함수 — 사진과 녹화가 같이 써요 */
+function docView(){
+  const dlg = $('#dlgDoc'), W0 = dlg.clientWidth, H0 = dlg.clientHeight;
+  const src = DOC.frozen ? $('#docFrz') : $('#docVid'), vw = src.videoWidth || src.width, vh = src.videoHeight || src.height;
+  if (!vw || !vh || !W0 || !H0) return null;
+  const fit = Math.min(W0 / vw, H0 / vh), dw = vw * fit, dh = vh * fit, odd = DOC.rot % 180 !== 0;
+  const sw = odd ? dh : dw, sh = odd ? dw : dh, cx = W0 / 2 + DOC.x, cy = H0 / 2 + DOC.y, hw = sw * DOC.zoom / 2, hh = sh * DOC.zoom / 2;
+  let x0 = Math.max(0, cx - hw), y0 = Math.max(0, cy - hh), x1 = Math.min(W0, cx + hw), y1 = Math.min(H0, cy + hh);
+  if (x1 - x0 < 2 || y1 - y0 < 2){ x0 = 0; y0 = 0; x1 = W0; y1 = H0; }
+  return {W0, H0, src, dw, dh, crop: {x: x0, y: y0, w: x1 - x0, h: y1 - y0}};
+}
+function docCompose(cv, v, k){
+  const g = cv.getContext('2d'), kx = cv.width / v.crop.w, ky = cv.height / v.crop.h;
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#111'; g.fillRect(0, 0, cv.width, cv.height);
+  g.scale(kx, ky); g.translate(-v.crop.x, -v.crop.y);
+  g.filter = $('#docStage').style.filter || 'none';
+  g.translate(v.W0 / 2 + DOC.x, v.H0 / 2 + DOC.y); g.rotate(DOC.rot * Math.PI / 180); g.scale(DOC.mir ? -DOC.zoom : DOC.zoom, DOC.zoom);
+  try { g.drawImage(v.src, -v.dw / 2, -v.dh / 2, v.dw, v.dh); } catch(e){}
+  g.restore();
+  const pen = $('#docPen');
+  if (pen.width && pen.height){
+    const px = pen.width / v.W0, py = pen.height / v.H0;
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.filter = 'none';
+    g.drawImage(pen, v.crop.x * px, v.crop.y * py, v.crop.w * px, v.crop.h * py, 0, 0, cv.width, cv.height); g.restore();
+  }
+}
 $('#docShot').onclick = () => {
-  const src = DOC.frozen ? $('#docFrz') : $('#docVid'), w = src.videoWidth || src.width, h = src.videoHeight || src.height;
-  if (!w){ toast('아직 화면이 없어요.'); return; }
-  const r = DOC.rot % 180 !== 0, cv = document.createElement('canvas'); cv.width = r ? h : w; cv.height = r ? w : h;
-  const g = cv.getContext('2d'); g.filter = $('#docStage').style.filter || 'none';
-  g.translate(cv.width / 2, cv.height / 2); g.rotate(DOC.rot * Math.PI / 180); if (DOC.mir) g.scale(-1, 1); g.drawImage(src, -w / 2, -h / 2);
+  const v = docView();
+  if (!v){ toast('아직 화면이 없어요.'); return; }
+  const k = Math.max(1, Math.min(1 / Math.min(v.W0 / (v.src.videoWidth || v.src.width), v.H0 / (v.src.videoHeight || v.src.height)), 3840 / v.crop.w, 2160 / v.crop.h));
+  const cv = document.createElement('canvas'); cv.width = Math.round(v.crop.w * k); cv.height = Math.round(v.crop.h * k);
+  docCompose(cv, v, k);
   const d = new Date(), p2 = n => String(n).padStart(2, '0'), a = document.createElement('a');
   a.download = `카메라_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
   a.href = cv.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); toast('지금 화면을 사진으로 저장했어요.');
