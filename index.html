@@ -301,6 +301,27 @@ body.hide-notice .notice-strip{display:none!important}
 .notice-ov li::marker{color:#8a74d6;font-family:"Jua",sans-serif}
 .notice-ov .hint2{position:absolute;bottom:2vh;color:var(--muted);font-size:14px}
 /* ---------- 알림장 (칠판) ---------- */
+.ld-sec{margin-bottom:12px}
+.ld-ta{width:100%;min-height:130px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px;line-height:1.6;box-sizing:border-box}
+.ld-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ld-chips button{font:inherit;font-size:15px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer}
+.ld-chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ld-chips button:disabled{opacity:.4;text-decoration:line-through;cursor:default}
+#ldTabR.on,#ldTabC.on,#ldModes .on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ld-names,.ld-res{display:flex;gap:4px}
+.ld-names button{flex:1;min-width:0;font:inherit;font-weight:700;font-size:clamp(11px,1.7vw,20px);padding:8px 2px;border:2px solid #cfc7b8;background:#fff;border-radius:10px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ld-names button:hover:not(:disabled){background:#fff3e8}
+.ld-names button:disabled{cursor:default;color:#fff;border-color:transparent}
+#ldCv{display:block;width:100%;height:clamp(260px,46vh,520px);background:#fffdf8;border-radius:10px;margin:6px 0}
+.ld-res>div{flex:1;min-width:0;text-align:center;padding:10px 2px;border-radius:10px;background:#d9d4c8;color:#7b7466;font-weight:800;font-size:clamp(11px,1.7vw,20px);min-height:3.2em;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;word-break:keep-all}
+.ld-res>div.rv{background:#fff;color:var(--ink);border:3px solid var(--c,#e2673b);animation:ldpop .5s}
+.ld-res>div small{font-weight:400;font-size:.75em;opacity:.8}
+@keyframes ldpop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.ld-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.ld-list span{padding:4px 12px;border-radius:999px;background:#fff;border:2px solid var(--c,#ccc);font-size:15px}
+.lmv{display:inline-flex;gap:3px;margin-left:6px}
+.lmv .mvb{border:1px solid #bbb;background:#fff;border-radius:8px;padding:2px 8px;cursor:pointer;font-size:14px}
+.lmv .mvb:disabled{opacity:.35;cursor:default}
 .dy-ov{position:fixed;inset:0;z-index:95;background:#3b2a1a;display:flex;flex-direction:column;gap:1.2vh;padding:1.6vh 1.6vw;animation:fadein .2s}
 .dy-board{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;background:radial-gradient(ellipse at 30% 20%,#2f5a49 0%,#244a3b 60%,#1d3d31 100%);border:clamp(8px,1.5vh,16px) solid #9a6a35;border-radius:10px;box-shadow:inset 0 0 70px rgba(0,0,0,.5),0 4px 18px rgba(0,0,0,.45);padding:1.8vh 3vw 1.4vh;color:#f6f3e8;font-family:"Jua","Gowun Dodum",sans-serif}
 .dy-head{display:flex;align-items:center;gap:1.4vw;flex-wrap:wrap;border-bottom:2px dashed rgba(255,255,255,.28);padding-bottom:1vh;margin-bottom:1.4vh}
@@ -981,6 +1002,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn" id="openLucky">🍀 행운의 친구</button>
       <button class="btn" id="openLine">🚶 줄 서기</button>
       <button class="btn" id="openGroup">👥 모둠 만들기</button>
+      <button class="btn" id="openLadder">🪜 사다리 타기</button>
       <button class="btn" id="pinMode">📌 지정석</button>
       <button class="btn" id="openTT">🗓️ 시간표</button>
       <button class="btn" id="openMeal">🍚 급식</button>
@@ -1528,6 +1550,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>🗓️ 날짜별 돌아보기</b>: 메인 화면 날짜 양옆의 작은 <b>◀ ▶</b>를 누르면 어제·내일부터 날짜를 넘겨 가며 그날의 학교 행사·기념일, 시간표, 급식, 오늘 할 일, 과제 확인(안 낸 친구), 칭찬·경고 받은 친구를 한눈에 볼 수 있어요. 키보드 ← → 로도 넘겨요. 결석·조퇴와 한 줄 메모는 교사용 설정에서 볼 수 있어요.</li>
           <li><b>📅 학교 행사</b>: 🍚 급식에서 찾아 둔 학교의 <b>나이스 학사일정</b>을 받아 와서, 이번 주 행사(현장체험학습·학예회·재량휴업일 등)를 메인 화면 날짜 오른쪽에 ‘📅 오늘 학예회 · 금 현장체험학습’처럼 보여 줘요. 반 이름에 ‘3학년’처럼 학년을 넣어 두면 다른 학년만의 행사는 빼고 보여 줘요. 누르면 앞으로 10주 일정이 주별로 나와요. 휴업일로 등록된 날은 쉬는 날로 보고 시간표·기념일·점심 커튼에도 반영해요.</li>
           <li><b>📌 기념일 · 계기교육 영상</b>: 식목일·한글날·독도의 날처럼 계기교육에 쓰는 기념일 30여 개와 설날·추석이 들어 있어요. 그날이 되면 메인 화면 날짜 아래에 <b>📌 오늘은 ○○</b>이 뜨고, 날짜나 그 표시를 누르면 유튜브에서 관련 계기교육 영상을 찾아 새 탭으로 열어 줘요. 기념일이 주말·공휴일이면 바로 앞 등교일에는 ‘○월 ○일은 ○○’로 미리, 바로 뒤 등교일에는 ‘지난 ○월 ○일은 ○○’로 보여 줘요. 이 메뉴에서 자주 쓰는 영상 주소를 저장하면 다음부터 그 영상이 바로 열리고, 개교기념일 같은 우리 학교 기념일이나 재량휴업일도 추가할 수 있어요.</li>
+          <li><b>🪜 사다리 타기</b>: 우리 반 친구(또는 직접 쓴 이름)를 고르고, 아래 칸을 ‘당첨 1개 · 당첨 2개 · 순서 정하기 · 직접 쓰기’ 중에서 정해요. 이름을 누르면 한 명씩, ‘모두 내려가기’를 누르면 한꺼번에 내려가고, 아래 칸은 내려가기 전까지 가려져 있어요. 결석한 친구는 자동으로 빠져요.</li>
           <li><b>📒 알림장</b>: 위쪽 ‘📒 알림장’ 버튼을 누르면 칠판 모양의 큰 화면이 열려요. 한 줄에 하나씩 쓰면 번호가 붙고, 쓰는 대로 날짜별로 저장돼요. 줄 맨 앞에 # 를 쓰면 제목, ! 를 쓰면 강조예요. ‘📚 지난 알림장’이나 ◀ ▶ 로 지난 기록을 볼 수 있고, ‘🗓️ 내일 시간표’로 시간표를 한 번에 넣을 수 있어요.</li>
           <li><b>📄 서류 양식</b>: 결석신고서 같은 PDF 양식을 여러 개 올리고 이름·날짜 자리를 눌러 두면, 책상 왼쪽 위 🖨를 눌렀을 때 양식 목록이 떠요. 고르면 그 학생 이름이 들어간 양식이 인쇄돼요(기본 양식 두 개는 날짜를 넣지 않고, 직접 올린 양식은 날짜 칸을 정해 두면 인쇄하는 날의 날짜가 들어가요). 전체 학생 인쇄도 돼요.</li>
           <li><b>📲 앱으로 설치하기</b>: 바탕화면·작업 표시줄에 😊 아이콘이 생기고 프로그램처럼 따로 창으로 열려요. 새 버전은 자동으로 바뀌고, 인터넷이 잠깐 끊겨도 기본 기능은 쓸 수 있어요.</li>
@@ -1603,6 +1626,55 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     </div>
   </div>
 </dialog>
+
+<dialog class="sheet wide" id="dlgLadder">
+  <div class="sheet-head">
+    <h2>🪜 사다리 타기</h2>
+    <span class="muted small" id="ldStep"></span>
+    <button class="btn" id="ldBack" style="margin-left:auto;display:none">⚙️ 설정 바꾸기</button>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div id="ldSetup">
+      <div class="card ld-sec">
+        <div class="ld-h"><b>1. 누가 탈까요?</b> <span class="muted small" id="ldCnt"></span></div>
+        <div class="row" style="gap:6px;margin:8px 0">
+          <button class="btn" id="ldTabR">우리 반 친구 고르기</button>
+          <button class="btn" id="ldTabC">이름 직접 쓰기</button>
+        </div>
+        <div id="ldRoster"></div>
+        <div id="ldCustom" style="display:none">
+          <textarea id="ldNamesTx" class="ld-ta" placeholder="한 줄에 한 명씩 (모둠 이름도 괜찮아요)"></textarea>
+        </div>
+      </div>
+      <div class="card ld-sec">
+        <div class="ld-h"><b>2. 아래 칸에는 무엇이 있을까요?</b> <span class="muted small">(내려가기 전에는 가려져 있어요)</span></div>
+        <div class="row" id="ldModes" style="gap:6px;margin:8px 0">
+          <button class="btn" data-m="win1">🎉 당첨 1개</button>
+          <button class="btn" data-m="win2">🎉 당첨 2개</button>
+          <button class="btn" data-m="order">🔢 순서 정하기</button>
+          <button class="btn" data-m="custom">✏️ 직접 쓰기</button>
+        </div>
+        <div id="ldModeNote" class="muted small"></div>
+        <textarea id="ldResTx" class="ld-ta" style="display:none" placeholder="한 줄에 하나씩 (예: 칠판 닦기 / 우유 당번 / 꽝)  사람 수보다 적으면 ‘꽝’으로 채워요"></textarea>
+      </div>
+      <div style="text-align:center"><button class="btn primary big" id="ldMake">🪜 사다리 만들기</button></div>
+    </div>
+    <div id="ldPlay" style="display:none">
+      <div class="muted small" style="text-align:center;margin-bottom:6px">이름을 누르면 내려가요. 순서대로 눌러도 좋고, 아래 버튼으로 한꺼번에 내려보낼 수도 있어요.</div>
+      <div class="ld-names" id="ldNames"></div>
+      <canvas id="ldCv"></canvas>
+      <div class="ld-res" id="ldRes"></div>
+      <div class="row" style="justify-content:center;margin-top:12px;gap:8px">
+        <button class="btn primary" id="ldAll">▶ 모두 내려가기</button>
+        <button class="btn" id="ldReveal">👀 결과 모두 보기</button>
+        <button class="btn" id="ldRedraw">🔀 사다리 다시 그리기</button>
+      </div>
+      <div class="ld-list" id="ldList"></div>
+    </div>
+  </div>
+</dialog>
+
 <dialog class="sheet mid" id="dlgMbti">
   <div class="sheet-head">
     <h2>💞 MBTI 궁합 자리</h2>
@@ -2567,6 +2639,24 @@ function renderNow(){
   if (html !== lastNow){ el.innerHTML = html; el.className = 'now-card ' + st.cls; lastNow = html; }
   el.hidden = false;
 }
+const ttMinStr = n => { n = ((n % 1440) + 1440) % 1440; return `${String(Math.floor(n / 60)).padStart(2, '0')}:${String(n % 60).padStart(2, '0')}`; };
+/* 점심시간 줄을 시각에 맞는 자리로 옮겨요 (교시 순서·과목은 그대로) */
+function ttFixLunch(){
+  let moved = false;
+  state.periods.filter(p => p.kind === 'lunch').forEach(l => {
+    const arr = state.periods, from = arr.indexOf(l); arr.splice(from, 1);
+    let at = arr.findIndex(p => p.kind === 'class' && toMin(p.start) > toMin(l.start)); if (at < 0) at = arr.length;
+    arr.splice(at, 0, l); if (at !== from) moved = true;
+  });
+  return moved;
+}
+/* 이웃한 두 줄의 자리를 바꾸면서 각자의 길이와 사이 쉬는 시간은 그대로 둬요 */
+function ttSwapRows(i, j){
+  const arr = state.periods, a = arr[i], b = arr[j];
+  const da = Math.max(10, toMin(a.end) - toMin(a.start)), db = Math.max(10, toMin(b.end) - toMin(b.start)), gap = Math.max(0, toMin(b.start) - toMin(a.end)), st = toMin(a.start);
+  arr[i] = {kind: b.kind, start: ttMinStr(st), end: ttMinStr(st + db)};
+  arr[j] = {kind: a.kind, start: ttMinStr(st + db + gap), end: ttMinStr(st + db + gap + da)};
+}
 function renderTT(){
   const idx = classIndexMap(), today = new Date().getDay();
   const m = new Date().getHours()*60 + new Date().getMinutes();
@@ -2574,13 +2664,24 @@ function renderTT(){
   state.periods.forEach((p,i) => {
     const isCur = today >= 1 && today <= 5 && m >= toMin(p.start) && m < toMin(p.end);
     const head = `<td><div class="pc"><b>${p.kind === 'lunch' ? '점심시간' : (idx[i]+1) + '교시'}</b><input type="time" data-i="${i}" data-f="start" value="${p.start}"> ~ <input type="time" data-i="${i}" data-f="end" value="${p.end}"></div></td>`;
-    if (p.kind === 'lunch'){ h += `<tr class="lunch${isCur ? ' cur' : ''}">${head}<td class="lz" colspan="5">🍚 점심시간</td></tr>`; return; }
+    if (p.kind === 'lunch'){
+      const mv = `<span class="lmv"><button type="button" class="mvb" data-i="${i}" data-dir="-1" title="위로 옮기기"${i === 0 ? ' disabled' : ''}>▲</button><button type="button" class="mvb" data-i="${i}" data-dir="1" title="아래로 옮기기"${i === state.periods.length - 1 ? ' disabled' : ''}>▼</button></span>`;
+      h += `<tr class="lunch${isCur ? ' cur' : ''}">${head.replace('</div></td>', mv + '</div></td>')}<td class="lz" colspan="5">🍚 점심시간 <small class="muted">(▲▼로 자리를 옮길 수 있어요)</small></td></tr>`; return;
+    }
     h += `<tr class="${isCur ? 'cur' : ''}">${head}${DOW.map((d,j) => `<td><input class="subj" list="subjList" data-d="${j+1}" data-k="${idx[i]}" value="${esc(subjOf(j+1, idx[i]))}" placeholder="·"></td>`).join('')}</tr>`;
   });
   $('#ttTable').innerHTML = h;
   $('#ttTable').querySelectorAll('input[type=time]').forEach(inp => inp.onchange = () => {
     if (!inp.value) return;
-    state.periods[+inp.dataset.i][inp.dataset.f] = inp.value; save(); renderNow();
+    const pr = state.periods[+inp.dataset.i], oldDur = Math.max(10, toMin(pr.end) - toMin(pr.start));
+    pr[inp.dataset.f] = inp.value;
+    if (inp.dataset.f === 'start' && toMin(pr.end) <= toMin(pr.start)) pr.end = ttMinStr(toMin(pr.start) + oldDur);   // 시작을 늦추면 끝도 길이만큼 따라가요
+    const moved = ttFixLunch(); save(); if (moved){ renderTT(); toast('점심시간 줄을 시각에 맞는 자리로 옮겼어요.'); } renderNow();
+  });
+  $('#ttTable').querySelectorAll('.mvb').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, j = i + (+b.dataset.dir);
+    if (j < 0 || j >= state.periods.length) return;
+    ttSwapRows(Math.min(i, j), Math.max(i, j)); save(); renderTT(); renderNow();
   });
   $('#ttTable').querySelectorAll('.subj').forEach(inp => inp.oninput = () => {
     const d = inp.dataset.d, k = +inp.dataset.k;
@@ -4313,6 +4414,144 @@ $('#lkSave').onclick = () => {
 $('#lkDefault').onclick = () => { $('#lkText').value = LUCKY_DEFAULT.join('\n'); };
 $('#dlgLucky').addEventListener('cancel', e => { if (lkSpinning){ e.preventDefault(); requestCancel(); } });
 
+/* ---------- 사다리 타기 ---------- */
+state.ladder = state.ladder || {mode: 'win1', custom: '', names: ''};
+const LD_MAX = 16, LD_COLORS = ['#e2673b','#2f7fd1','#2e9e5b','#c2479b','#d9a21b','#7a56d1','#16a3a3','#d14b4b','#5a7d1f','#b5651d','#3a6ea5','#a0407b','#2a8f7a','#c27b1e','#6b5bd6','#c0392b'];
+let ld = null, ldRoster = new Set(), ldTab = 'r';
+const ldColor = i => LD_COLORS[i % LD_COLORS.length];
+function ldRosterList(){ return state.students.filter(s => s.name.trim()); }
+function ldPickNames(){
+  if (ldTab === 'c') return $('#ldNamesTx').value.split('\n').map(t => t.trim()).filter(Boolean);
+  return ldRosterList().filter(s => ldRoster.has(s.id)).map(s => s.name.trim());
+}
+function ldSetupRender(){
+  const abs = absentSet(), list = ldRosterList();
+  $('#ldTabR').classList.toggle('on', ldTab === 'r'); $('#ldTabC').classList.toggle('on', ldTab === 'c');
+  $('#ldRoster').style.display = ldTab === 'r' ? '' : 'none'; $('#ldCustom').style.display = ldTab === 'c' ? '' : 'none';
+  $('#ldRoster').innerHTML = list.length
+    ? `<div class="ld-chips">${list.map(s => `<button data-id="${s.id}" class="${ldRoster.has(s.id) ? 'on' : ''}"${abs.has(s.id) ? ' disabled title="오늘 결석"' : ''}>${esc(s.name.trim())}</button>`).join('')}</div>
+       <div class="row" style="gap:6px;margin-top:8px"><button class="btn" id="ldSelAll">모두 선택 (최대 ${LD_MAX}명)</button><button class="btn" id="ldSelNone">모두 해제</button></div>`
+    : '<div class="muted">학생 이름이 없어요. ‘이름 직접 쓰기’를 이용해 주세요.</div>';
+  const n = ldPickNames().length;
+  $('#ldCnt').textContent = `${n}명 선택${n > LD_MAX ? ` (최대 ${LD_MAX}명)` : ''}`;
+  $('#ldModes').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.m === state.ladder.mode));
+  $('#ldResTx').style.display = state.ladder.mode === 'custom' ? '' : 'none';
+  $('#ldModeNote').textContent = { win1: '아래 칸 중 1개만 ‘🎉 당첨’, 나머지는 ‘꽝’이에요.', win2: '아래 칸 중 2개가 ‘🎉 당첨’, 나머지는 ‘꽝’이에요.', order: '아래 칸에 ‘1번, 2번, 3번…’이 들어가요. 발표 순서나 차례를 정할 때 좋아요.', custom: '' }[state.ladder.mode];
+  const ch = $('#ldRoster').querySelector('.ld-chips');
+  if (ch) ch.onclick = e => { const b = e.target.closest('button[data-id]'); if (!b || b.disabled) return; const id = b.dataset.id; if (ldRoster.has(id)) ldRoster.delete(id); else { if (ldRoster.size >= LD_MAX){ toast(`한 사다리에는 최대 ${LD_MAX}명까지 탈 수 있어요.`); return; } ldRoster.add(id); } ldSetupRender(); };
+  const sa = $('#ldSelAll'); if (sa) sa.onclick = () => { ldRoster = new Set(list.filter(s => !abs.has(s.id)).slice(0, LD_MAX).map(s => s.id)); if (list.filter(s => !abs.has(s.id)).length > LD_MAX) toast(`앞에서부터 ${LD_MAX}명만 선택했어요.`); ldSetupRender(); };
+  const sn = $('#ldSelNone'); if (sn) sn.onclick = () => { ldRoster.clear(); ldSetupRender(); };
+}
+function ldResultsFor(n){
+  const m = state.ladder.mode;
+  if (m === 'order') return Array.from({length: n}, (_, i) => `${i + 1}번`);
+  if (m === 'win1' || m === 'win2'){ const w = m === 'win1' ? 1 : 2; return Array.from({length: n}, (_, i) => i < w ? '🎉 당첨' : '꽝'); }
+  const L = $('#ldResTx').value.split('\n').map(t => t.trim()).filter(Boolean);
+  while (L.length < n) L.push('꽝');
+  return L;
+}
+function ldGen(n){
+  const L = Math.max(10, Math.min(20, n * 2 + 2)), bars = [];
+  for (let lv = 0; lv < L; lv++){ const row = Array(n - 1).fill(false); for (let i = 0; i < n - 1; i++){ if (i > 0 && row[i - 1]) continue; if (Math.random() < .42) row[i] = true; } bars.push(row); }
+  for (let i = 0; i < n - 1; i++){   // 모든 칸 사이에 가로줄이 2개 이상 있게
+    let c = bars.filter(r => r[i]).length, guard = 0;
+    while (c < 2 && guard++ < 80){ const lv = Math.floor(Math.random() * L); if (!bars[lv][i] && !(i > 0 && bars[lv][i - 1]) && !(i < n - 2 && bars[lv][i + 1])){ bars[lv][i] = true; c++; } }
+  }
+  return {L, bars};
+}
+function ldPath(start){
+  const n = ld.names.length, {L, bars} = ld.g, pts = [{c: start, t: 0}]; let c = start;
+  for (let lv = 0; lv < L; lv++){
+    const t = (lv + 1) / (L + 1);
+    let to = c;
+    if (c < n - 1 && bars[lv][c]) to = c + 1; else if (c > 0 && bars[lv][c - 1]) to = c - 1;
+    pts.push({c, t}); if (to !== c){ pts.push({c: to, t}); c = to; }
+  }
+  pts.push({c, t: 1});
+  return pts;
+}
+function ldMetrics(){ const cv = $('#ldCv'); return {cv, W: cv.clientWidth, H: cv.clientHeight, n: ld.names.length, pad: 14}; }
+function ldDraw(now){
+  if (!ld) return;
+  const {cv, W, H, n, pad} = ldMetrics(); if (!W || !H) return;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const X = c => (c + .5) * W / n, Y = t => pad + t * (H - 2 * pad), {L, bars} = ld.g;
+  g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = '#a9a396'; g.lineWidth = 4;
+  g.beginPath(); for (let i = 0; i < n; i++){ g.moveTo(X(i), Y(0)); g.lineTo(X(i), Y(1)); }
+  for (let lv = 0; lv < L; lv++) for (let i = 0; i < n - 1; i++) if (bars[lv][i]){ const y = Y((lv + 1) / (L + 1)); g.moveTo(X(i), y); g.lineTo(X(i + 1), y); }
+  g.stroke();
+  ld.anim.forEach(a => {
+    const P = a.pts.map(p => ({x: X(p.c), y: Y(p.t)})); let tot = 0; const seg = [];
+    for (let k = 1; k < P.length; k++){ const d = Math.hypot(P[k].x - P[k - 1].x, P[k].y - P[k - 1].y); seg.push(d); tot += d; }
+    const p = Math.max(0, Math.min(1, (now - a.t0) / a.dur)); if (p <= 0) return;
+    let left = tot * p; g.strokeStyle = a.color; g.fillStyle = a.color; g.lineWidth = 7; g.beginPath(); g.moveTo(P[0].x, P[0].y);
+    let hx = P[0].x, hy = P[0].y;
+    for (let k = 1; k < P.length && left > 0; k++){ const d = seg[k - 1], r = d ? Math.min(1, left / d) : 1; hx = P[k - 1].x + (P[k].x - P[k - 1].x) * r; hy = P[k - 1].y + (P[k].y - P[k - 1].y) * r; g.lineTo(hx, hy); left -= d; }
+    g.stroke(); if (p < 1){ g.beginPath(); g.arc(hx, hy, 9, 0, 7); g.fill(); }
+  });
+}
+function ldReveal(a){
+  if (a.shown) return; a.shown = true;
+  const col = a.pts[a.pts.length - 1].c, cell = $('#ldRes').children[col];
+  if (cell){ cell.classList.add('rv'); cell.style.setProperty('--c', a.color); cell.innerHTML = `<span>${esc(ld.results[col])}</span><small>${esc(ld.names[a.i])}</small>`; }
+  const sp = document.createElement('span'); sp.style.setProperty('--c', a.color); sp.textContent = `${ld.names[a.i]} → ${ld.results[col]}`; $('#ldList').appendChild(sp);
+  const win = /당첨/.test(ld.results[col]); beep(win ? 880 : 420, .12, .06);
+}
+function ldLoop(){
+  if (!ld || !$('#dlgLadder').open){ return; }
+  const now = performance.now(); ldDraw(now);
+  let busy = false;
+  ld.anim.forEach(a => { if (now >= a.t0 + a.dur){ ldReveal(a); } else busy = true; });
+  if (busy){ ld.raf = requestAnimationFrame(ldLoop); }
+  else { ld.raf = 0; if (ld.used.size === ld.names.length && !ld.done){ ld.done = true; fanfare(); } }
+}
+function ldStart(i, delay, instant){
+  if (ld.used.has(i)) return; ld.used.add(i);
+  const a = {i, color: ldColor(i), pts: ldPath(i), t0: performance.now() + (delay || 0), dur: 2800};
+  if (instant) a.t0 = -1e9;
+  ld.anim.push(a);
+  const b = $('#ldNames').children[i]; b.disabled = true; b.style.background = a.color;
+  if (!ld.raf) ld.raf = requestAnimationFrame(ldLoop);
+  if (instant) ldLoop();
+}
+function ldBuild(keepSetup){
+  const names = ld.names, n = names.length;
+  $('#ldNames').innerHTML = names.map((nm, i) => `<button data-i="${i}">${esc(nm)}</button>`).join('');
+  $('#ldRes').innerHTML = names.map(() => '<div>?</div>').join('');
+  $('#ldList').innerHTML = ''; ld.anim = []; ld.used = new Set(); ld.done = false;
+  $('#ldNames').onclick = e => { const b = e.target.closest('button[data-i]'); if (b && !b.disabled) ldStart(+b.dataset.i, 0); };
+  cancelAnimationFrame(ld.raf); ld.raf = 0; requestAnimationFrame(() => ldDraw(performance.now()));
+}
+$('#openLadder').onclick = () => {
+  if (animating) return;
+  ld = null; ldTab = ldRosterList().length ? 'r' : 'c';
+  $('#ldSetup').style.display = ''; $('#ldPlay').style.display = 'none'; $('#ldBack').style.display = 'none'; $('#ldStep').textContent = '';
+  $('#ldResTx').value = state.ladder.custom || ''; $('#ldNamesTx').value = state.ladder.names || '';
+  openSheet($('#dlgLadder')); ldSetupRender();
+};
+$('#ldTabR').onclick = () => { ldTab = 'r'; ldSetupRender(); };
+$('#ldTabC').onclick = () => { ldTab = 'c'; ldSetupRender(); };
+$('#ldNamesTx').oninput = () => { state.ladder.names = $('#ldNamesTx').value; save(); ldSetupRender(); };
+$('#ldResTx').oninput = () => { state.ladder.custom = $('#ldResTx').value; save(); };
+$('#ldModes').onclick = e => { const b = e.target.closest('button[data-m]'); if (!b) return; state.ladder.mode = b.dataset.m; save(); ldSetupRender(); };
+$('#ldMake').onclick = () => {
+  const names = ldPickNames();
+  if (names.length < 2){ toast('2명 이상 골라 주세요.'); return; }
+  if (names.length > LD_MAX){ toast(`한 사다리에는 최대 ${LD_MAX}명까지 탈 수 있어요.`); return; }
+  if (state.ladder.mode === 'custom' && $('#ldResTx').value.split('\n').filter(t => t.trim()).length > names.length){ toast('아래 칸 결과가 사람 수보다 많아요. 줄을 줄여 주세요.'); return; }
+  ld = {names, results: ldResultsFor(names.length), g: ldGen(names.length), anim: [], used: new Set(), raf: 0, done: false};
+  $('#ldSetup').style.display = 'none'; $('#ldPlay').style.display = ''; $('#ldBack').style.display = ''; $('#ldStep').textContent = `${names.length}명`;
+  ldBuild();
+};
+$('#ldBack').onclick = () => { if (ld) cancelAnimationFrame(ld.raf); ld = null; $('#ldSetup').style.display = ''; $('#ldPlay').style.display = 'none'; $('#ldBack').style.display = 'none'; $('#ldStep').textContent = ''; ldSetupRender(); };
+$('#ldAll').onclick = () => { if (!ld) return; let k = 0; ld.names.forEach((_, i) => { if (!ld.used.has(i)) ldStart(i, 300 * (k++)); }); };
+$('#ldReveal').onclick = () => { if (!ld) return; ld.names.forEach((_, i) => { if (!ld.used.has(i)) ldStart(i, 0, true); }); ld.anim.forEach(a => { a.t0 = -1e9; }); ldLoop(); };
+$('#ldRedraw').onclick = () => { if (!ld) return; ld.g = ldGen(ld.names.length); ld.results = ldResultsFor(ld.names.length); ldBuild(); toast('사다리를 새로 그렸어요.'); };
+window.addEventListener('resize', () => { if (ld && $('#dlgLadder').open) ldDraw(performance.now()); });
+$('#dlgLadder').addEventListener('close', () => { if (ld){ cancelAnimationFrame(ld.raf); ld.raf = 0; } });
+
 /* ---------- MBTI 궁합 자리 (재미로) ---------- */
 const MBTI_TYPES = ['ISTJ','ISFJ','INFJ','INTJ','ISTP','ISFP','INFP','INTP','ESTP','ESFP','ENFP','ENTP','ESTJ','ESFJ','ENFJ','ENTJ'];
 const MBTI_BEST = {INFP:['ENFJ','ENTJ'],ENFP:['INFJ','INTJ'],INFJ:['ENFP','ENTP'],ENFJ:['INFP','ISFP'],INTJ:['ENFP','ENTP'],ENTJ:['INFP','INTP'],
@@ -5047,7 +5286,7 @@ function purgeDemo(v, depth){
 async function endDemo(){
   if (!demoOn()) return;
   if (!await askConfirm('체험을 끝낼까요? 동물 친구들과 체험하면서 생긴 자리·칭찬·경고·결석·모둠·과제 기록이 지워져요. 교실 배치·시간표·오늘 할 일·설정은 그대로 남아요.')) return;
-  const keep = new Set(['settings','layout','periods','timetable','title','wx','meal','notices','diary','diaryFont','className']);
+  const keep = new Set(['settings','layout','periods','timetable','title','wx','meal','notices','diary','diaryFont','ladder','className']);
   state.students = state.students.filter(s => !isDemo(s));
   for (const k of Object.keys(state)) if (!keep.has(k) && k !== 'students') state[k] = purgeDemo(state[k], 0);
   if (state.current && !Object.keys(state.current).length) state.current = null;
