@@ -321,6 +321,9 @@ body.hide-notice .notice-strip{display:none!important}
 @keyframes ldpop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
 .ld-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
 .ld-list span{padding:4px 12px;border-radius:999px;background:#fff;border:2px solid var(--c,#ccc);font-size:15px}
+#wxFx{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:6}
+#wxFx[hidden]{display:none}
+@media print{#wxFx{display:none!important}}
 .lmv{display:inline-flex;gap:3px;margin-left:6px}
 .lmv .mvb{border:1px solid #bbb;background:#fff;border-radius:8px;padding:2px 8px;cursor:pointer;font-size:14px}
 .lmv .mvb:disabled{opacity:.35;cursor:default}
@@ -1055,6 +1058,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="tt"> 🗓️ 시간표</label>
             <label class="chk"><input type="checkbox" data-show="date"> 📅 날짜·시계</label>
             <label class="chk"><input type="checkbox" data-show="wx"> 🌤️ 날씨</label>
+            <label class="chk"><input type="checkbox" data-show="wxfx"> 🌧️ 비·눈 오는 효과</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
@@ -1723,6 +1727,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn primary" id="wxFind">찾기</button>
     </div>
     <div class="school-res" id="wxRes"></div>
+    <div class="row" style="margin-top:10px;gap:6px"><span class="muted small">효과 미리보기(7초):</span><button class="btn" id="wxPvRain">🌧️ 비</button><button class="btn" id="wxPvSnow">❄️ 눈</button></div>
     <p class="muted small" style="margin-bottom:0">날씨는 15분마다 새로 받아와요. (Open-Meteo 무료 날씨 정보)</p>
   </div>
 </dialog>
@@ -2860,6 +2865,53 @@ const WX = {0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구
   61:['🌧️','비'],63:['🌧️','비'],65:['🌧️','강한 비'],66:['🌧️','어는 비'],67:['🌧️','어는 비'],
   71:['🌨️','눈'],73:['🌨️','눈'],75:['❄️','많은 눈'],77:['🌨️','싸락눈'],80:['🌦️','소나기'],81:['🌧️','소나기'],82:['⛈️','강한 소나기'],
   85:['🌨️','눈 소나기'],86:['❄️','눈 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','뇌우']};
+/* ---------- 비·눈이 오면 메인 화면에도 내려요 ---------- */
+const WX_RAIN = {51:70, 53:90, 55:120, 56:90, 57:120, 61:110, 63:170, 65:240, 66:130, 67:220, 80:130, 81:200, 82:280, 95:260, 96:300, 99:340};
+const WX_SNOW = {71:70, 73:120, 75:190, 77:80, 85:110, 86:170};
+const wxFxCv = document.createElement('canvas'); wxFxCv.id = 'wxFx'; wxFxCv.hidden = true; wxFxCv.setAttribute('aria-hidden', 'true'); document.body.appendChild(wxFxCv);
+let wxFxKind = null, wxFxN = 0, wxFxRaf = 0, wxFxParts = [], wxFxOver = null, wxFxT = 0, wxFxTimer = 0;
+function wxFxSize(){ wxFxCv.width = window.innerWidth; wxFxCv.height = window.innerHeight; }
+function wxFxNew(anywhere){
+  const W = wxFxCv.width, H = wxFxCv.height;
+  if (wxFxKind === 'rain') return {x: Math.random() * (W + 200), y: anywhere ? Math.random() * H : -30 - Math.random() * 80, l: 12 + Math.random() * 14, v: 15 + Math.random() * 11};
+  return {x: Math.random() * W, y: anywhere ? Math.random() * H : -10, r: 2 + Math.random() * 3, v: 1.1 + Math.random() * 1.4, p: Math.random() * 6.28};
+}
+function wxFxLoop(ts){
+  const cv = wxFxCv, g = cv.getContext('2d'), W = cv.width, H = cv.height, dt = Math.min(3, (ts - (wxFxT || ts)) / 16.7 || 1); wxFxT = ts;
+  g.clearRect(0, 0, W, H);
+  if (wxFxKind === 'rain'){
+    g.strokeStyle = 'rgba(70,115,170,.55)'; g.lineWidth = 1.7; g.lineCap = 'round'; g.beginPath();
+    wxFxParts.forEach((p, i) => {
+      p.y += p.v * dt; p.x -= p.v * .22 * dt;
+      g.moveTo(p.x, p.y); g.lineTo(p.x + p.l * .22, p.y - p.l);
+      if (p.y > H + 20 || p.x < -40) wxFxParts[i] = wxFxNew(false);
+    });
+    g.stroke();
+  } else {
+    g.fillStyle = 'rgba(255,255,255,.95)'; g.strokeStyle = 'rgba(110,140,185,.65)'; g.lineWidth = 1;
+    wxFxParts.forEach((p, i) => {
+      p.y += p.v * dt; p.p += .02 * dt; p.x += Math.sin(p.p) * .6 * dt;
+      g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.3); g.fill(); g.stroke();
+      if (p.y > H + 10){ wxFxParts[i] = wxFxNew(false); }
+    });
+  }
+  wxFxRaf = requestAnimationFrame(wxFxLoop);
+}
+function wxFxApply(){
+  let kind = null, n = 0;
+  if (wxFxOver){ kind = wxFxOver.kind; n = wxFxOver.n; }
+  else if (S.show && S.show.wxfx && wxData && wxData.current){ const c = wxData.current.weather_code; if (WX_RAIN[c]){ kind = 'rain'; n = WX_RAIN[c]; } else if (WX_SNOW[c]){ kind = 'snow'; n = WX_SNOW[c]; } }
+  if (!kind){ wxFxKind = null; cancelAnimationFrame(wxFxRaf); wxFxRaf = 0; wxFxCv.hidden = true; return; }
+  if (kind === wxFxKind && n === wxFxN && wxFxRaf) return;
+  cancelAnimationFrame(wxFxRaf); wxFxRaf = 0; wxFxKind = kind; wxFxN = n; wxFxCv.hidden = false; wxFxSize(); wxFxT = 0;
+  wxFxParts = Array.from({length: n}, () => wxFxNew(true));
+  wxFxRaf = requestAnimationFrame(wxFxLoop);
+}
+function wxFxPreview(kind){
+  clearTimeout(wxFxTimer); wxFxOver = {kind, n: kind === 'rain' ? 200 : 130}; wxFxApply();
+  wxFxTimer = setTimeout(() => { wxFxOver = null; wxFxApply(); }, 7000);
+}
+window.addEventListener('resize', () => { if (wxFxKind) wxFxSize(); });
 let wxData = null, wxAt = 0;
 async function loadWeather(force){
   if (!force && wxData && Date.now() - wxAt < 15*60*1000) return renderWeather();
@@ -2868,19 +2920,22 @@ async function loadWeather(force){
     const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1`);
     if (!r.ok) throw 0;
     wxData = await r.json(); wxAt = Date.now();
-  } catch(e){ if (!wxData){ $('#wxCard').hidden = true; return; } }
+  } catch(e){ if (!wxData){ $('#wxCard').hidden = true; wxFxApply(); return; } }
   renderWeather();
 }
 function renderWeather(){
   const c = wxData && wxData.current, d = wxData && wxData.daily;
-  if (!c){ $('#wxCard').hidden = true; return; }
+  if (!c){ $('#wxCard').hidden = true; wxFxApply(); return; }
   let [ico, txt] = WX[c.weather_code] || ['🌡️',''];
   if (!c.is_day && (c.weather_code === 0 || c.weather_code === 1)) ico = '🌙';
   const hi = d && d.temperature_2m_max ? Math.round(d.temperature_2m_max[0]) : null, lo = d && d.temperature_2m_min ? Math.round(d.temperature_2m_min[0]) : null;
   const pp = d && d.precipitation_probability_max ? d.precipitation_probability_max[0] : null;
   $('#wxCard').innerHTML = `<div class="wi">${ico}</div><div class="wt">${Math.round(c.temperature_2m)}°</div><div class="wd">${esc(state.wx.name)} · ${txt}</div>${hi != null ? `<div class="wr">최고 ${hi}° / 최저 ${lo}°${pp != null && pp >= 30 ? ` · ☔${pp}%` : ''}</div>` : ''}`;
   $('#wxCard').hidden = false;
+  wxFxApply();
 }
+$('#wxPvRain').onclick = () => { $('#dlgWx').close(); wxFxPreview('rain'); };
+$('#wxPvSnow').onclick = () => { $('#dlgWx').close(); wxFxPreview('snow'); };
 $('#wxCard').onclick = () => { if (animating) return; $('#wxQ').value = ''; $('#wxRes').innerHTML = ''; $('#wxNow').textContent = state.wx.name; $('#dlgWx').showModal(); setTimeout(() => $('#wxQ').focus(), 50); };
 async function findPlace(){
   const q = $('#wxQ').value.trim(), res = $('#wxRes');
@@ -6308,10 +6363,11 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
+  wxFxApply();
 }
 document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
   const k = c.dataset.show;
