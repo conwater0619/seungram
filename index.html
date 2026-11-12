@@ -94,9 +94,11 @@ label.chk{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 main{padding:8px 16px 12px}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
 .controls .spacer{flex:1}
+.controls .rt{display:flex;gap:inherit;align-items:center;margin-left:auto}
+@media (max-width:600px){.controls .rt{display:contents}}
 .controls{gap:7px}
-.controls > .btn:not(.big), .controls .more > .btn{padding:8px 11px;font-size:15px}
-@media (max-width:1600px) and (min-width:761px){.controls{gap:5px}.controls > .btn:not(.big), .controls .more > .btn{padding:7px 8px;font-size:14px}.controls > .btn.big{padding:9px 14px!important;font-size:18px!important}}
+.controls > .btn:not(.big), .controls .rt > .btn:not(.big), .controls .more > .btn{padding:8px 11px;font-size:15px}
+@media (max-width:1600px) and (min-width:761px){.controls{gap:5px}.controls > .btn:not(.big), .controls .rt > .btn:not(.big), .controls .more > .btn{padding:7px 8px;font-size:14px}.controls > .btn.big{padding:9px 14px!important;font-size:18px!important}}
 #pickBtn{font-size:17px!important;padding:10px 14px!important}
 #go{font-size:21px;padding:11px 22px}
 .stage{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 18px 22px;display:flex;flex-direction:column;min-height:calc(100vh - 178px);min-height:calc(100dvh - 178px)}
@@ -4174,6 +4176,9 @@ function renderShortcut(){
   const ib = $('#scInstall'); if (ib) ib.onclick = async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch(e){} installEvt = null; renderShortcut(); };
 }
 $('#openShortcut').onclick = () => { if (animating) return; renderShortcut(); openSheet($('#dlgShortcut')); };
+
+/* 전체 화면·더보기는 항상 한 덩어리로 오른쪽 끝에 붙어요 (버튼이 많아 줄이 넘어가도 왼쪽으로 떨어지지 않게) */
+(function(){ const c = document.querySelector('.controls'), fs = $('#fs'), more = c && c.querySelector('.more'); if (!c || !fs || !more) return; const w = document.createElement('div'); w.className = 'rt'; c.insertBefore(w, fs); w.append(fs, more); })();
 
 /* ---------- 지정석 모드 자동 해제 ---------- */
 document.querySelector('.controls').addEventListener('click', e => {
