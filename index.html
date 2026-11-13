@@ -461,6 +461,15 @@ body.hide-notice .notice-strip{display:none!important}
 .time-up{position:fixed;inset:0;z-index:95;background:rgba(220,60,50,.92);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Jua",sans-serif;cursor:pointer;animation:fadein .2s}
 .time-up b{font-size:min(22vh,18vw);font-weight:400;line-height:1}
 .time-up span{font-size:3vh;margin-top:3vh;opacity:.9}
+dialog.tlock{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;overflow:hidden;outline:none;touch-action:none;user-select:none;-webkit-user-select:none}
+dialog.tlock::backdrop{background:transparent}
+html.tl-touch,html.tl-touch body{touch-action:none}
+#tLockBtn{position:absolute;right:14px;bottom:14px;width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;font-size:26px;display:grid;place-items:center;opacity:.28;transition:opacity .3s;touch-action:none;background:conic-gradient(#e2673b calc(var(--p,0)*360deg),rgba(60,50,40,.55) 0);color:#fff;-webkit-tap-highlight-color:transparent}
+#tLockBtn::before{content:"";position:absolute;inset:6px;border-radius:50%;background:rgba(60,50,40,.85)}
+#tLockBtn span{position:relative}
+dialog.tlock.hint #tLockBtn{opacity:.9}
+#tLockMsg{position:absolute;right:88px;bottom:30px;background:rgba(60,50,40,.9);color:#fff;border-radius:999px;padding:8px 16px;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+dialog.tlock.hint #tLockMsg{opacity:1}
 dialog.curtain{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;overflow:hidden;outline:none}
 dialog.curtain::backdrop{background:transparent}
 .curtain .cl,.curtain .cr{position:absolute;top:0;bottom:0;width:50.5%;transition:transform .95s cubic-bezier(.65,0,.25,1);
@@ -865,6 +874,7 @@ dialog.cam-dlg::backdrop{background:#111}
 @keyframes fall{to{transform:translateY(120vh) rotate(600deg);opacity:.3}}
 @keyframes pop{0%{transform:scale(1.25)}100%{transform:scale(1)}}
 .hint{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+#hint,#tlNote{display:inline}#tlNote{margin-left:10px}#tlNote.on{color:#d62828;font-weight:700}
 .demo-cta{max-width:980px;margin:0 auto 12px;background:#fffaf0;border:2px dashed #f0b45a;border-radius:18px;padding:12px 18px;display:flex;align-items:center;gap:18px}
 .demo-cta > button{flex:none}
 @media (max-width:760px){.demo-cta{flex-direction:column;text-align:center}}
@@ -1038,6 +1048,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openTemp">🌡️ 학급 온도계</button>
           <button class="mi" id="praiseAll">😎 반 전체 칭찬 (+1)</button>
           <button class="mi" id="openHelp">📖 사용 설명서</button>
+          <button class="mi" id="openTLock">🔒 터치 잠금 <span class="muted small">(마우스는 되고 터치만 막기 · L 키)</span></button>
+          <button class="mi" id="openTLockAll">🔒 전체 잠금 <span class="muted small">(마우스·터치 모두 막기)</span></button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openLadder">🪜 사다리 타기</button>
           <button class="mi" id="openVac">🏖️ 방학 타이머 <span class="muted small" id="vacState"></span></button>
@@ -1103,7 +1115,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="board">칠 판</div>
       <div class="floor"><div class="lane" id="laneL"></div><div class="seats" id="seats"></div><div class="lane" id="laneR"></div></div>
     </div>
-    <div class="hint" id="hint"></div>
+    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div>
     <div class="demo-pill" id="demoPill" hidden>🧪 체험 중 <button id="demoEnd">체험 끝내기</button></div>
   </main>
 </div>
@@ -2058,6 +2070,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <p class="muted small" style="margin-bottom:0">칭찬·경고 횟수와 한 줄 메모에서 어떤 면이 두드러지는지만 읽어서, 통지표에 쓸 수 있는 순화된 일반 문장(~함 / ~할 수 있음)으로 새로 만들어요. 기록 내용은 인터넷으로 보내지지 않아요. 고친 문장은 자동으로 저장돼요.</p>
   </div>
 </dialog>
+<dialog class="tlock" id="tLock" aria-label="터치 잠금"><button id="tLockBtn" aria-label="2초간 눌러서 잠금 해제"><span>🔒</span></button></dialog>
 <dialog class="curtain" id="curtain" aria-label="화면 가림">
   <div class="cl"></div><div class="cr"></div><div class="valance"></div>
   <div class="cmsg"><div class="csub" id="curSub"></div><div class="cclock" id="curClock"></div><div class="chint">H 키를 누르거나 화면을 두 번 누르면 열려요</div></div>
@@ -5339,7 +5352,7 @@ function toggleCurtain(force, sub, auto){
   }
 }
 $('#curtain').addEventListener('cancel', e => e.preventDefault());
-$('#curtain').addEventListener('click', () => { const t = Date.now(); if (t - curTap < 450){ curTap = 0; toggleCurtain(false); } else curTap = t; });
+$('#curtain').addEventListener('click', () => { if (tlT || tlA) return; const t = Date.now(); if (t - curTap < 450){ curTap = 0; toggleCurtain(false); } else curTap = t; });
 $('#openCurtain').onclick = () => toggleCurtain(true);
 /* 점심시간 자동 커튼 */
 $('#autoLunch').checked = S.autoLunch !== false;
@@ -5366,6 +5379,69 @@ document.addEventListener('keydown', e => {
   const t = e.target;
   if (!curtainOn && t && t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
   e.preventDefault(); e.stopPropagation(); toggleCurtain();
+}, true);
+
+/* ---------- 터치 잠금 (전자칠판에서 학생이 지나가다 눌러도 안 움직이게) ---------- */
+let tlT = false, tlA = false, tlHold = 0, tlRaf = 0, tlHintT = 0;   /* tlT: 터치 잠금, tlA: 전체 잠금 (둘은 따로 켜지고, 전체 잠금이 더 위예요) */
+function tlNote(){
+  const n = $('#tlNote'), on = tlT || tlA;
+  $('#openTLock').firstChild.textContent = tlT ? '🔓 터치 잠금 풀기 ' : '🔒 터치 잠금 ';
+  n.classList.toggle('on', on);
+  n.textContent = tlA ? '🔒 전체 잠금중입니다. L키를 누르거나 자물쇠 버튼을 꾹 눌러주세요.' : tlT ? '🔒 터치 잠금중입니다.' : '옆의 ⋯ 더보기 → 🔒 터치 잠금으로 화면 터치를 잠글 수 있어요.';
+}
+function tlHint(){ if (!tlA) return; const d = $('#tLock'); d.classList.add('hint'); clearTimeout(tlHintT); tlHintT = setTimeout(() => d.classList.remove('hint'), 2200); }
+function tlSet(kind, on, quiet){
+  $('#moreMenu').hidden = true;
+  if (kind === 'all'){
+    if (on === tlA) return;
+    if (on){ if (animating) return; tlA = true; $('#tLock').showModal(); tlHint(); }
+    else { tlStop(); tlA = false; $('#tLock').classList.remove('hint'); if ($('#tLock').open) $('#tLock').close(); if (!quiet) toast(tlT ? '🔓 전체 잠금을 풀었어요. (터치 잠금은 그대로예요)' : '🔓 잠금을 풀었어요.'); }
+  } else {
+    if (on === tlT) return;
+    if (on){ if (animating) return; tlT = true; document.documentElement.classList.add('tl-touch'); }
+    else { tlT = false; document.documentElement.classList.remove('tl-touch'); if (!quiet) toast('🔓 터치 잠금을 풀었어요.'); }
+  }
+  tlNote();
+}
+function tlStop(){ cancelAnimationFrame(tlRaf); tlHold = 0; $('#tLockBtn').style.setProperty('--p', 0); }
+$('#tLockBtn').addEventListener('pointerdown', e => {
+  e.preventDefault(); e.stopPropagation(); tlHint();
+  tlHold = performance.now();
+  const btn = e.currentTarget;
+  const step = () => { const p = Math.min(1, (performance.now() - tlHold) / 2000); btn.style.setProperty('--p', p); if (p >= 1){ tlSet('all', false); return; } tlRaf = requestAnimationFrame(step); };
+  tlRaf = requestAnimationFrame(step);
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev => $('#tLockBtn').addEventListener(ev, tlStop));
+$('#tLock').addEventListener('cancel', e => e.preventDefault());
+$('#tLock').addEventListener('pointerdown', e => { if (!e.target.closest('#tLockBtn')) tlHint(); });
+tlNote();
+$('#openTLock').onclick = () => tlSet('touch', !tlT);
+$('#openTLockAll').onclick = () => tlSet('all', true);
+/* 터치 잠금: 터치·펜 입력만 걸러내고 마우스는 그대로 통과 (전체 잠금은 대화상자가 전부 막아요) */
+const tlIsTouch = e => e.pointerType ? e.pointerType !== 'mouse' : (/^touch/.test(e.type) || !!(e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents));
+['touchstart','touchmove','touchend','touchcancel','pointerdown','pointermove','pointerup','click','dblclick','contextmenu'].forEach(t => window.addEventListener(t, e => {
+  if (!tlT || !tlIsTouch(e)) return;
+  if (tlA && e.target && e.target.closest && e.target.closest('#tLockBtn')) return;   /* 전체 잠금 해제 버튼만 터치 가능 */
+  if (e.cancelable) e.preventDefault(); e.stopImmediatePropagation();
+}, {capture: true, passive: false}));
+/* 전체 잠금 중에는 키보드도 L 키(풀기)만 받아요. 터치 잠금은 키보드는 그대로 써요 */
+let tlLastL = 0, tlPrevT = false, tlRelAt = 0;
+window.addEventListener('keydown', e => {
+  const isL = !e.ctrlKey && !e.metaKey && !e.altKey && (e.code === 'KeyL' || e.key === 'l' || e.key === 'L' || e.key === 'ㅣ');
+  if (tlA){ e.stopPropagation(); e.preventDefault(); if (isL && !e.repeat){ tlSet('all', false); tlRelAt = Date.now(); tlLastL = 0; } return; }
+  if (isL && !e.repeat){
+    const now = Date.now();
+    if (now - tlRelAt < 500){ e.preventDefault(); e.stopPropagation(); return; }   /* 전체 잠금을 막 푼 직후의 연타는 무시 */
+    const t = e.target;
+    if (!tlT && t && t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (!tlT && document.querySelector('dialog[open]')) return;
+    e.preventDefault(); e.stopPropagation();
+    if (tlLastL && now - tlLastL < 450){          /* L을 빠르게 두 번 → 전체 잠금 (첫 번째로 바뀐 터치 잠금은 원래대로 되돌림) */
+      tlLastL = 0; tlSet('touch', tlPrevT, true); tlSet('all', true); return;
+    }
+    tlLastL = now; tlPrevT = tlT;
+    tlSet('touch', !tlT);
+  }
 }, true);
 
 /* ---------- 체험용 학생 ---------- */
