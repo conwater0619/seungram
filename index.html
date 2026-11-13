@@ -2813,7 +2813,7 @@ async function neis(path, params){
   return (root && root[1] && root[1].row) || [];
 }
 function cleanMenu(s){
-  return String(s || '').split(/<br\s*\/?>/i).map(x => x.replace(/\([0-9.\s]+\)/g, '').replace(/[0-9]+\./g, '').replace(/\*/g, '').trim()).filter(Boolean);
+  return String(s || '').split(/<br\s*\/?>/i).map(x => x.replace(/\([0-9.\s]+\)/g, '').replace(/[0-9]+\./g, '').replace(/(?<=[가-힣A-Za-z\)])[0-9]+(?:\.[0-9]+)*\.?/g, '').replace(/\s+[0-9]+(?:\.[0-9]+)*\.?$/, '').replace(/\*/g, '').trim()).filter(Boolean);
 }
 async function loadMealWeek(d){
   const mon = new Date(d); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
