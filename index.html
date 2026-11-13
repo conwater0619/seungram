@@ -181,6 +181,7 @@ body.hide-tt.hide-date.hide-wx.hide-task .stage-head{display:none}
 .now-card{justify-self:start;text-align:center;min-width:150px;max-width:100%;background:#eef4ff;border:1px solid #c9d8f3;border-radius:16px;padding:8px 16px;cursor:pointer;line-height:1.2}
 .now-card[hidden]{display:none}
 .head-right{justify-self:end;min-width:0;display:flex;justify-content:flex-end;align-items:flex-start;gap:10px}
+.upd-log h3{margin:14px 0 6px;font-family:"Jua",sans-serif;font-weight:400;font-size:19px}.upd-log h3:first-child{margin-top:0}.upd-log ul{margin:0;padding-left:20px;display:grid;gap:7px;font-size:15px;line-height:1.5}
 .vac-card{flex:none;align-self:center;background:#fff3e6;border:1px solid #f6d3a8;border-radius:999px;padding:4px 10px;text-align:center;cursor:pointer;line-height:1.1;color:#8a4b10;white-space:nowrap;font-size:14px}
 .vac-card .vd{font-family:"Jua",sans-serif;font-size:20px;margin-left:4px}
 @media (max-width:1300px){.head-right{flex-wrap:wrap}}
@@ -1098,6 +1099,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <div class="msep"></div>
           <button class="mi" id="clearPicked" style="display:none">발표 표시 초기화</button>
           <button class="mi" id="clearPraise" style="display:none">칭찬·경고 표시 초기화</button>
+          <button class="mi" id="openLog">🆕 업데이트 내역</button>
           <button class="mi danger" id="clearSeats">자리 초기화</button>
         </div>
       </div>
@@ -1858,6 +1860,32 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <span style="margin-left:8px">방학하는 날</span><input type="date" id="vacDate">
     </div>
     <div class="muted small" id="vacHint"></div>
+  </div>
+</dialog>
+<dialog class="sheet mid" id="dlgLog">
+  <div class="sheet-head">
+    <h2>🆕 업데이트 내역</h2>
+    <span class="muted small">새로 생기거나 바뀐 기능이에요</span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body upd-log">
+    <h3>2026년 11월 13일</h3>
+    <ul>
+      <li><b>🔒 터치 잠금 · 전체 잠금</b>: 전자칠판을 학생이 지나가다 눌러도 안 움직여요. 터치 잠금은 마우스는 되고 터치만 막고, 전체 잠금은 마우스까지 막아요. <b>L 키</b>로 터치 잠금, <b>L 키 두 번</b>은 전체 잠금이에요. 터치 잠금 중에도 전체 잠금을 겹쳐 걸 수 있어요. (더보기 메뉴)</li>
+      <li><b>🍚 급식 알레르기 번호</b>: 메뉴 끝에 붙던 숫자를 지웠어요.</li>
+      <li><b>🌤️ 날씨</b>: 못 받아오면 1분마다 다시 시도해요.</li>
+      <li><b>🎅 기념일 얼굴 꾸미기</b>: 크리스마스엔 산타 모자 등 기념일마다 얼굴이 바뀌어요. 칭찬·경고를 받은 친구는 원래 단계 표시로 보여요. (설정의 화면 표시에서 끄고 켜요)</li>
+      <li><b>🏖️ 방학 타이머</b>: 날짜·시계 옆에 방학까지 D-day가 떠요. 기본은 꺼져 있고 더보기에서 켜요.</li>
+      <li><b>📚 수업 전 과목 목록</b>: 1교시 전에는 왼쪽 시간표 카드에 오늘 과목이 쭉 떠서 교과서를 미리 준비할 수 있어요.</li>
+    </ul>
+    <h3>이전 업데이트</h3>
+    <ul>
+      <li><b>🌧️ 비·눈 오는 효과</b>: 날씨에 맞춰 메인 화면에 비나 눈이 내려요.</li>
+      <li><b>🪜 사다리 타기</b>와 <b>🍚 점심시간 자동 이동</b> (시간표에서 점심 줄에 ▲▼ 버튼)</li>
+      <li><b>📲 앱으로 설치하기</b>: 바탕화면 앱으로 만들고, 컴퓨터를 켜면 자동으로 열리게 하는 안내</li>
+      <li><b>📷 카메라</b>: 확대·회전·필터·펜이 사진과 녹화에 그대로 담겨요.</li>
+      <li><b>📒 알림장</b>: 칠판처럼 크게 쓰고, 저장해서 나중에 볼 수 있고, 복사도 돼요.</li>
+    </ul>
   </div>
 </dialog>
 <dialog class="sheet mid" id="dlgTemp">
@@ -6499,6 +6527,7 @@ function vacRender(){
   if (el.innerHTML !== html) el.innerHTML = html;
   const h = $('#vacHint'); if (h) h.textContent = !v.date ? '방학하는 날을 고르면 D-day가 떠요. 그날이 지나면 저절로 사라져요.' : (v.on ? '' : '위 칸을 켜면 화면에 나타나요.');
 }
+$('#openLog').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; openSheet($('#dlgLog')); };
 $('#openVac').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; $('#vacOn').checked = state.vac.on; $('#vacName').value = state.vac.name; $('#vacDate').value = state.vac.date; vacRender(); openSheet($('#dlgVac')); };
 $('#vacOn').onchange = e => { state.vac.on = e.target.checked; save(); vacRender(); };
 $('#vacName').oninput = e => { state.vac.name = e.target.value.trim(); save(); vacRender(); };
