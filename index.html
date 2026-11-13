@@ -180,7 +180,11 @@ body.hide-tt.hide-date.hide-wx.hide-task .stage-head{display:none}
 .mshow .chk{display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
 .now-card{justify-self:start;text-align:center;min-width:150px;max-width:100%;background:#eef4ff;border:1px solid #c9d8f3;border-radius:16px;padding:8px 16px;cursor:pointer;line-height:1.2}
 .now-card[hidden]{display:none}
-.head-right{justify-self:end;min-width:0;display:flex;align-items:flex-start;gap:10px}
+.head-right{justify-self:end;min-width:0;display:flex;justify-content:flex-end;align-items:flex-start;gap:10px}
+.vac-card{flex:none;align-self:center;background:#fff3e6;border:1px solid #f6d3a8;border-radius:999px;padding:4px 10px;text-align:center;cursor:pointer;line-height:1.1;color:#8a4b10;white-space:nowrap;font-size:14px}
+.vac-card .vd{font-family:"Jua",sans-serif;font-size:20px;margin-left:4px}
+@media (max-width:1300px){.head-right{flex-wrap:wrap}}
+body.fs .stage .vac-card{font-size:2vh}body.fs .stage .vac-card .vd{font-size:3.2vh}
 .wx-card{flex:none;min-width:118px;background:#eef7fd;border:1px solid #c4e1f3;border-radius:16px;padding:8px 14px;text-align:center;cursor:pointer;line-height:1.15;color:#1d4e6e}
 .wx-card[hidden]{display:none}
 .wx-card .wi{font-size:clamp(30px,3vw,44px);line-height:1}
@@ -1031,6 +1035,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openHelp">📖 사용 설명서</button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openLadder">🪜 사다리 타기</button>
+          <button class="mi" id="openVac">🏖️ 방학 타이머 <span class="muted small" id="vacState"></span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
           <button class="mi" id="openSched">📅 학교 행사 일정</button>
@@ -1085,7 +1090,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn primary big" id="demoStart">🧪 체험용 학생으로 써 보기</button>
     </div>
     <div class="stage" id="stage">
-      <div class="stage-head"><div class="now-card" id="nowCard" hidden></div><div class="clock" id="stageDate"></div><div class="head-right"><div class="wx-card" id="wxCard" hidden></div><div class="task-card" id="taskCard"></div></div></div>
+      <div class="stage-head"><div class="now-card" id="nowCard" hidden></div><div class="clock" id="stageDate"></div><div class="head-right"><div class="vac-card" id="vacCard" hidden></div><div class="wx-card" id="wxCard" hidden></div><div class="task-card" id="taskCard"></div></div></div>
       <div class="task-bar" id="taskBar" hidden></div>
       <div class="meal-strip" id="mealStrip" hidden><b>🍚 오늘 급식</b><span id="mealStripText"></span></div>
       <div class="notice-strip" id="noticeStrip" hidden title="눌러서 크게 보기"></div>
@@ -1822,6 +1827,21 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 <div class="tool-pill" id="toolPill" hidden></div>
+<dialog class="sheet mid" id="dlgVac">
+  <div class="sheet-head">
+    <h2>🏖️ 방학 타이머</h2>
+    <span class="muted small">날짜와 시계 옆에 방학까지 남은 날이 떠요</span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <label class="chk" style="font-size:16px"><input type="checkbox" id="vacOn"> 화면에 방학 타이머 보이기</label>
+    <div class="row" style="gap:8px;margin:14px 0;flex-wrap:wrap;align-items:center">
+      <span>이름</span><input type="text" id="vacName" maxlength="8" placeholder="방학" style="width:110px">
+      <span style="margin-left:8px">방학하는 날</span><input type="date" id="vacDate">
+    </div>
+    <div class="muted small" id="vacHint"></div>
+  </div>
+</dialog>
 <dialog class="sheet mid" id="dlgTemp">
   <div class="sheet-head">
     <h2>🌡️ 학급 온도계</h2>
@@ -2933,7 +2953,7 @@ async function loadWeather(force){
     const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1`);
     if (!r.ok) throw 0;
     wxData = await r.json(); wxAt = Date.now();
-  } catch(e){ if (!wxData){ $('#wxCard').hidden = true; wxFxApply(); return; } }
+  } catch(e){ if (!wxData){ $('#wxCard').hidden = true; wxFxApply(); clearTimeout(loadWeather._t); loadWeather._t = setTimeout(() => loadWeather(true), 60000); return; } }
   renderWeather();
 }
 function renderWeather(){
@@ -6360,6 +6380,29 @@ function tempCelebrate(r){
   document.body.appendChild(ov);
 }
 function tempAdjust(d){ state.temp.pts = Math.max(0, (state.temp.pts || 0) + d); save(); if (d > 0) tempCheck(); else { const rew = tempRewards(), reached = rew.filter(r => r.at <= state.temp.pts).map(r => r.at); state.temp.done = reached.length ? Math.max(...reached) : 0; save(); } renderTemp(); }
+/* ---------- 방학 타이머 ---------- */
+state.vac = Object.assign({on:false, date:'', name:'방학'}, state.vac || {});
+function vacRender(){
+  const v = state.vac, el = $('#vacCard'); if (!el) return;
+  const st = $('#vacState'); if (st) st.textContent = v.on ? '(켜짐)' : '(꺼짐)';
+  let html = '';
+  if (v.on && v.date){
+    const n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate()), [y,m,dd] = v.date.split('-').map(Number);
+    const days = Math.round((new Date(y, m-1, dd) - t0) / 86400000), nm = esc(v.name || '방학');
+    if (days > 0) html = `<span>🏖️ ${nm}</span><b class="vd">D-${days}</b>`;
+    else if (days === 0) html = `<span>🎉 ${nm}식 날!</span>`;
+    el.title = days > 0 ? `${m}월 ${dd}일` : '';
+  }
+  el.hidden = !html;
+  if (el.innerHTML !== html) el.innerHTML = html;
+  const h = $('#vacHint'); if (h) h.textContent = !v.date ? '방학하는 날을 고르면 D-day가 떠요. 그날이 지나면 저절로 사라져요.' : (v.on ? '' : '위 칸을 켜면 화면에 나타나요.');
+}
+$('#openVac').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; $('#vacOn').checked = state.vac.on; $('#vacName').value = state.vac.name; $('#vacDate').value = state.vac.date; vacRender(); openSheet($('#dlgVac')); };
+$('#vacOn').onchange = e => { state.vac.on = e.target.checked; save(); vacRender(); };
+$('#vacName').oninput = e => { state.vac.name = e.target.value.trim(); save(); vacRender(); };
+$('#vacDate').onchange = e => { state.vac.date = e.target.value; if (e.target.value && !state.vac.on){ state.vac.on = true; $('#vacOn').checked = true; } save(); vacRender(); };
+$('#vacCard').onclick = () => $('#openVac').click();
+vacRender(); setInterval(vacRender, 60000);
 $('#openTemp').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; renderTemp(); openSheet($('#dlgTemp')); };
 $('#tempMini').onclick = () => $('#openTemp').click();
 renderTempMini();
