@@ -182,6 +182,25 @@ body.hide-tt.hide-date.hide-wx.hide-task .stage-head{display:none}
 .now-card[hidden]{display:none}
 .head-right{justify-self:end;min-width:0;display:flex;justify-content:flex-end;align-items:flex-start;gap:10px}
 .upd-log h3{margin:14px 0 6px;font-family:"Jua",sans-serif;font-weight:400;font-size:19px}.upd-log h3:first-child{margin-top:0}.upd-log ul{margin:0;padding-left:20px;display:grid;gap:7px;font-size:15px;line-height:1.5}
+.mus-body h3{margin:16px 0 6px;font-family:"Jua",sans-serif;font-weight:400;font-size:19px}.mus-body h3:first-child{margin-top:0}
+.mus-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.mus-chips a{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;font-size:13px;color:var(--ink);text-decoration:none}.mus-chips a:hover{background:var(--gray-soft)}
+.mus-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.mus-row .mn{flex:1;min-width:120px;font-family:"Jua",sans-serif;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mus-row input{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px}
+.mus-row .kw{width:90px}.mus-row .nm2{width:170px}.mus-row .ul{flex:1;min-width:150px}
+.mus-row .x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:16px}.mus-row .x:hover{color:var(--red)}
+#musPlayer{position:fixed;right:14px;bottom:14px;z-index:60;width:320px;border-radius:14px;overflow:hidden;background:#111;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+#musPlayer[hidden]{display:none}
+#musPlayer .mh{display:flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;background:#fff3e6;color:#8a4b10;font-size:13px}
+#musPlayer .mh b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+#musPlayer .mh button,#musPlayer .mh a{border:0;background:transparent;cursor:pointer;font-size:15px;color:#8a4b10;text-decoration:none;padding:2px 6px;border-radius:6px}
+#musPlayer .mh button:hover,#musPlayer .mh a:hover{background:#f6d3a8}
+#musPlayer iframe{display:block;width:100%;height:180px;border:0}
+#musPlayer.big{width:480px}#musPlayer.big iframe{height:270px}
+html.tl-touch #musPlayer iframe{pointer-events:none}
+.clock .mus{flex-basis:100%;order:4;align-self:center;margin:2px auto 0;border:1px solid #b9dcc4;background:#eaf6ee;color:#2d6a4f;border-radius:999px;padding:3px 14px;font-size:clamp(14px,1.4vw,19px);cursor:pointer;font-family:inherit;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock .mus[hidden]{display:none}.clock .mus:hover{background:#d9efe0}
+body.fs .stage .clock .mus{font-size:2.2vh}
 .vac-card{flex:none;align-self:center;background:#fff3e6;border:1px solid #f6d3a8;border-radius:999px;padding:4px 10px;text-align:center;cursor:pointer;line-height:1.1;color:#8a4b10;white-space:nowrap;font-size:14px}
 .vac-card .vd{font-family:"Jua",sans-serif;font-size:20px;margin-left:4px}
 @media (max-width:1300px){.head-right{flex-wrap:wrap}}
@@ -1047,6 +1066,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openDoc">📷 카메라</button>
           <button class="mi" id="openNoise">🔊 소음 측정기</button>
           <button class="mi" id="openTemp">🌡️ 학급 온도계</button>
+          <button class="mi" id="openMusic">🎵 음악 <span class="muted small">(유튜브 링크 · 수업별 추천)</span></button>
           <button class="mi" id="praiseAll">😎 반 전체 칭찬 (+1)</button>
           <button class="mi" id="openHelp">📖 사용 설명서</button>
           <button class="mi" id="openTLock">🔒 터치 잠금 <span class="muted small">(마우스는 되고 터치만 막기 · L 키)</span></button>
@@ -1871,6 +1891,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 13일</h3>
     <ul>
+      <li><b>🎵 음악</b>: 유튜브 링크를 화면 아래 작은 플레이어로 틀어요. 미술 같은 수업 시간에는 날짜·시계 아래에 추천 음악 링크가 떠요. (더보기 메뉴)</li>
       <li><b>🔒 터치 잠금 · 전체 잠금</b>: 전자칠판을 학생이 지나가다 눌러도 안 움직여요. 터치 잠금은 마우스는 되고 터치만 막고, 전체 잠금은 마우스까지 막아요. <b>L 키</b>로 터치 잠금, <b>L 키 두 번</b>은 전체 잠금이에요. 터치 잠금 중에도 전체 잠금을 겹쳐 걸 수 있어요. (더보기 메뉴)</li>
       <li><b>🍚 급식 알레르기 번호</b>: 메뉴 끝에 붙던 숫자를 지웠어요.</li>
       <li><b>🌤️ 날씨</b>: 못 받아오면 1분마다 다시 시도해요.</li>
@@ -1888,6 +1909,37 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     </ul>
   </div>
 </dialog>
+<dialog class="sheet mid" id="dlgMusic">
+  <div class="sheet-head">
+    <h2>🎵 음악</h2>
+    <span class="muted small">유튜브 링크를 화면 아래 작은 플레이어로 틀어요</span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body mus-body">
+    <h3>▶ 지금 틀기</h3>
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <input type="text" id="musUrl" placeholder="유튜브 영상·재생목록 링크를 붙여 넣으세요" style="flex:1;min-width:240px">
+      <button class="btn primary" id="musPlay">▶ 재생</button>
+    </div>
+    <p class="muted small" style="margin:6px 0 0">영상은 플레이어에 그대로 보여요(소리만 따로 틀 수는 없어요). 가요 뮤직비디오 같은 일부 영상은 올린 곳에서 다른 사이트 재생을 막아 두어 안 나올 수 있어요. 그럴 땐 플레이어 위의 <b>↗</b>로 유튜브에서 열어 주세요. 무료 계정은 광고가 나올 수 있어요.</p>
+    <div class="mus-chips" id="musChips"></div>
+
+    <h3>⭐ 내 음악 목록</h3>
+    <div id="musList"></div>
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">
+      <input type="text" id="musName" placeholder="이름 (예: 쉬는 시간 노래)" maxlength="30" style="width:200px">
+      <input type="text" id="musSaveUrl" placeholder="유튜브 링크" style="flex:1;min-width:200px">
+      <button class="btn" id="musSave">＋ 목록에 저장</button>
+    </div>
+
+    <h3>📚 수업 시간 추천 음악</h3>
+    <label class="chk"><input type="checkbox" id="musRec"> 시간표에 해당 과목이 있으면 날짜·시계 아래에 추천 음악 링크 띄우기</label>
+    <p class="muted small" style="margin:6px 0">수업 시작 10분 전부터 끝날 때까지 떠요. 링크를 비워 두면 이름으로 유튜브 검색 결과가 열려요.</p>
+    <div id="musMap"></div>
+    <button class="btn" id="musMapAdd" style="margin-top:6px">＋ 과목 추가</button>
+  </div>
+</dialog>
+<div id="musPlayer" hidden><div class="mh"><b>🎵</b><button class="mz" title="크게/작게">⤢</button><a class="mo" target="_blank" rel="noopener" title="유튜브에서 열기">↗</a><button class="mc" title="닫기">✕</button></div><iframe title="음악 플레이어" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
 <dialog class="sheet mid" id="dlgTemp">
   <div class="sheet-head">
     <h2>🌡️ 학급 온도계</h2>
@@ -2830,9 +2882,10 @@ function renderClock(){
   const d = new Date(), h = d.getHours(), ap = h < 12 ? '오전' : '오후', h12 = h % 12 || 12;
   const pad = n => String(n).padStart(2, '0');
   const el = $('#stageDate');
-  if (!el.querySelector('.cd')) el.innerHTML = '<span class="cdrow"><button class="dnav" data-k="-1" title="지난 날 돌아보기">◀</button><span class="cd"></span><button class="dnav" data-k="1" title="다음 날 미리 보기">▶</button><button class="cev" id="evBadge" hidden></button></span><span class="ct"><span class="ctm"></span><span class="cs"></span></span><button class="annv" id="annvBadge" hidden></button>';
+  if (!el.querySelector('.cd')) el.innerHTML = '<span class="cdrow"><button class="dnav" data-k="-1" title="지난 날 돌아보기">◀</button><span class="cd"></span><button class="dnav" data-k="1" title="다음 날 미리 보기">▶</button><button class="cev" id="evBadge" hidden></button></span><span class="ct"><span class="ctm"></span><span class="cs"></span></span><button class="annv" id="annvBadge" hidden></button><button class="mus" id="musBadge" hidden></button>';
   const cd = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${'일월화수목금토'[d.getDay()]}요일`;
   if (el.querySelector('.cd').textContent !== cd){ el.querySelector('.cd').textContent = cd; if (typeof renderAnnv === 'function') renderAnnv(); if (typeof renderSchedBadge === 'function') renderSchedBadge(); }
+  if (typeof renderMusBadge === 'function') renderMusBadge();
   el.querySelector('.ctm').textContent = `${ap} ${h12}:${pad(d.getMinutes())}`;
   el.querySelector('.cs').textContent = `:${pad(d.getSeconds())}`;
 }
@@ -6527,6 +6580,93 @@ function vacRender(){
   if (el.innerHTML !== html) el.innerHTML = html;
   const h = $('#vacHint'); if (h) h.textContent = !v.date ? '방학하는 날을 고르면 D-day가 떠요. 그날이 지나면 저절로 사라져요.' : (v.on ? '' : '위 칸을 켜면 화면에 나타나요.');
 }
+/* ---------- 음악 (유튜브 링크를 아래 작은 플레이어로) ---------- */
+state.music = Object.assign({rec: true, list: [], map: [{kw: '미술', name: '미술 시간 잔잔한 음악', url: ''}]}, state.music || {});
+const MUS_CHIPS = ['미술 시간 잔잔한 음악', '집중 잘 되는 잔잔한 음악', '청소 시간 신나는 노래', '쉬는 시간 동요', '요즘 초등학생 인기 노래', '어린이 K-POP 인기 노래'];
+const musSearch = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+function ytParse(u){
+  u = String(u || '').trim();
+  if (!u || !/(^|\/\/|\.)(youtube\.com|youtu\.be|youtube-nocookie\.com)/i.test(u)) return null;
+  const list = (u.match(/[?&]list=([\w-]+)/) || [])[1];
+  let m, vid = null;
+  if ((m = u.match(/youtu\.be\/([\w-]{11})/))) vid = m[1];
+  else if ((m = u.match(/[?&]v=([\w-]{11})/))) vid = m[1];
+  else if ((m = u.match(/\/(?:shorts|embed|live)\/([\w-]{11})/))) vid = m[1];
+  if (vid) return {vid, list};
+  return list ? {list} : null;
+}
+const ytEmbed = p => p.vid
+  ? `https://www.youtube-nocookie.com/embed/${p.vid}?autoplay=1&rel=0&playsinline=1${p.list ? '&list=' + p.list : ''}`
+  : `https://www.youtube-nocookie.com/embed/videoseries?list=${p.list}&autoplay=1&rel=0&playsinline=1`;
+const ytWatch = p => p.vid ? `https://www.youtube.com/watch?v=${p.vid}${p.list ? '&list=' + p.list : ''}` : `https://www.youtube.com/playlist?list=${p.list}`;
+let musCur = null;
+function musOpen(url, title){
+  const p = ytParse(url);
+  if (!p){ toast('유튜브 영상이나 재생목록 링크를 붙여 넣어 주세요.'); return false; }
+  musCur = p;
+  const el = $('#musPlayer');
+  el.querySelector('b').textContent = '🎵 ' + (title || '재생 중');
+  el.querySelector('.mo').href = ytWatch(p);
+  el.querySelector('iframe').src = ytEmbed(p);
+  el.hidden = false;
+  return true;
+}
+function musClose(){ const el = $('#musPlayer'); el.querySelector('iframe').src = 'about:blank'; el.hidden = true; musCur = null; }
+$('#musPlayer .mc').onclick = musClose;
+$('#musPlayer .mz').onclick = () => { const big = $('#musPlayer').classList.toggle('big'); $('#musPlayer .mz').textContent = big ? '⤡' : '⤢'; };
+function musRows(){
+  $('#musList').innerHTML = state.music.list.length ? state.music.list.map((x, i) => `<div class="mus-row"><span class="mn">${esc(x.name)}</span><button class="btn" data-play="${i}">▶ 재생</button><button class="x" data-del="${i}" title="지우기">✕</button></div>`).join('') : '<p class="muted small" style="margin:0">아직 없어요. 아래에서 이름과 링크를 적어 저장해 두세요.</p>';
+  $('#musMap').innerHTML = state.music.map.map((r, i) => `<div class="mus-row"><input class="kw" data-f="kw" data-i="${i}" value="${esc(r.kw)}" placeholder="과목"><input class="nm2" data-f="name" data-i="${i}" value="${esc(r.name)}" placeholder="추천 이름"><input class="ul" data-f="url" data-i="${i}" value="${esc(r.url)}" placeholder="링크 (비우면 검색)"><button class="x" data-mdel="${i}" title="지우기">✕</button></div>`).join('');
+  $('#musRec').checked = !!state.music.rec;
+  $('#musChips').innerHTML = MUS_CHIPS.map(q => `<a href="${musSearch(q)}" target="_blank" rel="noopener">🔍 ${esc(q)}</a>`).join('');
+}
+$('#openMusic').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; musRows(); openSheet($('#dlgMusic')); };
+$('#musPlay').onclick = () => { if (musOpen($('#musUrl').value, '재생 중')) $('#dlgMusic').close(); };
+$('#musUrl').addEventListener('keydown', e => { if (e.key === 'Enter') $('#musPlay').click(); });
+$('#musSave').onclick = () => {
+  const name = $('#musName').value.trim(), url = $('#musSaveUrl').value.trim();
+  if (!name){ toast('이름을 적어 주세요.'); return; }
+  if (!ytParse(url)){ toast('유튜브 영상이나 재생목록 링크를 붙여 넣어 주세요.'); return; }
+  state.music.list.push({name, url}); save(); $('#musName').value = ''; $('#musSaveUrl').value = ''; musRows();
+};
+$('#musList').addEventListener('click', e => {
+  const pl = e.target.closest('[data-play]'), dl = e.target.closest('[data-del]');
+  if (pl){ const x = state.music.list[+pl.dataset.play]; if (x && musOpen(x.url, x.name)) $('#dlgMusic').close(); }
+  if (dl){ state.music.list.splice(+dl.dataset.del, 1); save(); musRows(); }
+});
+$('#musRec').onchange = e => { state.music.rec = e.target.checked; save(); renderMusBadge(); };
+$('#musMap').addEventListener('input', e => { const t = e.target; if (!t.dataset.f) return; state.music.map[+t.dataset.i][t.dataset.f] = t.value.trim(); save(); renderMusBadge(); });
+$('#musMap').addEventListener('click', e => { const d = e.target.closest('[data-mdel]'); if (!d) return; state.music.map.splice(+d.dataset.mdel, 1); save(); musRows(); renderMusBadge(); });
+$('#musMapAdd').onclick = () => { state.music.map.push({kw: '', name: '', url: ''}); save(); musRows(); };
+/* 시간표에 맞춰: 수업 시작 10분 전부터 끝날 때까지 날짜·시계 아래에 추천 링크 */
+function musNow(){
+  if (!state.music || !state.music.rec) return null;
+  const d = new Date(), dow = d.getDay();
+  if (dow === 0 || dow === 6 || !state.periods || !state.periods.length) return null;
+  const ds = dstrOf(d);
+  if (typeof isSchoolDay === 'function' && !isSchoolDay(ds)) return null;
+  const m = d.getHours() * 60 + d.getMinutes();
+  const x = dayPeriods(dow, ds).find(p => p.p.kind === 'class' && m >= p.s - 10 && m < p.e);
+  if (!x) return null;
+  const sub = subjOn(ds, x.k); if (!sub) return null;
+  const row = state.music.map.find(r => r.kw && sub.includes(r.kw));
+  return row ? {row, sub} : null;
+}
+let lastMus = '';
+function renderMusBadge(){
+  const b = $('#musBadge'); if (!b || !state.music) return;
+  const n = musNow(), txt = n ? `🎵 ${n.sub} 시간 추천 음악: ${n.row.name || n.row.kw} ▶` : '';
+  if (txt === lastMus) return;
+  lastMus = txt; b.hidden = !n; b.textContent = txt; b.title = '눌러서 음악 틀기';
+}
+$('#stageDate').addEventListener('click', e => {
+  if (!e.target.closest('#musBadge')) return;
+  const n = musNow(); if (!n) return;
+  const r = n.row;
+  if (r.url && ytParse(r.url)) musOpen(r.url, r.name || n.sub);
+  else window.open(r.url && /^https?:\/\//.test(r.url) ? r.url : musSearch(r.name || (r.kw + ' 시간 잔잔한 음악')), '_blank', 'noopener');
+});
+setInterval(renderMusBadge, 20000); renderMusBadge();
 $('#openLog').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; openSheet($('#dlgLog')); };
 $('#openVac').onclick = () => { $('#moreMenu').hidden = true; if (animating) return; $('#vacOn').checked = state.vac.on; $('#vacName').value = state.vac.name; $('#vacDate').value = state.vac.date; vacRender(); openSheet($('#dlgVac')); };
 $('#vacOn').onchange = e => { state.vac.on = e.target.checked; save(); vacRender(); };
