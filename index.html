@@ -254,6 +254,12 @@ body.fs .stage .task-card .tn{font-size:2.6vh}
 .now-card .nn span{font-size:.8em;background:rgba(74,123,208,.14);border-radius:999px;padding:1px 8px;margin-right:4px}
 .now-card .nn b{font-family:"Jua",sans-serif;font-weight:400;color:#1f3a6b}
 .now-card .nn small{font-size:.75em;opacity:.8;margin-left:2px}
+.now-card .nlist{list-style:none;margin:8px 0 0;padding:8px 2px 0;border-top:1px dashed rgba(61,90,140,.25);text-align:left;font-size:clamp(15px,1.45vw,21px);display:grid;gap:3px}
+.now-card .nlist li{white-space:nowrap}
+.now-card .nlist li b{display:inline-block;min-width:3.4em;font-weight:400;color:#3d5a8c;font-size:.85em}
+.now-card .nlist li .s{font-family:"Jua",sans-serif;color:#1f3a6b}
+.now-card .nlist li.lu,.now-card .nlist li.lu b{color:#b06a12}
+body.fs .stage .now-card .nlist{font-size:2.5vh}
 .now-card.lunch .nn,.now-card.lunch .nn b{color:#b06a12}
 .now-card.lunch .nn{border-top-color:rgba(176,106,18,.25)}
 .now-card.lunch .nn span{background:rgba(176,106,18,.12)}
@@ -2632,7 +2638,7 @@ function nowStatus(){
     if (cur.p.kind === 'lunch') return {cls:'lunch', top:`점심시간 · ${cur.p.start}~${cur.p.end}`, main:'점심시간 🍚', prog:(m-cur.s)/(cur.e-cur.s), next: after(cur)};
     return {cls:'', top:`${cur.k+1}교시 · ${cur.p.start}~${cur.p.end}`, main: sub(cur) || `${cur.k+1}교시`, prog:(m-cur.s)/(cur.e-cur.s), next: after(cur)};
   }
-  if (m < P[0].s) return {cls:'off', top:`수업 전 · ${P[0].p.start} 시작`, main:`${lbl(P[0])}${sub(P[0]) ? ' ' + sub(P[0]) : ''}`, next: after(P[0]), nextLabel:'그다음'};
+  if (m < P[0].s) return {cls:'off', top:`수업 전 · ${P[0].p.start} 시작`, main:`${lbl(P[0])}${sub(P[0]) ? ' ' + sub(P[0]) : ''}`, next: after(P[0]), nextLabel:'그다음', list: P.map(x => ({lbl: lbl(x), sub: sub(x), lunch: x.p.kind === 'lunch'}))};
   if (m >= P[P.length-1].e) return {cls:'off', top:'오늘 수업 끝', main:'수고했어요 👋'};
   const nx = P.find(x => x.s > m);
   return {cls:'off', top:`쉬는 시간 · ${Math.ceil(nx.s - m)}분 남았어요`, main:`다음 ${lbl(nx)}${sub(nx) ? ' ' + sub(nx) : ''}`, next: after(nx), nextLabel:'그다음'};
@@ -2642,6 +2648,13 @@ function renderNow(){
   const el = $('#nowCard'), st = nowStatus();
   if (!st){ if (!el.hidden){ el.hidden = true; lastNow = ''; } return; }
   const nxt = st.next ? `<div class="nn"><span>${st.nextLabel || '다음'}</span> ${st.next.lunch ? '점심시간 🍚' : `${esc(st.next.lbl)}${st.next.sub ? ' <b>' + esc(st.next.sub) + '</b>' : ''}`}</div>` : '';
+  /* 1교시 전에는 오늘 과목을 아래로 쭉 보여 줘서, 학생들이 교과서를 미리 꺼내 둘 수 있어요 */
+  if (st.list && st.list.some(x => x.sub)){
+    const li = st.list.map(x => x.lunch ? `<li class="lu"><b>점심</b> 점심시간 🍚</li>` : `<li><b>${esc(x.lbl)}</b> <span class="s">${esc(x.sub || '-')}</span></li>`).join('');
+    const html = `<div class="nl">${esc(st.top)}</div><div class="ns">📚 교과서 준비!</div><ul class="nlist">${li}</ul>`;
+    if (html !== lastNow){ el.innerHTML = html; el.className = 'now-card ' + st.cls + ' prep'; lastNow = html; }
+    el.hidden = false; return;
+  }
   const html = `<div class="nl">${esc(st.top)}</div><div class="ns">${esc(st.main)}</div>${st.prog != null ? `<div class="np"><i style="width:${(st.prog*100).toFixed(1)}%"></i></div>` : ''}${nxt}`;
   if (html !== lastNow){ el.innerHTML = html; el.className = 'now-card ' + st.cls; lastNow = html; }
   el.hidden = false;
