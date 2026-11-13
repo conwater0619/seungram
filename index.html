@@ -551,6 +551,11 @@ body.fs .stage .kid .tag{font-size:16px}
 .acc.glasses{top:9px;left:2px;width:22px;height:6px;background:linear-gradient(#1d1d24,#1d1d24) center 2px/6px 1.6px no-repeat}
 .acc.glasses::before,.acc.glasses::after{content:"";position:absolute;top:0;width:9px;height:6px;border-radius:2px 2px 4px 4px;background:#1d1d24;box-shadow:inset 1px 1px 0 rgba(255,255,255,.35)}
 .acc.glasses::before{left:0}.acc.glasses::after{right:0}
+.acc.em{top:-15px;left:4px;font-size:17px;line-height:1;z-index:1}
+.acc.santa{top:-17px;left:-4px;width:34px;height:22px;z-index:1}
+.acc.santa::before{content:"";position:absolute;left:0;bottom:0;width:34px;height:6px;border-radius:4px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.acc.santa::after{content:"";position:absolute;left:5px;bottom:5px;width:25px;height:16px;background:#d62828;clip-path:polygon(0 100%,100% 100%,100% 55%,70% 0,25% 40%)}
+.acc.santa i{position:absolute;left:23px;top:-3px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12);z-index:1}
 .acc.hat{top:-16px;left:-2px;width:30px;height:20px}
 .acc.hat::before{content:"";position:absolute;left:0;bottom:0;width:30px;height:4px;border-radius:3px;background:#2a2440}
 .acc.hat::after{content:"";position:absolute;left:7px;bottom:3px;width:16px;height:14px;border-radius:3px 3px 0 0;background:#2a2440;box-shadow:inset 0 -4px 0 #8b5cf6}
@@ -1070,6 +1075,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="date"> 📅 날짜·시계</label>
             <label class="chk"><input type="checkbox" data-show="wx"> 🌤️ 날씨</label>
             <label class="chk"><input type="checkbox" data-show="wxfx"> 🌧️ 비·눈 오는 효과</label>
+            <label class="chk"><input type="checkbox" data-show="annvface"> 🎅 기념일 얼굴 꾸미기</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
@@ -3282,9 +3288,29 @@ const faceDown = L => L > 0 ? L - 1 : -1;
 function pCountToday(id){ return ((state.praiseTimes[todayStr()] || {})[id] || []).length; }
 function wCountToday(id){ return ((state.warnTimes[todayStr()] || {})[id] || []).length; }
 const EYES = '<span class="eye l"></span><span class="eye r"></span>';
+/* 기념일 얼굴 꾸미기: 칭찬·경고를 받지 않은(보통) 친구에게만 붙고, 단계가 생기면 원래 단계 표시로 바뀌어요 */
+const FACE_THEME = [
+  ['01-01','🎉'],['02-14','💝'],['03-01','🇰🇷'],['03-14','🍬'],['05-05','🎈'],['05-08','🌺'],['05-15','🎓'],
+  ['06-06','🇰🇷'],['08-15','🇰🇷'],['10-03','🇰🇷'],['10-09','✏️'],['10-31','🎃'],['11-11','🍫']
+];
+let _ftKey = '', _ftVal = null;
+function faceTheme(){
+  if (S.show && S.show.annvface === false) return null;
+  const t = todayStr(), md = t.slice(5), key = t + (typeof KR_HOLI === 'undefined' ? '' : '+');
+  if (key === _ftKey) return _ftVal;
+  let v = null;
+  if (md >= '12-20' && md <= '12-25') v = {html: '<span class="acc santa"><i></i></span>'};
+  else {
+    const f = FACE_THEME.find(x => x[0] === md);
+    if (f) v = {html: `<span class="acc em">${f[1]}</span>`};
+    else { try { const l = annvLunar(t.slice(0, 4)).find(x => x[0] === md); if (l) v = {html: `<span class="acc em">${l[1] === '추석' ? '🌕' : '🧧'}</span>`}; } catch(e){} }
+  }
+  _ftKey = key; _ftVal = v; return v;
+}
 function accHtml(id){
   const p = praiseOf(id);
   if (p < 0) return EYES + '<span class="brow l"></span><span class="brow r"></span><span class="tear"></span><span class="frown"></span>';
+  if (p === 0){ const th = faceTheme(); if (th) return EYES + th.html; }
   return EYES + (p >= 1 ? '<span class="acc glasses"></span>' : '') + (p >= 2 ? '<span class="acc hat"></span>' : '') + (p >= 3 ? '<span class="acc flower"></span>' : '');
 }
 function sitterId(sit){
@@ -6419,7 +6445,7 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
@@ -6434,6 +6460,7 @@ document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
   }
   S.show[k] = c.checked;
   if (k === 'task' && !c.checked && checkId){ checkId = null; renderStage(); renderTasks(); }
+  if (k === 'annvface') renderStage();
   save(); applyShow();
 });
 applyShow();
