@@ -662,6 +662,14 @@ body.fs .stage .stage-title{font-size:4vh}
 @media (max-width:760px){.fm{grid-template-columns:1fr}}
 .seat .no{position:absolute;top:3px;left:7px;font-size:13px;line-height:1;color:#7a5428;font-weight:bold;z-index:2}
 .seat .star{position:absolute;bottom:5px;right:6px;font-size:15px;line-height:1;z-index:2}
+.seat.duty{z-index:3}
+.seat.duty::before{content:"";position:absolute;left:-18%;right:-18%;bottom:35%;height:150%;pointer-events:none;z-index:0;background:linear-gradient(0deg,rgba(255,232,120,.6),rgba(255,232,120,0) 85%);clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);animation:dutyBeam 1.8s ease-in-out infinite alternate}
+.seat.duty .desk{z-index:1;border-color:#e8b923;box-shadow:0 0 0 3px #ffd54a,0 0 20px 6px rgba(255,213,74,.8),0 4px 0 #a07240;animation:dutyGlow 1.6s ease-in-out infinite alternate}
+.seat .dutytag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#e8a317;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px;line-height:1.4;white-space:nowrap;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+@keyframes dutyGlow{from{box-shadow:0 0 0 3px #ffd54a,0 0 12px 3px rgba(255,213,74,.55),0 4px 0 #a07240}to{box-shadow:0 0 0 3px #ffd54a,0 0 26px 9px rgba(255,213,74,.95),0 4px 0 #a07240}}
+@keyframes dutyBeam{from{opacity:.55}to{opacity:1}}
+body.fs .stage .seat .dutytag{font-size:1.9vh}
+.seat.absent.duty .desk,.seat.absent.duty::before{animation:none;opacity:.7}
 dialog.sheet.mid{width:min(980px,96vw)}
 .mini{display:grid;gap:5px;max-width:760px;margin:0 auto}
 .mini .mgap{min-height:6px}
@@ -1109,6 +1117,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="wx"> 🌤️ 날씨</label>
             <label class="chk"><input type="checkbox" data-show="wxfx"> 🌧️ 비·눈 오는 효과</label>
             <label class="chk"><input type="checkbox" data-show="annvface"> 🎅 기념일 얼굴 꾸미기</label>
+            <label class="chk"><input type="checkbox" data-show="duty"> 🔦 오늘의 도우미 책상 스포트라이트</label>
             <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
@@ -1892,6 +1901,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 16일</h3>
     <ul>
+      <li><span class="tm">08:50</span> <b>🌟 오늘의 도우미</b>: "일일당번"의 이름을 "오늘의 도우미"로 바꿨어요. 줄 서기 오늘의 1번 책상에 조명이 비쳐요.</li>
+      <li><span class="tm">08:28</span> <b>🔦 일일당번 안내 문구</b>: 줄 서기 창의 일일당번 안내는 스포트라이트를 켠 상태에서만 보여요.</li>
+      <li><span class="tm">08:26</span> <b>🔦 일일당번</b>: 줄 서기 오늘의 1번이 일일당번이에요. 메인 화면 책상에 조명이 비치고 "🌟 일일당번" 표가 붙어요. (설정의 화면 표시에서 끄고 켜요)</li>
       <li><span class="tm">08:16</span> <b>🆕 업데이트 내역에 날짜와 시각 기록</b>: 앞으로 새 기능과 고친 점이 날짜와 시각과 함께 남아요. (11월 13일 기록의 시각은 대략이에요)</li>
       <li><span class="tm">08:13</span> <b>🔒 터치 잠금으로 시작</b>: 앱을 켤 때마다 터치 잠금이 걸린 채로 시작해요. 설정의 화면 표시에서 끌 수 있어요.</li>
     </ul>
@@ -3105,7 +3117,8 @@ function renderStage(spinning){
   const doneIds = new Set(state.picked && state.picked.date === todayStr() ? state.picked.ids : []);
   $('#clearPicked').style.display = doneIds.size ? '' : 'none';
   $('#pickReset').style.display = doneIds.size ? '' : 'none';
-  const numMap = {}; let firstCi = null;
+  const numMap = {}; let firstCi = null, dutyCi = null;
+  if (!spinning && state.current && S.show && S.show.duty !== false){ const tl = todayLine(); if (tl.length) dutyCi = tl[0].ci; }
   if (S.showNums && state.current && !spinning){
     seatSequence().forEach((x,k) => numMap[x.ci] = k+1);
     const tl = todayLine(); if (tl.length) firstCi = tl[0].ci;
@@ -3153,7 +3166,8 @@ function renderStage(spinning){
       if (tagList.length) el.classList.add('has-tags');
       const sitId = spinning ? pid : (state.current && nameOf(state.current[i]) ? state.current[i] : null);
       if (selected === i) el.classList.add('sel');
-      el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
+      if (dutyCi === i) el.classList.add('duty');
+      el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${dutyCi === i ? '<span class="dutytag">🌟 오늘의 도우미</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
       grid.appendChild(el);
     }
   }
@@ -6699,7 +6713,7 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
@@ -6714,7 +6728,7 @@ document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
   }
   S.show[k] = c.checked;
   if (k === 'task' && !c.checked && checkId){ checkId = null; renderStage(); renderTasks(); }
-  if (k === 'annvface') renderStage();
+  if (k === 'annvface' || k === 'duty') renderStage();
   save(); applyShow();
 });
 applyShow();
@@ -6864,7 +6878,7 @@ function renderLine(){
   const absL = absentSet();
   $('#lineList').innerHTML = line.map((x,k) => `<li class="${k === 0 ? 'top' : ''}${absL.has(x.id) ? ' absent' : ''}"><b>${k+1}</b>${nm(x.id)}</li>`).join('');
   const w = d.getDay();
-  $('#lineNote').textContent = (S.skipWeekend && (w === 0 || w === 6)) ? '오늘은 주말이라 금요일 순서가 그대로 보여요. 월요일에 다음 순서로 넘어가요.' : '';
+  $('#lineNote').textContent = (S.skipWeekend && (w === 0 || w === 6)) ? '오늘은 주말이라 금요일 순서가 그대로 보여요. 월요일에 다음 순서로 넘어가요.' : ((S.show && S.show.duty === false) ? '' : '오늘의 1번은 오늘의 도우미예요. 메인 화면 책상에 조명이 비쳐요. (설정의 화면 표시에서 끌 수 있어요)');
 }
 $('#openLine').onclick = () => { if (animating) return; renderLine(); openSheet($('#dlgLine')); };
 $('#lineBack').onclick = () => { if (!state.line) return; state.line.adjust = (state.line.adjust||0) - 1; save(); renderLine(); };
