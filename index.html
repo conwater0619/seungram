@@ -1109,6 +1109,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="wx"> 🌤️ 날씨</label>
             <label class="chk"><input type="checkbox" data-show="wxfx"> 🌧️ 비·눈 오는 효과</label>
             <label class="chk"><input type="checkbox" data-show="annvface"> 🎅 기념일 얼굴 꾸미기</label>
+            <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
@@ -1891,6 +1892,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 13일</h3>
     <ul>
+      <li><b>🔒 터치 잠금으로 시작</b>: 앱을 켤 때마다 터치 잠금이 걸린 채로 시작해요. 설정의 화면 표시에서 끌 수 있어요.</li>
       <li><b>🎵 음악</b>: 유튜브 링크를 화면 아래 작은 플레이어로 틀어요. 미술 같은 수업 시간에는 날짜·시계 아래에 추천 음악 링크가 떠요. (더보기 메뉴)</li>
       <li><b>🔒 터치 잠금 · 전체 잠금</b>: 전자칠판을 학생이 지나가다 눌러도 안 움직여요. 터치 잠금은 마우스는 되고 터치만 막고, 전체 잠금은 마우스까지 막아요. <b>L 키</b>로 터치 잠금, <b>L 키 두 번</b>은 전체 잠금이에요. 터치 잠금 중에도 전체 잠금을 겹쳐 걸 수 있어요. (더보기 메뉴)</li>
       <li><b>🍚 급식 알레르기 번호</b>: 메뉴 끝에 붙던 숫자를 지웠어요.</li>
@@ -5525,6 +5527,9 @@ window.addEventListener('keydown', e => {
   }
 }, true);
 
+/* 앱을 켤 때마다 터치 잠금 상태로 시작 (설정의 화면 표시에서 끌 수 있어요) */
+setTimeout(() => { if (!S.show || S.show.tlstart !== false) tlSet('touch', true); }, 0);
+
 /* ---------- 체험용 학생 ---------- */
 const DEMO_NAMES = ['다람쥐','토끼','펭귄','고래','사자','판다','여우','수달','부엉이','기린','코알라','돌고래','햄스터','고양이','강아지','거북이','하마','미어캣','너구리','오리','두더지','참새','사슴','얼룩말','다랑어','고슴도치','알파카','치타','캥거루','홍학'];
 const isDemo = s => String(s.id).startsWith('demo_');
@@ -6690,7 +6695,7 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
