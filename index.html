@@ -1114,6 +1114,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="wx"> 🌤️ 날씨</label>
             <label class="chk"><input type="checkbox" data-show="wxfx"> 🌧️ 비·눈 오는 효과</label>
             <label class="chk"><input type="checkbox" data-show="annvface"> 🎅 기념일 얼굴 꾸미기</label>
+            <label class="chk"><input type="checkbox" data-show="exitask"> 🚪 창을 닫을 때 확인창 띄우기</label>
             <label class="chk"><input type="checkbox" data-show="duty"> 🌟 오늘의 도우미 표시 (노란 테두리와 표)</label>
             <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
@@ -1898,11 +1899,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 16일</h3>
     <ul>
-      <li><span class="tm">08:56</span> <b>🌟 오늘의 도우미</b>: 조명(빛) 효과는 없애고, 노란 테두리와 "오늘의 도우미" 표만 남겼어요.</li>
-      <li><span class="tm">08:50</span> <b>🌟 오늘의 도우미</b>: "일일당번"의 이름을 "오늘의 도우미"로 바꿨어요. 줄 서기 오늘의 1번 책상에 조명이 비쳐요.</li>
-      <li><span class="tm">08:28</span> <b>🔦 일일당번 안내 문구</b>: 줄 서기 창의 일일당번 안내는 스포트라이트를 켠 상태에서만 보여요.</li>
-      <li><span class="tm">08:26</span> <b>🔦 일일당번</b>: 줄 서기 오늘의 1번이 일일당번이에요. 메인 화면 책상에 조명이 비치고 "🌟 일일당번" 표가 붙어요. (설정의 화면 표시에서 끄고 켜요)</li>
-      <li><span class="tm">08:16</span> <b>🆕 업데이트 내역에 날짜와 시각 기록</b>: 앞으로 새 기능과 고친 점이 날짜와 시각과 함께 남아요. (11월 13일 기록의 시각은 대략이에요)</li>
+      <li><span class="tm">13:25</span> <b>🚪 닫기 전 확인창</b>: 창을 닫거나 새로고침하려 하면 "나가시겠습니까?" 확인창이 떠요. (설정의 화면 표시에서 끄고 켜요)</li>
+      <li><span class="tm">08:56</span> <b>🌟 오늘의 도우미</b>: 줄 서기 오늘의 1번 친구의 책상에 노란 테두리와 "오늘의 도우미" 표가 붙어요. (설정의 화면 표시에서 끄고 켜요)</li>
+      <li><span class="tm">08:16</span> <b>🆕 업데이트 내역에 날짜와 시각 기록</b>: 최종적으로 남은 기능만 날짜와 시각과 함께 적어요. (11월 13일 기록의 시각은 대략이에요)</li>
       <li><span class="tm">08:13</span> <b>🔒 터치 잠금으로 시작</b>: 앱을 켤 때마다 터치 잠금이 걸린 채로 시작해요. 설정의 화면 표시에서 끌 수 있어요.</li>
     </ul>
     <h3>2026년 11월 13일</h3>
@@ -4335,7 +4334,7 @@ let installEvt = null;
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js', {updateViaCache: 'none'}).then(r => r.update()).catch(() => {}); });
-  { const had = !!navigator.serviceWorker.controller; let done = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !done){ done = true; location.reload(); } }); }
+  { const had = !!navigator.serviceWorker.controller; let done = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !done){ done = true; reloadNow(); } }); }
 }
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if ($('#dlgShortcut').open) renderShortcut(); });
 window.addEventListener('appinstalled', () => { installEvt = null; toast('앱으로 설치했어요! 바탕화면이나 시작 메뉴에서 열 수 있어요.'); if ($('#dlgShortcut').open) renderShortcut(); });
@@ -5543,6 +5542,14 @@ window.addEventListener('keydown', e => {
   }
 }, true);
 
+/* 창을 닫거나 새로고침하기 전에 확인창 (실수로 닫기 방지). 앱이 스스로 새로고침할 때는 묻지 않아요 */
+let allowUnload = false;
+function reloadNow(){ allowUnload = true; location.reload(); }
+window.addEventListener('beforeunload', e => {
+  if (allowUnload || (S.show && S.show.exitask === false)) return;
+  e.preventDefault(); e.returnValue = '';
+});
+
 /* 앱을 켤 때마다 터치 잠금 상태로 시작 (설정의 화면 표시에서 끌 수 있어요) */
 setTimeout(() => { if (!S.show || S.show.tlstart !== false) tlSet('touch', true); }, 0);
 
@@ -5564,7 +5571,7 @@ function startDemo(){
   if (realCount()){ toast('실제 학생이 있을 때는 체험용 학생을 넣을 수 없어요.'); return; }
   const desks = state.layout.cells.filter(c => c.desk).length || 24, n = clamp(desks, 4, Math.min(24, DEMO_NAMES.length));
   state.students = DEMO_NAMES.slice(0, n).map((nm, k) => ({id: 'demo_' + k, name: nm, gender: k % 2 ? '여' : '남', level: ['상','중','하','중'][k % 4]}));
-  save(); location.reload();
+  save(); reloadNow();
 }
 function purgeDemo(v, depth){
   if (Array.isArray(v)){
@@ -5590,7 +5597,7 @@ async function endDemo(){
   if (state.lastGroups && !(state.lastGroups.groups || []).some(g => g.length)) state.lastGroups = null;
   if (Array.isArray(state.history)) state.history = state.history.filter(h => h && h.seats && Object.keys(h.seats).length);
   if (state.history && !state.history.some(h => h.id === state.curHist)) state.curHist = null;
-  save(); location.reload();
+  save(); reloadNow();
 }
 $('#demoStart').onclick = startDemo; $('#demoStart2').onclick = startDemo;
 $('#demoEnd').onclick = endDemo; $('#demoEnd2').onclick = endDemo;
@@ -6711,7 +6718,7 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, exitask:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
@@ -6771,14 +6778,14 @@ $('#importFile').onchange = async e => {
     data.praise = data.praise || {};
     data.history = data.history || [];
     data.secretPins = data.secretPins || {};
-    state = data; save(); location.reload();
+    state = data; save(); reloadNow();
   } catch(err){ toast('이 앱에서 내보낸 파일이 아니에요.'); }
   e.target.value = '';
 };
 $('#resetBtn').onclick = async () => {
   if (!await askConfirm('학생 정보와 교실 배치를 모두 지울까요? 되돌릴 수 없어요.')) return;
   try { localStorage.removeItem(KEY); } catch(e){}
-  location.reload();
+  reloadNow();
 };
 
 /* ---------- 시작 ---------- */
