@@ -347,11 +347,11 @@ body.hide-notice .notice-strip{display:none!important}
 .ld-chips button:disabled{opacity:.4;text-decoration:line-through;cursor:default}
 #ldTabR.on,#ldTabC.on,#ldModes .on{background:var(--accent);border-color:var(--accent);color:#fff}
 .ld-names,.ld-res{display:flex;gap:4px}
-.ld-names button{flex:1;min-width:0;font:inherit;font-weight:700;font-size:clamp(11px,1.7vw,20px);padding:8px 2px;border:2px solid #cfc7b8;background:#fff;border-radius:10px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ld-names button{flex:1;min-width:0;font:inherit;font-weight:700;font-size:var(--ldfs,clamp(11px,1.7vw,20px));padding:8px 2px;border:2px solid #cfc7b8;background:#fff;border-radius:10px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ld-names button:hover:not(:disabled){background:#fff3e8}
 .ld-names button:disabled{cursor:default;color:#fff;border-color:transparent}
 #ldCv{display:block;width:100%;height:clamp(260px,46vh,520px);background:#fffdf8;border-radius:10px;margin:6px 0}
-.ld-res>div{flex:1;min-width:0;text-align:center;padding:10px 2px;border-radius:10px;background:#d9d4c8;color:#7b7466;font-weight:800;font-size:clamp(11px,1.7vw,20px);min-height:3.2em;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;word-break:keep-all}
+.ld-res>div{flex:1;min-width:0;text-align:center;padding:10px 2px;border-radius:10px;background:#d9d4c8;color:#7b7466;font-weight:800;font-size:var(--ldfs,clamp(11px,1.7vw,20px));min-height:3.2em;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;word-break:keep-all}
 .ld-res>div.rv{background:#fff;color:var(--ink);border:3px solid var(--c,#e2673b);animation:ldpop .5s}
 .ld-res>div small{font-weight:400;font-size:.75em;opacity:.8}
 @keyframes ldpop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
@@ -1920,6 +1920,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 16일</h3>
     <ul>
+      <li><span class="tm">13:59</span> <b>🪜 사다리 타기 최대 36명</b>: 한 판에 16명까지였던 것을 36명까지 늘렸어요. 사람이 많으면 이름 글자가 칸에 맞게 작아져요.</li>
       <li><span class="tm">13:50</span> <b>🚶 줄 서는 순서 방식 고르기</b>: 줄 서기 창에서 자리 순서(기본) · 명단 순서 · 이름 가나다순 · 직접 정하기(키 순 등)를 고를 수 있어요. 직접 정하기는 ▲▼로 순서를 맞춰요.</li>
       <li><span class="tm">13:25</span> <b>🚪 닫기 전 확인창</b>: 창을 닫거나 새로고침하려 하면 "나가시겠습니까?" 확인창이 떠요. (설정의 화면 표시에서 끄고 켜요)</li>
       <li><span class="tm">08:56</span> <b>🌟 오늘의 도우미</b>: 줄 서기 오늘의 1번 친구의 책상에 노란 테두리와 "오늘의 도우미" 표가 붙어요. (설정의 화면 표시에서 끄고 켜요)</li>
@@ -4668,7 +4669,7 @@ $('#dlgLucky').addEventListener('cancel', e => { if (lkSpinning){ e.preventDefau
 
 /* ---------- 사다리 타기 ---------- */
 state.ladder = state.ladder || {mode: 'win1', custom: '', names: ''};
-const LD_MAX = 16, LD_COLORS = ['#e2673b','#2f7fd1','#2e9e5b','#c2479b','#d9a21b','#7a56d1','#16a3a3','#d14b4b','#5a7d1f','#b5651d','#3a6ea5','#a0407b','#2a8f7a','#c27b1e','#6b5bd6','#c0392b'];
+const LD_MAX = 36, LD_COLORS = ['#e2673b','#2f7fd1','#2e9e5b','#c2479b','#d9a21b','#7a56d1','#16a3a3','#d14b4b','#5a7d1f','#b5651d','#3a6ea5','#a0407b','#2a8f7a','#c27b1e','#6b5bd6','#c0392b'];
 let ld = null, ldRoster = new Set(), ldTab = 'r';
 const ldColor = i => LD_COLORS[i % LD_COLORS.length];
 function ldRosterList(){ return state.students.filter(s => s.name.trim()); }
@@ -4682,7 +4683,7 @@ function ldSetupRender(){
   $('#ldRoster').style.display = ldTab === 'r' ? '' : 'none'; $('#ldCustom').style.display = ldTab === 'c' ? '' : 'none';
   $('#ldRoster').innerHTML = list.length
     ? `<div class="ld-chips">${list.map(s => `<button data-id="${s.id}" class="${ldRoster.has(s.id) ? 'on' : ''}"${abs.has(s.id) ? ' disabled title="오늘 결석"' : ''}>${esc(s.name.trim())}</button>`).join('')}</div>
-       <div class="row" style="gap:6px;margin-top:8px"><button class="btn" id="ldSelAll">모두 선택 (최대 ${LD_MAX}명)</button><button class="btn" id="ldSelNone">모두 해제</button></div>`
+       <div class="row" style="gap:6px;margin-top:8px"><button class="btn" id="ldSelAll">${list.filter(s => !abs.has(s.id)).length > LD_MAX ? `모두 선택 (앞에서 ${LD_MAX}명까지)` : '모두 선택'}</button><button class="btn" id="ldSelNone">모두 해제</button></div>`
     : '<div class="muted">학생 이름이 없어요. ‘이름 직접 쓰기’를 이용해 주세요.</div>';
   const n = ldPickNames().length;
   $('#ldCnt').textContent = `${n}명 선택${n > LD_MAX ? ` (최대 ${LD_MAX}명)` : ''}`;
@@ -4768,13 +4769,21 @@ function ldStart(i, delay, instant){
   if (!ld.raf) ld.raf = requestAnimationFrame(ldLoop);
   if (instant) ldLoop();
 }
+/* 사람이 많을 때 이름이 잘리지 않게 글자 크기를 칸 너비에 맞춰요 */
+function ldFont(){
+  if (!ld) return;
+  const box = $('#ldNames'), n = ld.names.length, w = box.clientWidth; if (!w || !n) return;
+  const longest = Math.max(...ld.names.map(x => [...String(x)].length), ...(ld.results || []).map(x => [...String(x)].length), 1);
+  const fs = Math.max(9, Math.min(20, Math.floor((w / n - 8) / Math.max(1, longest * 0.95))));
+  $('#dlgLadder').style.setProperty('--ldfs', fs + 'px');
+}
 function ldBuild(keepSetup){
   const names = ld.names, n = names.length;
   $('#ldNames').innerHTML = names.map((nm, i) => `<button data-i="${i}">${esc(nm)}</button>`).join('');
   $('#ldRes').innerHTML = names.map(() => '<div>?</div>').join('');
   $('#ldList').innerHTML = ''; ld.anim = []; ld.used = new Set(); ld.done = false;
   $('#ldNames').onclick = e => { const b = e.target.closest('button[data-i]'); if (b && !b.disabled) ldStart(+b.dataset.i, 0); };
-  cancelAnimationFrame(ld.raf); ld.raf = 0; requestAnimationFrame(() => ldDraw(performance.now()));
+  cancelAnimationFrame(ld.raf); ld.raf = 0; requestAnimationFrame(() => { ldFont(); ldDraw(performance.now()); });
 }
 $('#openLadder').onclick = () => {
   if (animating) return;
@@ -4801,7 +4810,7 @@ $('#ldBack').onclick = () => { if (ld) cancelAnimationFrame(ld.raf); ld = null; 
 $('#ldAll').onclick = () => { if (!ld) return; let k = 0; ld.names.forEach((_, i) => { if (!ld.used.has(i)) ldStart(i, 300 * (k++)); }); };
 $('#ldReveal').onclick = () => { if (!ld) return; ld.names.forEach((_, i) => { if (!ld.used.has(i)) ldStart(i, 0, true); }); ld.anim.forEach(a => { a.t0 = -1e9; }); ldLoop(); };
 $('#ldRedraw').onclick = () => { if (!ld) return; ld.g = ldGen(ld.names.length); ld.results = ldResultsFor(ld.names.length); ldBuild(); toast('사다리를 새로 그렸어요.'); };
-window.addEventListener('resize', () => { if (ld && $('#dlgLadder').open) ldDraw(performance.now()); });
+window.addEventListener('resize', () => { if (ld && $('#dlgLadder').open){ ldFont(); ldDraw(performance.now()); } });
 $('#dlgLadder').addEventListener('close', () => { if (ld){ cancelAnimationFrame(ld.raf); ld.raf = 0; } });
 
 /* ---------- MBTI 궁합 자리 (재미로) ---------- */
