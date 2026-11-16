@@ -673,6 +673,14 @@ body.fs .stage .stage-title{font-size:4vh}
 .seat .dutytag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#e8a317;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px;line-height:1.4;white-space:nowrap;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 body.fs .stage .seat .dutytag{font-size:1.9vh}
 .seat.absent.duty .desk{opacity:.7}
+.seat.bday{z-index:3}
+.seat.bday .desk{border-color:#d6336c;box-shadow:0 0 0 3px #f783ac,0 4px 0 #a07240}
+.seat .bdtag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#d6336c;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px;line-height:1.4;white-space:nowrap;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+body.fs .stage .seat .bdtag{font-size:1.9vh}
+.seat.duty.bday .dutytag,.seat.duty.bday .bdtag{font-size:10px;padding:1px 4px;top:-10px;transform:none}
+.seat.duty.bday .dutytag{left:2px}
+.seat.duty.bday .bdtag{left:auto;right:2px}
+.stu .bd{width:84px;padding:6px 6px;text-align:center}
 dialog.sheet.mid{width:min(980px,96vw)}
 .mini{display:grid;gap:5px;max-width:760px;margin:0 auto}
 .mini .mgap{min-height:6px}
@@ -1122,6 +1130,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="annvface"> 🎅 기념일 얼굴 꾸미기</label>
             <label class="chk"><input type="checkbox" data-show="exitask"> 🚪 창을 닫을 때 확인창 띄우기</label>
             <label class="chk"><input type="checkbox" data-show="duty"> 🌟 오늘의 도우미 표시 (노란 테두리와 표)</label>
+            <label class="chk"><input type="checkbox" data-show="bday"> 🎂 생일 표시 (분홍 테두리와 표)</label>
             <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
@@ -1918,8 +1927,13 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <button class="btn x" data-close>닫기</button>
   </div>
   <div class="sheet-body upd-log">
+    <h3>2026년 11월 17일</h3>
+    <ul>
+      <li><span class="tm">08:06</span> <b>🌤️ 날씨</b>: 못 받아오는 동안은 "날씨 불러오는 중…"이 뜨고, 몇 초 간격으로 다시 시도해요. 인터넷이 연결되면 바로 불러와요.</li>
+    </ul>
     <h3>2026년 11월 16일</h3>
     <ul>
+      <li><span class="tm">16:45</span> <b>🎂 생일 표시</b>: 학생 목록에서 생일(예: 3/5)을 적어 두면 생일 당일 그 친구 책상에 분홍 테두리와 "생일 축하해!" 표가 붙어요. (설정의 화면 표시에서 끄고 켜요)</li>
       <li><span class="tm">13:59</span> <b>🪜 사다리 타기 최대 36명</b>: 한 판에 16명까지였던 것을 36명까지 늘렸어요. 사람이 많으면 이름 글자가 칸에 맞게 작아져요.</li>
       <li><span class="tm">13:50</span> <b>🚶 줄 서는 순서 방식 고르기</b>: 줄 서기 창에서 자리 순서(기본) · 명단 순서 · 이름 가나다순 · 직접 정하기(키 순 등)를 고를 수 있어요. 직접 정하기는 ▲▼로 순서를 맞춰요.</li>
       <li><span class="tm">13:25</span> <b>🚪 닫기 전 확인창</b>: 창을 닫거나 새로고침하려 하면 "나가시겠습니까?" 확인창이 떠요. (설정의 화면 표시에서 끄고 켜요)</li>
@@ -1932,7 +1946,6 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <li><span class="tm">13:30경</span> <b>🎵 음악</b>: 유튜브 링크를 화면 아래 작은 플레이어로 틀어요. 미술 같은 수업 시간에는 날짜·시계 아래에 추천 음악 링크가 떠요. (더보기 메뉴)</li>
       <li><span class="tm">12:00경</span> <b>🔒 터치 잠금 · 전체 잠금</b>: 전자칠판을 학생이 지나가다 눌러도 안 움직여요. 터치 잠금은 마우스는 되고 터치만 막고, 전체 잠금은 마우스까지 막아요. <b>L 키</b>로 터치 잠금, <b>L 키 두 번</b>은 전체 잠금이에요. 터치 잠금 중에도 전체 잠금을 겹쳐 걸 수 있어요. (더보기 메뉴)</li>
       <li><span class="tm">11:25경</span> <b>🍚 급식 알레르기 번호</b>: 메뉴 끝에 붙던 숫자를 지웠어요.</li>
-      <li><span class="tm">10:15경</span> <b>🌤️ 날씨</b>: 못 받아오면 1분마다 다시 시도해요.</li>
       <li><span class="tm">10:25경</span> <b>🎅 기념일 얼굴 꾸미기</b>: 크리스마스엔 산타 모자 등 기념일마다 얼굴이 바뀌어요. 칭찬·경고를 받은 친구는 원래 단계 표시로 보여요. (설정의 화면 표시에서 끄고 켜요)</li>
       <li><span class="tm">10:10경</span> <b>🏖️ 방학 타이머</b>: 날짜·시계 옆에 방학까지 D-day가 떠요. 기본은 꺼져 있고 더보기에서 켜요.</li>
       <li><span class="tm">09:55경</span> <b>📚 수업 전 과목 목록</b>: 1교시 전에는 왼쪽 시간표 카드에 오늘 과목이 쭉 떠서 교과서를 미리 준비할 수 있어요.</li>
@@ -2574,6 +2587,9 @@ $('#openLayout').onclick = () => { renderEditor(); openSheet($('#dlgLayout')); }
 $('#className').value = state.className || '';
 $('#className').oninput = e => { state.className = e.target.value; save(); renderAppTitle(); };
 function autoGrow(el){ el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+function bdParse(t){ const m = String(t||'').match(/^\s*(\d{1,2})\s*[\/.\-월]\s*(\d{1,2})\s*일?\s*$/); if (!m) return ''; const a = +m[1], b = +m[2]; if (a < 1 || a > 12 || b < 1 || b > 31) return ''; return a + '-' + b; }
+function bdText(v){ return v ? v.replace('-', '/') : ''; }
+function bdToday(){ const d = new Date(); return (d.getMonth()+1) + '-' + d.getDate(); }
 function renderStudents(){
   const list = $('#stuList');
   list.innerHTML = '';
@@ -2585,6 +2601,7 @@ function renderStudents(){
       <div class="stu-main">
         <div class="stu-top">
           <input class="nm" placeholder="이름" value="${esc(s.name)}">
+          <input class="bd" placeholder="생일(선택)" title="생일 (선택) · 월/일로 써요. 예: 3/5" maxlength="6" value="${esc(bdText(s.bday))}">
           <select class="gd"><option value="">성별</option><option value="남">남</option><option value="여">여</option></select>
           <select class="lv" title="학습 수준"><option value="">수준</option><option value="상">상</option><option value="중">중</option><option value="하">하</option></select>
           <button class="del" title="삭제">✕</button>
@@ -2592,6 +2609,8 @@ function renderStudents(){
       </div>`;
     const nm = row.querySelector('.nm'), gd = row.querySelector('.gd');
     gd.value = s.gender || '';
+    const bd = row.querySelector('.bd');
+    bd.onchange = () => { const v = bdParse(bd.value); if (bd.value.trim() && !v){ toast('생일은 3/5 처럼 월/일로 써 주세요.'); bd.value = bdText(s.bday); return; } s.bday = v; bd.value = bdText(v); save(); renderStage(); };
     const lv = row.querySelector('.lv'); lv.value = s.level || '';
     lv.onchange = () => { s.level = lv.value; save(); };
     nm.oninput = () => { s.name = nm.value; save(); updateCounts(); renderSepPairs(); };
@@ -3083,15 +3102,17 @@ function wxFxPreview(kind){
   wxFxTimer = setTimeout(() => { wxFxOver = null; wxFxApply(); }, 7000);
 }
 window.addEventListener('resize', () => { if (wxFxKind) wxFxSize(); });
-let wxData = null, wxAt = 0;
+let wxData = null, wxAt = 0, wxFail = 0;
 async function loadWeather(force){
   if (!force && wxData && Date.now() - wxAt < 15*60*1000) return renderWeather();
   const {lat, lon} = state.wx;
+  const ac = new AbortController(), tmo = setTimeout(() => ac.abort(), 10000);
   try {
-    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1`);
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1`, {signal: ac.signal});
     if (!r.ok) throw 0;
-    wxData = await r.json(); wxAt = Date.now();
-  } catch(e){ if (!wxData){ $('#wxCard').hidden = true; wxFxApply(); clearTimeout(loadWeather._t); loadWeather._t = setTimeout(() => loadWeather(true), 60000); return; } }
+    wxData = await r.json(); wxAt = Date.now(); wxFail = 0;
+  } catch(e){ if (!wxData){ wxFail++; $('#wxCard').innerHTML = '<div class="wi">🌡️</div><div class="wd">날씨 불러오는 중…</div>'; $('#wxCard').hidden = false; wxFxApply(); clearTimeout(loadWeather._t); loadWeather._t = setTimeout(() => loadWeather(true), [5000, 15000, 30000][wxFail - 1] || 60000); clearTimeout(tmo); return; } }
+  clearTimeout(tmo);
   renderWeather();
 }
 function renderWeather(){
@@ -3128,6 +3149,8 @@ $('#wxFind').onclick = findPlace;
 $('#wxQ').addEventListener('keydown', e => { if (e.key === 'Enter') findPlace(); });
 loadWeather();
 setInterval(() => loadWeather(), 15*60*1000);
+window.addEventListener('online', () => { if (!wxData) loadWeather(true); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && (!wxData || Date.now() - wxAt > 15*60*1000)) loadWeather(true); });
 function renderStage(spinning){
   renderTitle();
   const L = state.layout, grid = $('#seats'), flip = S.flip, sizes = groupSizes(), pins = getPins();
@@ -3137,7 +3160,7 @@ function renderStage(spinning){
   const doneIds = new Set(state.picked && state.picked.date === todayStr() ? state.picked.ids : []);
   $('#clearPicked').style.display = doneIds.size ? '' : 'none';
   $('#pickReset').style.display = doneIds.size ? '' : 'none';
-  const numMap = {}; let firstCi = null, dutyCi = null;
+  const numMap = {}; let firstCi = null, dutyCi = null; const bdOn = !spinning && S.show && S.show.bday !== false, bdKey = bdToday();
   if (!spinning && state.current && S.show && S.show.duty !== false){ const tl = todayLine(); if (tl.length) dutyCi = tl[0].ci; }
   if (S.showNums && state.current && !spinning){
     lineBase().forEach((x,k) => numMap[x.ci] = k+1);
@@ -3187,7 +3210,9 @@ function renderStage(spinning){
       const sitId = spinning ? pid : (state.current && nameOf(state.current[i]) ? state.current[i] : null);
       if (selected === i) el.classList.add('sel');
       if (dutyCi === i) el.classList.add('duty');
-      el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${dutyCi === i ? '<span class="dutytag">🌟 오늘의 도우미</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
+      const bdSt = bdOn && sitId ? state.students.find(x => x.id === sitId) : null, isBd = !!(bdSt && bdSt.bday === bdKey);
+      if (isBd) el.classList.add('bday');
+      el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${dutyCi === i ? '<span class="dutytag">🌟 오늘의 도우미</span>' : ''}${isBd ? '<span class="bdtag">🎂 생일 축하해!</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
       grid.appendChild(el);
     }
   }
@@ -6749,7 +6774,7 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, exitask:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, bday:true, exitask:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
   ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
@@ -6764,7 +6789,7 @@ document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
   }
   S.show[k] = c.checked;
   if (k === 'task' && !c.checked && checkId){ checkId = null; renderStage(); renderTasks(); }
-  if (k === 'annvface' || k === 'duty') renderStage();
+  if (k === 'annvface' || k === 'duty' || k === 'bday') renderStage();
   save(); applyShow();
 });
 applyShow();
