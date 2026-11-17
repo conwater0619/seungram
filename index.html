@@ -340,11 +340,30 @@ body.hide-notice .notice-strip{display:none!important}
 .notice-ov .hint2{position:absolute;bottom:2vh;color:var(--muted);font-size:14px}
 /* ---------- 알림장 (칠판) ---------- */
 .ld-sec{margin-bottom:12px}
+.rl-wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.rl-side{flex:1 1 260px;min-width:240px}
+.rl-main{flex:1 1 380px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.rl-box{position:relative;width:min(100%,440px);aspect-ratio:1}
+.rl-box canvas{width:100%;height:100%;display:block}
+.rl-ptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:34px;line-height:1;color:#d6452b;z-index:2;text-shadow:0 2px 3px rgba(0,0,0,.35)}
+.rl-res{min-height:56px;font-family:"Jua",sans-serif;font-size:clamp(26px,3vw,40px);text-align:center;color:#c2410c;display:flex;align-items:center;justify-content:center;max-width:100%;word-break:keep-all}
+.rl-res.dim{font-size:18px;color:var(--muted,#888);font-family:inherit}
+.gp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.gp-card{border-radius:14px;padding:8px 10px;border:3px solid transparent;background:var(--gc,#eee);transition:transform .1s,opacity .2s}
+.gp-card h4{margin:0 0 4px;font-family:"Jua",sans-serif;font-size:20px}
+.gp-card .gp-m{font-size:14px;line-height:1.5}
+.gp-card.hl{border-color:#f59e0b;transform:scale(1.04);box-shadow:0 0 0 3px #fde68a}
+.gp-card.win{border-color:#d6452b;transform:scale(1.06);box-shadow:0 0 0 4px #fecaca}
+.gp-card.done{opacity:.45}
+.gp-card.done h4::after{content:" ✓ 발표 완료";font-family:inherit;font-size:12px}
+.gp-res{min-height:60px;font-family:"Jua",sans-serif;font-size:clamp(24px,2.8vw,38px);text-align:center;color:#c2410c;margin:6px 0 10px}
+.gp-res small{display:block;font-family:inherit;font-size:16px;color:#555;margin-top:4px}
 .ld-ta{width:100%;min-height:130px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px;line-height:1.6;box-sizing:border-box}
 .ld-chips{display:flex;flex-wrap:wrap;gap:6px}
 .ld-chips button{font:inherit;font-size:15px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer}
 .ld-chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .ld-chips button:disabled{opacity:.4;text-decoration:line-through;cursor:default}
+.ld-chips button.done{opacity:.4}
 #ldTabR.on,#ldTabC.on,#ldModes .on{background:var(--accent);border-color:var(--accent);color:#fff}
 .ld-names,.ld-res{display:flex;gap:4px}
 .ld-names button{flex:1;min-width:0;font:inherit;font-weight:700;font-size:var(--ldfs,clamp(11px,1.7vw,20px));padding:8px 2px;border:2px solid #cfc7b8;background:#fff;border-radius:10px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1092,6 +1111,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openTLockAll">🔒 전체 잠금 <span class="muted small">(마우스·터치 모두 막기)</span></button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openLadder">🪜 사다리 타기</button>
+          <button class="mi" id="openRoul">🎡 룰렛 <span class="muted small">(학생 이름 · 직접 쓴 목록)</span></button>
+          <button class="mi" id="openGPick">🏆 모둠 발표 뽑기</button>
           <button class="mi" id="openVac">🏖️ 방학 타이머 <span class="muted small" id="vacState"></span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
@@ -1722,6 +1743,56 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 
+<dialog class="sheet wide" id="dlgRoul">
+  <div class="sheet-head">
+    <h2>🎡 룰렛</h2>
+    <span class="muted small" id="rlCnt"></span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="rl-wrap">
+      <div class="rl-side">
+        <div class="row" style="gap:6px;margin-bottom:8px">
+          <button class="btn" id="rlTabR">우리 반 친구 고르기</button>
+          <button class="btn" id="rlTabC">목록 직접 쓰기</button>
+        </div>
+        <div id="rlRoster"></div>
+        <div id="rlCustom" style="display:none">
+          <textarea id="rlTx" class="ld-ta" placeholder="한 줄에 하나씩 (예: 책 읽기 / 퀴즈 / 노래 부르기)"></textarea>
+        </div>
+        <label class="chk" style="margin-top:10px"><input type="checkbox" id="rlExcl"> 뽑힌 항목은 다음 판에서 빼기</label>
+        <div class="row" style="gap:6px;margin-top:6px"><button class="btn" id="rlReset">처음부터 다시</button></div>
+      </div>
+      <div class="rl-main">
+        <div class="rl-box"><div class="rl-ptr">▼</div><canvas id="rlCv" width="640" height="640"></canvas></div>
+        <div class="rl-res dim" id="rlRes">돌리기를 눌러 보세요!</div>
+        <button class="btn primary big" id="rlGo">🎡 돌리기</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<dialog class="sheet wide" id="dlgGPick">
+  <div class="sheet-head">
+    <h2>🏆 모둠 발표 뽑기</h2>
+    <span class="muted small" id="gpInfo"></span>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div id="gpMsg" class="muted" style="display:none;text-align:center;padding:30px 10px">먼저 ‘모둠 만들기’에서 모둠을 만들어 주세요.</div>
+    <div id="gpMain">
+      <div class="gp-grid" id="gpGrid"></div>
+      <div class="gp-res" id="gpRes"></div>
+      <div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn primary big" id="gpGo">🎯 발표 모둠 뽑기</button>
+        <button class="btn" id="gpMem" style="display:none">👤 이 모둠에서 발표자 뽑기</button>
+      </div>
+      <div class="row" style="gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+        <label class="chk"><input type="checkbox" id="gpExcl"> 발표한 모둠은 다음에서 빼기</label>
+        <button class="btn" id="gpReset">처음부터 다시</button>
+      </div>
+    </div>
+  </div>
+</dialog>
 <dialog class="sheet wide" id="dlgLadder">
   <div class="sheet-head">
     <h2>🪜 사다리 타기</h2>
@@ -1929,6 +2000,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 17일</h3>
     <ul>
+      <li><span class="tm">09:12</span> <b>🎡 룰렛 · 🏆 모둠 발표 뽑기</b>: 룰렛은 학생 이름이나 직접 쓴 목록을 돌려요(뽑힌 항목 빼기 선택 가능). 모둠 발표 뽑기는 만들어 둔 모둠 중 발표할 모둠을 뽑고, 그 모둠에서 발표자도 뽑을 수 있어요. (더보기 메뉴)</li>
       <li><span class="tm">08:06</span> <b>🌤️ 날씨</b>: 못 받아오는 동안은 "날씨 불러오는 중…"이 뜨고, 몇 초 간격으로 다시 시도해요. 인터넷이 연결되면 바로 불러와요.</li>
     </ul>
     <h3>2026년 11월 16일</h3>
@@ -4810,6 +4882,159 @@ function ldBuild(keepSetup){
   $('#ldNames').onclick = e => { const b = e.target.closest('button[data-i]'); if (b && !b.disabled) ldStart(+b.dataset.i, 0); };
   cancelAnimationFrame(ld.raf); ld.raf = 0; requestAnimationFrame(() => { ldFont(); ldDraw(performance.now()); });
 }
+
+/* ---------- 룰렛 · 모둠 발표 뽑기 ---------- */
+state.roul = state.roul || {tab: 'r', text: '', excl: false};
+state.gpick = state.gpick || {sig: '', done: [], excl: true};
+const RL_MAX = 40;
+let rlSel = new Set(), rlDone = new Set(), rlRot = 0, rlSpin = false, rlRaf = 0, rlLast = null;
+function rlItems(){
+  if (state.roul.tab === 'c') return $('#rlTx').value.split('\n').map(t => t.trim()).filter(Boolean).slice(0, RL_MAX).map((t, i) => ({k: 'c' + i, label: t}));
+  return state.students.filter(s => s.name.trim() && rlSel.has(s.id)).map(s => ({k: s.id, label: s.name.trim()}));
+}
+function rlActive(){ return rlItems().filter(x => !rlDone.has(x.k)); }
+function rlWheel(){ return rlItems().filter(x => !rlDone.has(x.k) || x.k === rlLast); }
+function rlSetup(){
+  const tab = state.roul.tab, abs = absentSet(), list = state.students.filter(s => s.name.trim());
+  $('#rlTabR').classList.toggle('on', tab === 'r'); $('#rlTabC').classList.toggle('on', tab === 'c');
+  $('#rlRoster').style.display = tab === 'r' ? '' : 'none'; $('#rlCustom').style.display = tab === 'c' ? '' : 'none';
+  $('#rlRoster').innerHTML = list.length
+    ? `<div class="ld-chips">${list.map(s => `<button data-id="${s.id}" class="${rlSel.has(s.id) ? 'on' : ''}${rlDone.has(s.id) ? ' done' : ''}"${abs.has(s.id) ? ' disabled title="오늘 결석"' : ''}>${esc(s.name.trim())}</button>`).join('')}</div>
+       <div class="row" style="gap:6px;margin-top:8px"><button class="btn" id="rlAll">모두 선택</button><button class="btn" id="rlNone">모두 해제</button></div>`
+    : '<div class="muted">학생 이름이 없어요. ‘목록 직접 쓰기’를 이용해 주세요.</div>';
+  const ch = $('#rlRoster').querySelector('.ld-chips');
+  if (ch) ch.onclick = e => { const b = e.target.closest('button[data-id]'); if (!b || b.disabled || rlSpin) return; const id = b.dataset.id; if (rlSel.has(id)) rlSel.delete(id); else rlSel.add(id); rlSetup(); };
+  const a = $('#rlAll'); if (a) a.onclick = () => { if (rlSpin) return; rlSel = new Set(list.filter(s => !abs.has(s.id)).slice(0, RL_MAX).map(s => s.id)); if (list.filter(s => !abs.has(s.id)).length > RL_MAX) toast(`룰렛에는 최대 ${RL_MAX}개까지 넣을 수 있어요. 앞에서부터 골랐어요.`); rlSetup(); };
+  const n = $('#rlNone'); if (n) n.onclick = () => { if (rlSpin) return; rlSel.clear(); rlSetup(); };
+  $('#rlExcl').checked = !!state.roul.excl;
+  const k = rlActive().length;
+  $('#rlCnt').textContent = rlDone.size ? `${k}개 남음 (뽑힌 ${rlDone.size}개)` : `${k}개`;
+  rlDraw();
+}
+function rlColor(i, n){ let c = i % PALETTE.length; if (i === n - 1 && n % PALETTE.length === 1) c = 5; return PALETTE[c]; }
+function rlDraw(){
+  const cv = $('#rlCv'), g = cv.getContext('2d'), W = cv.width, R = W / 2 - 8, cx = W / 2, cy = W / 2, items = rlWheel(), n = items.length;
+  g.clearRect(0, 0, W, W);
+  g.save(); g.beginPath(); g.arc(cx, cy, R + 6, 0, 6.2832); g.fillStyle = '#8a5a2b'; g.fill(); g.restore();
+  if (n < 2){
+    g.beginPath(); g.arc(cx, cy, R, 0, 6.2832); g.fillStyle = '#f3ecdf'; g.fill();
+    g.fillStyle = '#8a7a66'; g.font = '700 26px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(n === 1 ? '2개 이상 필요해요' : '항목을 넣어 주세요', cx, cy); return;
+  }
+  const s = 6.2832 / n;
+  for (let i = 0; i < n; i++){
+    const a0 = rlRot + i * s - Math.PI / 2, a1 = a0 + s;
+    g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, R, a0, a1); g.closePath();
+    g.fillStyle = rlColor(i, n); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 3; g.stroke();
+    g.save(); g.translate(cx, cy); g.rotate(a0 + s / 2); g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillStyle = '#333';
+    const fs = Math.max(13, Math.min(40, R * s * 0.42)); g.font = `700 ${fs}px "Jua", sans-serif`;
+    g.fillText(items[i].label, R - 18, 0, R * 0.68); g.restore();
+  }
+  g.beginPath(); g.arc(cx, cy, 24, 0, 6.2832); g.fillStyle = '#fff'; g.fill(); g.strokeStyle = '#8a5a2b'; g.lineWidth = 5; g.stroke();
+}
+function rlGo(){
+  if (rlSpin) return;
+  rlLast = null;
+  const it = rlActive(), n = it.length;
+  if (n < 2){ rlDraw(); toast(n ? '항목이 2개 이상 있어야 돌릴 수 있어요.' : '돌릴 항목을 넣어 주세요.'); return; }
+  rlSpin = true; $('#rlGo').disabled = true; $('#rlRes').className = 'rl-res dim'; $('#rlRes').textContent = '두근두근…';
+  const s = 6.2832 / n, w = Math.floor(Math.random() * n), t = (w + .15 + Math.random() * .7) * s;
+  const base = rlRot + 6.2832 * (5 + Math.floor(Math.random() * 3)), target = -t + 6.2832 * Math.ceil((base + t) / 6.2832);
+  const r0 = rlRot, dur = 5000, t0 = performance.now();
+  const step = now => {
+    const x = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - x, 4);
+    rlRot = r0 + (target - r0) * e; rlDraw();
+    if (x < 1){ rlRaf = requestAnimationFrame(step); return; }
+    rlRot = target % 6.2832; rlSpin = false; rlRaf = 0; $('#rlGo').disabled = false;
+    const win = it[w]; $('#rlRes').className = 'rl-res'; $('#rlRes').textContent = `🎉 ${win.label}`;
+    rlLast = win.k; if (state.roul.excl) rlDone.add(win.k);
+    rlSetup();
+    if (state.roul.excl){ const left = rlActive().length; if (left === 0) toast('모두 뽑았어요! ‘처음부터 다시’를 눌러 보세요.'); else if (left === 1) toast('남은 항목이 1개예요.'); }
+  };
+  rlRaf = requestAnimationFrame(step);
+}
+function rlStop(){ cancelAnimationFrame(rlRaf); rlRaf = 0; rlSpin = false; $('#rlGo').disabled = false; }
+$('#openRoul').onclick = () => {
+  if (animating) return;
+  rlStop(); rlDone.clear(); rlLast = null; rlRot = 0;
+  const abs = absentSet(); rlSel = new Set(state.students.filter(s => s.name.trim() && !abs.has(s.id)).slice(0, RL_MAX).map(s => s.id));
+  if (state.roul.tab === 'r' && !state.students.some(s => s.name.trim())) state.roul.tab = 'c';
+  $('#rlTx').value = state.roul.text || ''; $('#rlRes').className = 'rl-res dim'; $('#rlRes').textContent = '돌리기를 눌러 보세요!';
+  openSheet($('#dlgRoul')); rlSetup();
+};
+$('#dlgRoul').addEventListener('close', rlStop);
+$('#rlTabR').onclick = () => { if (rlSpin) return; state.roul.tab = 'r'; save(); rlSetup(); };
+$('#rlTabC').onclick = () => { if (rlSpin) return; state.roul.tab = 'c'; save(); rlSetup(); };
+$('#rlTx').oninput = () => { state.roul.text = $('#rlTx').value; rlDone.clear(); rlLast = null; save(); rlSetup(); };
+$('#rlExcl').onchange = () => { state.roul.excl = $('#rlExcl').checked; save(); };
+$('#rlReset').onclick = () => { if (rlSpin) return; rlDone.clear(); rlLast = null; $('#rlRes').className = 'rl-res dim'; $('#rlRes').textContent = '돌리기를 눌러 보세요!'; rlSetup(); };
+$('#rlGo').onclick = rlGo;
+
+let gpTm = 0, gpPick = null, gpBusy = false;
+function gpSig(){ const lg = state.lastGroups; return lg ? lg.date + '|' + lg.groups.map(g => g.join(',')).join('/') : ''; }
+function gpPresent(g){ const ab = absentSet(); return g.filter(id => nameOf(id) && !ab.has(id)); }
+function gpPool(){
+  const lg = state.lastGroups; if (!lg) return [];
+  return lg.groups.map((g, k) => k).filter(k => gpPresent(lg.groups[k]).length && !(state.gpick.excl && state.gpick.done.includes(k)));
+}
+function gpRender(hl, win){
+  const lg = state.lastGroups, has = lg && lg.groups.some(g => g.filter(nameOf).length);
+  $('#gpMsg').style.display = has ? 'none' : ''; $('#gpMain').style.display = has ? '' : 'none';
+  if (!has){ $('#gpInfo').textContent = ''; return; }
+  const ab = absentSet();
+  $('#gpGrid').innerHTML = lg.groups.map((g, k) => {
+    const mem = g.filter(nameOf); if (!mem.length) return '';
+    const cls = ['gp-card', hl === k ? 'hl' : '', win === k ? 'win' : '', state.gpick.excl && state.gpick.done.includes(k) ? 'done' : ''].join(' ');
+    return `<div class="${cls}" style="--gc:${PALETTE[k % PALETTE.length]}"><h4>${k + 1}모둠</h4><div class="gp-m">${mem.map(id => ab.has(id) ? `<span style="opacity:.45;text-decoration:line-through">${esc(nameOf(id))}</span>` : esc(nameOf(id))).join(', ')}</div></div>`;
+  }).join('');
+  const left = gpPool().length;
+  $('#gpInfo').textContent = state.gpick.excl && state.gpick.done.length ? `${left}모둠 남음` : '';
+  $('#gpExcl').checked = !!state.gpick.excl;
+}
+function gpSlow(P, finalIdx, tick, end){
+  const steps = 22 + Math.floor(Math.random() * 6); let i = 0; const j0 = ((finalIdx - (steps - 1)) % P + P) % P;
+  const next = () => {
+    tick((j0 + i) % P); i++;
+    if (i >= steps){ gpTm = 0; end(); return; }
+    gpTm = setTimeout(next, 55 + Math.pow(i / steps, 3) * 420);
+  };
+  next();
+}
+function gpGo(){
+  if (gpBusy) return;
+  if (state.gpick.sig !== gpSig()){ state.gpick.sig = gpSig(); state.gpick.done = []; }
+  const pool = gpPool();
+  if (!pool.length){ toast(state.gpick.excl && state.gpick.done.length ? '모든 모둠이 발표했어요! ‘처음부터 다시’를 눌러 보세요.' : '발표할 모둠이 없어요.'); return; }
+  gpBusy = true; gpPick = null; $('#gpGo').disabled = true; $('#gpMem').style.display = 'none'; $('#gpRes').innerHTML = '두근두근…';
+  const wi = Math.floor(Math.random() * pool.length);
+  gpSlow(pool.length, wi, j => gpRender(pool[j], null), () => {
+    const k = pool[wi]; gpPick = k;
+    if (state.gpick.excl && !state.gpick.done.includes(k)) state.gpick.done.push(k);
+    save(); gpBusy = false; $('#gpGo').disabled = false;
+    gpRender(null, k); $('#gpRes').innerHTML = `🎉 ${k + 1}모둠 발표 차례!`; $('#gpMem').style.display = '';
+    const el = $('#gpGrid').querySelector('.gp-card.win'); if (el) el.classList.remove('done');
+  });
+}
+function gpMember(){
+  if (gpBusy || gpPick == null) return;
+  const ids = gpPresent(state.lastGroups.groups[gpPick]); if (!ids.length) return;
+  gpBusy = true; $('#gpGo').disabled = true; $('#gpMem').disabled = true;
+  const wi = Math.floor(Math.random() * ids.length), k = gpPick;
+  const show = j => { $('#gpRes').innerHTML = `${k + 1}모둠 발표 차례!<small>👤 ${esc(nameOf(ids[j]))}</small>`; };
+  if (ids.length === 1){ show(0); gpBusy = false; $('#gpGo').disabled = false; $('#gpMem').disabled = false; return; }
+  gpSlow(ids.length, wi, show, () => { gpBusy = false; $('#gpGo').disabled = false; $('#gpMem').disabled = false; $('#gpRes').innerHTML = `${k + 1}모둠 발표 차례!<small>🎉 발표자는 ${esc(nameOf(ids[wi]))}</small>`; });
+}
+$('#openGPick').onclick = () => {
+  if (animating) return;
+  clearTimeout(gpTm); gpBusy = false; gpPick = null; $('#gpGo').disabled = false; $('#gpMem').disabled = false; $('#gpMem').style.display = 'none'; $('#gpRes').innerHTML = '';
+  if (state.gpick.sig !== gpSig()){ state.gpick.sig = gpSig(); state.gpick.done = []; save(); }
+  openSheet($('#dlgGPick')); gpRender();
+};
+$('#dlgGPick').addEventListener('close', () => { clearTimeout(gpTm); gpBusy = false; });
+$('#gpGo').onclick = gpGo; $('#gpMem').onclick = gpMember;
+$('#gpExcl').onchange = () => { state.gpick.excl = $('#gpExcl').checked; save(); gpRender(null, gpPick); };
+$('#gpReset').onclick = () => { if (gpBusy) return; state.gpick.done = []; save(); gpPick = null; $('#gpRes').innerHTML = ''; $('#gpMem').style.display = 'none'; gpRender(); };
+
 $('#openLadder').onclick = () => {
   if (animating) return;
   ld = null; ldTab = ldRosterList().length ? 'r' : 'c';
