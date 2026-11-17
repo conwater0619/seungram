@@ -1053,6 +1053,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
 .guide p,.help-doc p{margin:0 0 6px}
 .guide ul,.help-doc ul{margin:4px 0 8px;padding-left:20px}
 .guide li,.help-doc li{margin:3px 0}
+.vbtn{margin-left:8px;padding:3px 10px;border-radius:999px;border:1.5px solid var(--blue,#3b82c4);background:#fff;color:var(--blue,#3b82c4);font:700 13px/1.4 inherit;cursor:pointer;vertical-align:middle}.vbtn:hover{background:#eef5fd}
+#vdPlayer{width:100%;max-height:70vh;border-radius:12px;background:#000;display:block}
 .help-doc{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px;font-size:15px}
 .help-doc .card{margin:0}
 .help-doc .card h3{margin-bottom:6px}
@@ -1220,7 +1222,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="board">칠 판</div>
       <div class="floor"><div class="lane" id="laneL"></div><div class="seats" id="seats"></div><div class="lane" id="laneR"></div></div>
     </div>
-    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 17일 14:15</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
+    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 17일 14:30</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
     <div class="demo-pill" id="demoPill" hidden>🧪 체험 중 <button id="demoEnd">체험 끝내기</button></div>
   </main>
 </div>
@@ -1584,9 +1586,10 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <button class="btn x" data-close>닫기</button>
   </div>
   <div class="sheet-body">
+    <div class="muted small" style="margin:0 0 8px">▶ <b>영상 보기</b> 버튼이 있는 항목은 짧은 영상으로 사용법을 볼 수 있어요.</div>
     <div class="help-doc">
       <div class="card">
-        <h3>🚀 처음 시작하기</h3>
+        <h3>🚀 처음 시작하기 <button class="vbtn" data-v="intro" data-t="우리 반 교실 한눈에 보기">▶ 영상 보기</button></h3>
         <ul>
           <li><b>🧪 먼저 체험해 보기</b>: 학생이 하나도 없을 때 메인 화면에 뜨는 <b>🧪 체험용 학생으로 써 보기</b>를 누르면 동물 친구들(다람쥐·토끼·펭귄…)이 들어와요. 모든 기능을 마음껏 눌러 본 뒤 왼쪽 아래 <b>체험 끝내기</b>를 누르면 동물 친구와 체험 기록만 깨끗하게 지워지고, 만들어 둔 교실 배치·시간표·설정은 그대로 남아요.</li>
           <li>먼저 교사용 설정에서 <b>반 이름과 학생 이름</b>을 넣어요. <br><b>🔑 교사용 설정 여는 방법</b>: 화면 <b>맨 오른쪽 위 구석</b>(눈에 보이지 않는 작은 칸)을 마우스로 한 번 누르면 <b>학생 정보</b> 창이 열려요. 전체 화면이어도 같은 자리예요. 학생들이 모르고 열지 않도록 일부러 보이지 않게 해 두었어요. 터치 잠금 중에는 마우스로 눌러요.</li>
@@ -1596,7 +1599,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         <p class="muted small">학생 정보는 이 컴퓨터의 브라우저에만 저장되고 인터넷으로 보내지지 않아요. (날씨·급식만 인터넷에서 받아 와요.)</p>
       </div>
       <div class="card">
-        <h3>🖥️ 메인 화면 보기</h3>
+        <h3>🖥️ 메인 화면 보기 <button class="vbtn" data-v="absent" data-t="결석·조퇴 표시하기">▶ 영상 보기</button></h3>
         <ul>
           <li><b>맨 위 문구</b>: ‘웃음이 넘치는 우리 반 교실’ 글씨를 누르면 우리 반에 맞는 문구로 바꿀 수 있어요. 색 글씨와 검은 글씨를 따로 적어요.</li>
           <li><b>지금 시간표</b>(왼쪽 위): 🗓️ 시간표에 요일별 과목과 교시 시간을 적어 두면 지금 몇 교시인지, 쉬는 시간·점심시간인지가 시간에 맞춰 나오고, 아래에 다음 교시와 과목도 미리 보여 줘요.</li>
@@ -1615,7 +1618,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>🎲 자리 바꾸기</h3>
+        <h3>🎲 자리 바꾸기 <button class="vbtn" data-v="seat" data-t="자리 바꾸기">▶ 영상 보기</button></h3>
         <ul>
           <li>학생들이 교실 양옆에 줄을 섰다가 한 명씩 걸어 들어와 앉아요.</li>
           <li>걸어 들어오는 중에 <kbd>Esc</kbd>나 <b>✕ 취소 (Esc)</b> 버튼을 누르면 자리 바꾸기가 취소되고 원래 자리로 돌아가요.</li>
@@ -1625,7 +1628,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>🎤 발표자 뽑기</h3>
+        <h3>🎤 발표자 뽑기 <button class="vbtn" data-v="pick" data-t="발표자 뽑기">▶ 영상 보기</button></h3>
         <ul>
           <li>불빛이 책상 사이를 돌다가 천천히 한 명에게 멈추고, 가운데에 이름이 크게 떠요. 카드는 화면을 누르거나 <kbd>Enter</kbd>로 닫아요.</li>
           <li>발표한 친구는 <b>이름표가 흐리게</b> 표시되고, 같은 날에는 다시 뽑히지 않아요. 결석한 친구도 뽑히지 않아요.</li>
@@ -1636,7 +1639,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>📅 일정 관리</h3>
+        <h3>📅 일정 관리 <button class="vbtn" data-v="cal" data-t="일정 관리 (조퇴 시간 넣기)">▶ 영상 보기</button></h3>
         <ul>
           <li>위쪽 <b>📅 일정</b>을 누르면 달력이 떠요. 날짜를 누르면 오른쪽에서 그날의 <b>할 일 · 일정/행사 · 결석·조퇴 예정</b>을 적을 수 있어요. 공휴일과 나이스 학교 행사(🍚 급식에서 학교를 찾아 둔 경우)도 같이 보여요.</li>
           <li><b>결석·조퇴 예정</b>을 미리 넣어 두면, 그날이 되었을 때 자리에 자동으로 결석·조퇴로 표시돼요. (날짜가 바뀌면 알아서 바뀌어요.) <b>조퇴</b>는 시간까지 적을 수 있어요. 적어 두면 그 시간까지는 자리에 그대로 출석으로 있다가, 시간이 되면 자동으로 조퇴로 바뀌어요.</li>
@@ -1646,7 +1649,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>🏆 발표 모둠 뽑기</h3>
+        <h3>🏆 발표 모둠 뽑기 <button class="vbtn" data-v="gpick" data-t="발표 모둠 뽑기">▶ 영상 보기</button></h3>
         <ul>
           <li>먼저 <b>모둠 만들기</b>로 모둠을 만들어 두세요. <b>🏆 발표 모둠 뽑기</b>를 누르면 모둠 친구들의 자리에 불빛이 돌다가 한 모둠에서 멈춰요.</li>
           <li>발표한 모둠은 다음 뽑기에서 빠져요. 모두 발표하면 처음부터 다시 뽑아요. <b>↺ 발표 초기화</b>로도 지워요.</li>
@@ -1664,7 +1667,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>😎 칭찬 · ⚠️ 경고</h3>
+        <h3>😎 칭찬 · ⚠️ 경고 <button class="vbtn" data-v="praise" data-t="칭찬 · 경고">▶ 영상 보기</button></h3>
         <ul>
           <li>의자에 앉은 <b>학생 얼굴</b>을 왼쪽 클릭할 때마다 한 단계씩 올라가요.<br>1단계 선글라스 → 2단계 마술 모자 → 3단계 모자에 꽃 (꽃까지 가면 더 이상 올라가지 않아요)</li>
           <li><b>마우스 오른쪽 버튼</b>(태블릿은 <b>길게 누르기</b>)을 누르면 <b>⚠️ 경고</b>가 기록되고 얼굴이 한 단계 내려가요. 예를 들어 2단계(마술 모자)에서 경고를 받으면 1단계(선글라스)로 내려가요. 아무것도 없는 보통 얼굴에서 경고를 받으면 울상 얼굴이 돼요. 울상에서 왼쪽 클릭하면 보통 얼굴로 돌아와요.</li>
@@ -1684,7 +1687,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>👥 모둠 만들기</h3>
+        <h3>👥 모둠 만들기 <button class="vbtn" data-v="group" data-t="모둠 만들기">▶ 영상 보기</button></h3>
         <ul>
           <li><b>🎲 무작위로</b>: ‘한 모둠에 ○명씩’ 또는 ‘모둠을 ○개로’ 정하고 누르면 자동으로 짜여요. 결석한 친구는 빠져요.</li>
           <li><b>🪑 자리 보고 정하기</b>: 지금 고르는 모둠 번호를 ◀ ▶로 고르고 책상을 누르면 그 모둠에 들어가요. 다시 누르면 빠져요.</li>
@@ -1711,7 +1714,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
-        <h3>⋯ 더보기 메뉴</h3>
+        <h3>⋯ 더보기 메뉴 <button class="vbtn" data-v="more" data-t="더보기의 룰렛·사다리 타기">▶ 영상 보기</button></h3>
         <ul>
           <li><b>📷 카메라</b>(⋯ 더보기 맨 위): 전자칠판 카메라, USB 실물화상기, 웹캠 중 연결된 카메라를 화면 가득 크게 보여 줘요(여러 개면 아래 막대에서 골라요). ⟳ 회전(R), 확대·축소(＋/－, 마우스 휠), 확대했을 때 끌어서 옮기기, 맞춤(0), 좌우 반전, ☀ 밝게, 📄 글씨 또렷(흑백·대비), ✏️ 펜으로 화면 위에 쓰기(P, 색 바꾸기·🧽 지우기), ⏸ 멈춤(스페이스), 📸 지금 화면을 사진으로 저장이 있어요. 고른 카메라·회전·밝기 설정은 기억해 둬요. 영상은 화면에만 보이고 어디로도 보내지지 않아요.</li>
           <li><b>😎 반 전체 칭찬</b>(⋯ 더보기): 누르면 자리에 앉은 친구들을 <b>한 번에 한 단계씩</b> 칭찬해요(결석한 친구는 빼요). 학급 온도계도 함께 올라가고, 칭찬 횟수에는 제한이 없지만, 온도계 점수는 한 친구당 하루 3점까지만 올라가요. 우리 반이 다 함께 잘했을 때 쓰기 좋아요.</li>
@@ -1801,6 +1804,10 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   </div>
 </dialog>
 
+<dialog class="sheet wide" id="dlgVideo">
+  <div class="sheet-head"><h2 id="vdTitle">▶ 사용 영상</h2><button class="btn x" data-close>닫기</button></div>
+  <div class="sheet-body"><video id="vdPlayer" controls playsinline preload="metadata"></video><p class="muted small" id="vdNote" style="margin:8px 0 0"></p></div>
+</dialog>
 <dialog class="sheet wide" id="dlgRoul">
   <div class="sheet-head">
     <h2>🎡 룰렛</h2>
@@ -2054,6 +2061,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 17일</h3>
     <ul>
+      <li><span class="tm">14:30</span> <b>▶ 사용 영상</b>: 사용 설명서의 항목 제목 옆 <b>▶ 영상 보기</b>를 누르면 그 기능을 짧은 영상으로 볼 수 있어요. (영상은 videos 폴더에 들어 있어요.)</li>
       <li><span class="tm">14:15</span> <b>⏰ 조퇴 시간 입력</b>: 일정 달력과 결석·조퇴 기록에서 조퇴를 미리 넣을 때 시간도 적을 수 있어요. 그 시간까지는 자리에 출석으로 있다가 시간이 되면 자동으로 조퇴로 바뀌어요. 시간을 비우면 예전처럼 하루 종일 조퇴예요.</li>
       <li><span class="tm">14:00</span> <b>🆕 업데이트 안내</b>: 화면 맨 아래 안내 줄에 최종 업데이트 날짜·시간과 '업데이트 내역은 더보기 → 업데이트 내역에서 확인할 수 있어요' 문장을 넣었어요.</li>
       <li><span class="tm">13:55</span> <b>📖 사용 설명서</b>: 교사용 설정(학생 정보) 여는 방법을 '처음 시작하기'에 적었어요.</li>
@@ -3885,6 +3893,16 @@ $('#clearPraise').onclick = async () => {
   if (!await askConfirm('모든 학생의 칭찬·경고 표시(선글라스·모자·꽃·울상 얼굴)를 지울까요? 기록은 남아요.')) return;
   state.praise = {}; save(); updatePraiseBtn(); renderStage(); toast('칭찬을 초기화했어요.');
 };
+
+/* ---------- 사용 영상 (사용 설명서) ---------- */
+$('#dlgHelp').addEventListener('click', e => {
+  const b = e.target.closest('.vbtn'); if (!b) return;
+  const v = $('#vdPlayer'); $('#vdTitle').textContent = '▶ ' + b.dataset.t; $('#vdNote').textContent = '';
+  v.onerror = () => { $('#vdNote').textContent = '영상 파일을 불러오지 못했어요. 인터넷 연결과 videos 폴더 업로드를 확인해 주세요.'; };
+  v.src = 'videos/' + b.dataset.v + '.mp4'; v.load();
+  $('#dlgVideo').showModal(); v.play().catch(() => {});
+});
+$('#dlgVideo').addEventListener('close', () => { const v = $('#vdPlayer'); v.pause(); v.removeAttribute('src'); v.load(); });
 
 /* ---------- 결석 ---------- */
 state.absLog = state.absLog || {};

@@ -1,5 +1,5 @@
 // 웃음이 넘치는 교실 - 오프라인용 서비스 워커
-const VER = 'classroom-v129';
+const VER = 'classroom-v130';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './forms/absence.pdf', './forms/parent-opinion.pdf'];
 const CDN = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
@@ -13,6 +13,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  if (url.pathname.indexOf('/videos/') >= 0) return;  // 영상은 브라우저가 직접 받아요(저장하지 않음)
   // 같은 사이트: 인터넷이 되면 항상 최신 버전, 안 되면 저장해 둔 버전
   if (url.origin === location.origin){
     e.respondWith(fetch(req.url, {cache: 'no-cache', credentials: 'same-origin'}).then(res => {
