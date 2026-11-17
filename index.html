@@ -357,6 +357,10 @@ body.hide-notice .notice-strip{display:none!important}
 .gp-card.done{opacity:.45}
 .gp-card.done h4::after{content:" ✓ 발표 완료";font-family:inherit;font-size:12px}
 .gp-res{min-height:60px;font-family:"Jua",sans-serif;font-size:clamp(24px,2.8vw,38px);text-align:center;color:#c2410c;margin:6px 0 10px}
+.gp-card .gp-n{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-family:"Jua",sans-serif;font-size:18px}
+.gp-card .gp-n input{width:62px;font:inherit;font-size:20px;text-align:center;border:2px solid #f59e0b;border-radius:10px;padding:2px 4px;background:#fff}
+.gcard .gc-n{display:inline-flex;align-items:center;gap:6px}
+.gcard .gc-n input{width:62px;font:inherit;font-size:20px;text-align:center;border:2px solid #f59e0b;border-radius:10px;padding:2px 4px;background:#fff}
 .gp-res small{display:block;font-family:inherit;font-size:16px;color:#555;margin-top:4px}
 .ld-ta{width:100%;min-height:130px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px;line-height:1.6;box-sizing:border-box}
 .ld-chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -1439,6 +1443,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <input type="number" id="gNum" min="2" max="12">
       <span id="gUnit">명씩</span>
       <button class="btn primary big" id="gGo" style="font-size:19px;padding:9px 20px">🎲 모둠 만들기</button>
+      <button class="btn" id="gNumBtn" title="어느 모둠이 몇 모둠인지 직접 정해요">✏️ 모둠 번호 정하기</button>
     </div>
     <div class="groups" id="groups"></div>
   </div>
@@ -1761,6 +1766,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <textarea id="rlTx" class="ld-ta" placeholder="한 줄에 하나씩 (예: 책 읽기 / 퀴즈 / 노래 부르기)"></textarea>
         </div>
         <label class="chk" style="margin-top:10px"><input type="checkbox" id="rlExcl"> 뽑힌 항목은 다음 판에서 빼기</label>
+        <label class="chk" style="margin-top:6px"><input type="checkbox" id="rlSnd"> 🔊 효과음</label>
         <div class="row" style="gap:6px;margin-top:6px"><button class="btn" id="rlReset">처음부터 다시</button></div>
       </div>
       <div class="rl-main">
@@ -1788,6 +1794,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       </div>
       <div class="row" style="gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
         <label class="chk"><input type="checkbox" id="gpExcl"> 발표한 모둠은 다음에서 빼기</label>
+        <label class="chk"><input type="checkbox" id="gpSnd"> 🔊 효과음</label>
+        <button class="btn" id="gpNumBtn">✏️ 모둠 번호 정하기</button>
         <button class="btn" id="gpReset">처음부터 다시</button>
       </div>
     </div>
@@ -2000,7 +2008,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 17일</h3>
     <ul>
-      <li><span class="tm">09:12</span> <b>🎡 룰렛 · 🏆 모둠 발표 뽑기</b>: 룰렛은 학생 이름이나 직접 쓴 목록을 돌려요(뽑힌 항목 빼기 선택 가능). 모둠 발표 뽑기는 만들어 둔 모둠 중 발표할 모둠을 뽑고, 그 모둠에서 발표자도 뽑을 수 있어요. (더보기 메뉴)</li>
+      <li><span class="tm">09:41</span> <b>🎡 룰렛 · 🏆 모둠 발표 뽑기</b>: 룰렛은 학생 이름이나 직접 쓴 목록을 돌려요(뽑힌 항목 빼기 선택 가능). 모둠 발표 뽑기는 만들어 둔 모둠 중 발표할 모둠을 뽑고, 그 모둠에서 발표자도 뽑을 수 있어요. 돌아가는 동안 효과음이 나요(끌 수 있어요). (더보기 메뉴)</li>
+      <li><span class="tm">09:41</span> <b>✏️ 모둠 번호 정하기</b>: 모둠 만들기 화면에서 번호를 직접 정할 수 있어요. 같은 번호를 쓰면 두 모둠의 번호가 서로 바뀌고, 모둠 발표 뽑기에도 똑같이 적용돼요.</li>
       <li><span class="tm">08:06</span> <b>🌤️ 날씨</b>: 못 받아오는 동안은 "날씨 불러오는 중…"이 뜨고, 몇 초 간격으로 다시 시도해요. 인터넷이 연결되면 바로 불러와요.</li>
     </ul>
     <h3>2026년 11월 16일</h3>
@@ -4041,8 +4050,12 @@ function solveGroups(){
   return {groups: shuffle(groups).map(g => shuffle(g))};
 }
 function chipHtml(id, pop){ return `<span class="gchip${pop ? ' pop' : ''}${absentSet().has(id) ? ' absent' : ''}"><span class="face" style="--c:${kidColor(id)}">${EYES}</span>${esc(nameOf(id))}</span>`; }
+let gcEdit = false;
 function groupCards(groups, fill){
-  return groups.map((g,k) => `<div class="gcard" style="--gc:${PALETTE[k % PALETTE.length]}"><h4>${k+1}모둠 <span class="muted small" style="font-family:inherit">${g.length}명</span></h4><div class="gmem" data-g="${k}">${fill ? g.filter(nameOf).map(id => chipHtml(id)).join('') : ''}</div></div>`).join('');
+  const own = !!(state.lastGroups && groups === state.lastGroups.groups && state.gpick); if (own) gpSync();
+  const cust = own && state.gpick.nums && Object.keys(state.gpick.nums).length, edit = own && gcEdit && gTab === 'rand' && fill;
+  const ord = groups.map((g, k) => k); if (cust) ord.sort((a, b) => gpNum(a) - gpNum(b) || a - b);
+  return ord.map(k => { const g = groups[k]; return `<div class="gcard" style="--gc:${PALETTE[k % PALETTE.length]}"><h4>${edit ? `<span class="gc-n"><input type="number" min="1" max="30" value="${gpNum(k)}" data-k="${k}" aria-label="모둠 번호">모둠</span>` : `${cust ? gpNum(k) : k+1}모둠`} <span class="muted small" style="font-family:inherit">${g.length}명</span></h4><div class="gmem" data-g="${k}">${fill ? g.filter(nameOf).map(id => chipHtml(id)).join('') : ''}</div></div>`; }).join('');
 }
 function renderGroupsIdle(){
   const lg = state.lastGroups;
@@ -4054,7 +4067,7 @@ function renderGroupsIdle(){
 }
 let gTab = 'rand', gCur = 1;
 function setGTab(t){
-  gTab = t;
+  gTab = t; gcEdit = false; if ($('#gNumBtn')){ $('#gNumBtn').textContent = '✏️ 모둠 번호 정하기'; $('#gNumBtn').classList.remove('on'); }
   document.querySelectorAll('#gTabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   $('#gRand').style.display = t === 'rand' ? '' : 'none';
   $('#gSeat').style.display = t === 'seat' ? '' : 'none';
@@ -4138,13 +4151,21 @@ $('#openGroup').onclick = () => {
   gCur = used.length ? Math.max(...used) : 1;
   setGTab(state.gLastTab || 'rand'); openSheet($('#dlgGroup'));
 };
+$('#groups').addEventListener('change', e => { const i = e.target.closest('.gc-n input'); if (i) gpSetNum(+i.dataset.k, i.value); });
+$('#gNumBtn').onclick = () => {
+  if (gAnimating) return;
+  if (!state.lastGroups){ toast('먼저 모둠을 만들어 주세요.'); return; }
+  gcEdit = !gcEdit; $('#gNumBtn').textContent = gcEdit ? '✅ 번호 정하기 끝' : '✏️ 모둠 번호 정하기'; $('#gNumBtn').classList.toggle('on', gcEdit);
+  if (gcEdit) toast('번호를 바꾸면 같은 번호의 모둠과 서로 바뀌어요.');
+  renderGroupsIdle();
+};
 $('#gMode').onchange = e => { state.gMode = e.target.value; state.gNum = state.gMode === 'count' ? 6 : 4; save(); renderGroupsIdle(); };
 $('#gNum').onchange = e => { state.gNum = clamp(+e.target.value || 2, 1, 20); e.target.value = state.gNum; save(); };
 $('#gGo').onclick = async () => {
   if (gAnimating) return;
   const res = solveGroups();
   if (res.error){ toast(res.error); return; }
-  gAnimating = true; $('#gGo').disabled = true;
+  gAnimating = true; $('#gGo').disabled = true; gcEdit = false; $('#gNumBtn').textContent = '✏️ 모둠 번호 정하기'; $('#gNumBtn').classList.remove('on');
   state.lastGroups = {date: todayStr(), groups: res.groups}; state.gLastTab = 'rand'; save();
   const [y,m,d] = todayStr().split('-').map(Number); $('#gDate').textContent = `${m}월 ${d}일에 만든 모둠`;
   $('#groups').innerHTML = groupCards(res.groups, false);
@@ -4886,8 +4907,25 @@ function ldBuild(keepSetup){
 /* ---------- 룰렛 · 모둠 발표 뽑기 ---------- */
 state.roul = state.roul || {tab: 'r', text: '', excl: false};
 state.gpick = state.gpick || {sig: '', done: [], excl: true};
+let sfxCtx = null;
+function sfxOn(){ return state.sndOn !== false; }
+function sfxGet(){
+  if (!sfxOn()) return null;
+  try { sfxCtx = sfxCtx || new (window.AudioContext || window.webkitAudioContext)(); if (sfxCtx.state === 'suspended') sfxCtx.resume(); return sfxCtx; } catch(e){ return null; }
+}
+function sfxTone(freq, dur, type, vol, when){
+  const c = sfxGet(); if (!c) return;
+  const t = c.currentTime + (when || 0), o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
+}
+let sfxLastT = 0;
+function sfxTick(p){ const n = performance.now(); if (n - sfxLastT < 45) return; sfxLastT = n; sfxTone(620 + (p || 0) * 380, 0.05, 'square', 0.07); }
+function sfxWin(){ [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => sfxTone(f, 0.28, 'triangle', 0.16, i * 0.11)); sfxTone(1046.5, 0.6, 'triangle', 0.14, 0.46); }
+function sfxChime(){ [880, 1318.5].forEach((f, i) => sfxTone(f, 0.3, 'sine', 0.15, i * 0.1)); }
 const RL_MAX = 40;
-let rlSel = new Set(), rlDone = new Set(), rlRot = 0, rlSpin = false, rlRaf = 0, rlLast = null;
+let rlSel = new Set(), rlDone = new Set(), rlRot = 0, rlSpin = false, rlRaf = 0, rlLast = null, rlTk = -1;
 function rlItems(){
   if (state.roul.tab === 'c') return $('#rlTx').value.split('\n').map(t => t.trim()).filter(Boolean).slice(0, RL_MAX).map((t, i) => ({k: 'c' + i, label: t}));
   return state.students.filter(s => s.name.trim() && rlSel.has(s.id)).map(s => ({k: s.id, label: s.name.trim()}));
@@ -4906,7 +4944,7 @@ function rlSetup(){
   if (ch) ch.onclick = e => { const b = e.target.closest('button[data-id]'); if (!b || b.disabled || rlSpin) return; const id = b.dataset.id; if (rlSel.has(id)) rlSel.delete(id); else rlSel.add(id); rlSetup(); };
   const a = $('#rlAll'); if (a) a.onclick = () => { if (rlSpin) return; rlSel = new Set(list.filter(s => !abs.has(s.id)).slice(0, RL_MAX).map(s => s.id)); if (list.filter(s => !abs.has(s.id)).length > RL_MAX) toast(`룰렛에는 최대 ${RL_MAX}개까지 넣을 수 있어요. 앞에서부터 골랐어요.`); rlSetup(); };
   const n = $('#rlNone'); if (n) n.onclick = () => { if (rlSpin) return; rlSel.clear(); rlSetup(); };
-  $('#rlExcl').checked = !!state.roul.excl;
+  $('#rlExcl').checked = !!state.roul.excl; $('#rlSnd').checked = sfxOn();
   const k = rlActive().length;
   $('#rlCnt').textContent = rlDone.size ? `${k}개 남음 (뽑힌 ${rlDone.size}개)` : `${k}개`;
   rlDraw();
@@ -4940,13 +4978,14 @@ function rlGo(){
   rlSpin = true; $('#rlGo').disabled = true; $('#rlRes').className = 'rl-res dim'; $('#rlRes').textContent = '두근두근…';
   const s = 6.2832 / n, w = Math.floor(Math.random() * n), t = (w + .15 + Math.random() * .7) * s;
   const base = rlRot + 6.2832 * (5 + Math.floor(Math.random() * 3)), target = -t + 6.2832 * Math.ceil((base + t) / 6.2832);
-  const r0 = rlRot, dur = 5000, t0 = performance.now();
+  const r0 = rlRot, dur = 5000, t0 = performance.now(); rlTk = -1; sfxGet();
   const step = now => {
     const x = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - x, 4);
     rlRot = r0 + (target - r0) * e; rlDraw();
+    const ti = Math.floor((((-rlRot) % 6.2832) + 6.2832) % 6.2832 / s); if (ti !== rlTk){ if (rlTk >= 0) sfxTick(x); rlTk = ti; }
     if (x < 1){ rlRaf = requestAnimationFrame(step); return; }
     rlRot = target % 6.2832; rlSpin = false; rlRaf = 0; $('#rlGo').disabled = false;
-    const win = it[w]; $('#rlRes').className = 'rl-res'; $('#rlRes').textContent = `🎉 ${win.label}`;
+    const win = it[w]; $('#rlRes').className = 'rl-res'; $('#rlRes').textContent = `🎉 ${win.label}`; sfxWin();
     rlLast = win.k; if (state.roul.excl) rlDone.add(win.k);
     rlSetup();
     if (state.roul.excl){ const left = rlActive().length; if (left === 0) toast('모두 뽑았어요! ‘처음부터 다시’를 눌러 보세요.'); else if (left === 1) toast('남은 항목이 1개예요.'); }
@@ -4967,34 +5006,51 @@ $('#rlTabR').onclick = () => { if (rlSpin) return; state.roul.tab = 'r'; save();
 $('#rlTabC').onclick = () => { if (rlSpin) return; state.roul.tab = 'c'; save(); rlSetup(); };
 $('#rlTx').oninput = () => { state.roul.text = $('#rlTx').value; rlDone.clear(); rlLast = null; save(); rlSetup(); };
 $('#rlExcl').onchange = () => { state.roul.excl = $('#rlExcl').checked; save(); };
+$('#rlSnd').onchange = () => { state.sndOn = $('#rlSnd').checked; save(); if (state.sndOn) sfxChime(); };
 $('#rlReset').onclick = () => { if (rlSpin) return; rlDone.clear(); rlLast = null; $('#rlRes').className = 'rl-res dim'; $('#rlRes').textContent = '돌리기를 눌러 보세요!'; rlSetup(); };
 $('#rlGo').onclick = rlGo;
 
 let gpTm = 0, gpPick = null, gpBusy = false;
+let gpEdit = false;
+function gpSync(){ const sg = gpSig(); if (state.gpick.sig !== sg){ state.gpick.sig = sg; state.gpick.done = []; state.gpick.nums = {}; } state.gpick.nums = state.gpick.nums || {}; }
+function gpNum(k){ return (state.gpick.nums && state.gpick.nums[k]) || (k + 1); }
+function gpOrder(){ const lg = state.lastGroups; if (!lg) return []; return lg.groups.map((g, k) => k).filter(k => lg.groups[k].filter(nameOf).length).sort((a, b) => gpNum(a) - gpNum(b) || a - b); }
 function gpSig(){ const lg = state.lastGroups; return lg ? lg.date + '|' + lg.groups.map(g => g.join(',')).join('/') : ''; }
 function gpPresent(g){ const ab = absentSet(); return g.filter(id => nameOf(id) && !ab.has(id)); }
 function gpPool(){
   const lg = state.lastGroups; if (!lg) return [];
-  return lg.groups.map((g, k) => k).filter(k => gpPresent(lg.groups[k]).length && !(state.gpick.excl && state.gpick.done.includes(k)));
+  return gpOrder().filter(k => gpPresent(lg.groups[k]).length && !(state.gpick.excl && state.gpick.done.includes(k)));
 }
 function gpRender(hl, win){
+  gpSync();
   const lg = state.lastGroups, has = lg && lg.groups.some(g => g.filter(nameOf).length);
   $('#gpMsg').style.display = has ? 'none' : ''; $('#gpMain').style.display = has ? '' : 'none';
   if (!has){ $('#gpInfo').textContent = ''; return; }
   const ab = absentSet();
-  $('#gpGrid').innerHTML = lg.groups.map((g, k) => {
-    const mem = g.filter(nameOf); if (!mem.length) return '';
+  $('#gpGrid').innerHTML = gpOrder().map(k => {
+    const g = lg.groups[k], mem = g.filter(nameOf);
     const cls = ['gp-card', hl === k ? 'hl' : '', win === k ? 'win' : '', state.gpick.excl && state.gpick.done.includes(k) ? 'done' : ''].join(' ');
-    return `<div class="${cls}" style="--gc:${PALETTE[k % PALETTE.length]}"><h4>${k + 1}모둠</h4><div class="gp-m">${mem.map(id => ab.has(id) ? `<span style="opacity:.45;text-decoration:line-through">${esc(nameOf(id))}</span>` : esc(nameOf(id))).join(', ')}</div></div>`;
+    return `<div class="${cls}" style="--gc:${PALETTE[k % PALETTE.length]}">${gpEdit ? `<div class="gp-n"><input type="number" min="1" max="30" value="${gpNum(k)}" data-k="${k}" aria-label="모둠 번호">모둠</div>` : `<h4>${gpNum(k)}모둠</h4>`}<div class="gp-m">${mem.map(id => ab.has(id) ? `<span style="opacity:.45;text-decoration:line-through">${esc(nameOf(id))}</span>` : esc(nameOf(id))).join(', ')}</div></div>`;
   }).join('');
   const left = gpPool().length;
   $('#gpInfo').textContent = state.gpick.excl && state.gpick.done.length ? `${left}모둠 남음` : '';
-  $('#gpExcl').checked = !!state.gpick.excl;
+  $('#gpExcl').checked = !!state.gpick.excl; $('#gpSnd').checked = sfxOn();
+  $('#gpNumBtn').textContent = gpEdit ? '✅ 번호 정하기 끝' : '✏️ 모둠 번호 정하기';
+  $('#gpNumBtn').classList.toggle('on', gpEdit);
+  $('#gpGrid').querySelectorAll('.gp-n input').forEach(inp => inp.onchange = () => gpSetNum(+inp.dataset.k, inp.value));
+}
+function gpSetNum(k, v){
+  v = Math.round(+v);
+  if (!(v >= 1 && v <= 30)){ toast('모둠 번호는 1~30 사이로 써 주세요.'); gpRender(); return; }
+  const old = gpNum(k), other = gpOrder().find(j => j !== k && gpNum(j) === v);
+  state.gpick.nums[k] = v;
+  if (other !== undefined){ state.gpick.nums[other] = old; toast(`${v}모둠과 ${old}모둠의 번호를 서로 바꿨어요.`); }
+  save(); gpRender(); if ($('#dlgGroup').open && gTab === 'rand') renderGroupsIdle();
 }
 function gpSlow(P, finalIdx, tick, end){
   const steps = 22 + Math.floor(Math.random() * 6); let i = 0; const j0 = ((finalIdx - (steps - 1)) % P + P) % P;
   const next = () => {
-    tick((j0 + i) % P); i++;
+    tick((j0 + i) % P, i / steps); i++;
     if (i >= steps){ gpTm = 0; end(); return; }
     gpTm = setTimeout(next, 55 + Math.pow(i / steps, 3) * 420);
   };
@@ -5002,16 +5058,16 @@ function gpSlow(P, finalIdx, tick, end){
 }
 function gpGo(){
   if (gpBusy) return;
-  if (state.gpick.sig !== gpSig()){ state.gpick.sig = gpSig(); state.gpick.done = []; }
+  gpSync();
   const pool = gpPool();
   if (!pool.length){ toast(state.gpick.excl && state.gpick.done.length ? '모든 모둠이 발표했어요! ‘처음부터 다시’를 눌러 보세요.' : '발표할 모둠이 없어요.'); return; }
-  gpBusy = true; gpPick = null; $('#gpGo').disabled = true; $('#gpMem').style.display = 'none'; $('#gpRes').innerHTML = '두근두근…';
+  gpBusy = true; gpPick = null; $('#gpGo').disabled = true; $('#gpMem').style.display = 'none'; $('#gpRes').innerHTML = '두근두근…'; sfxGet();
   const wi = Math.floor(Math.random() * pool.length);
-  gpSlow(pool.length, wi, j => gpRender(pool[j], null), () => {
+  gpSlow(pool.length, wi, (j, pr) => { gpRender(pool[j], null); sfxTick(pr); }, () => {
     const k = pool[wi]; gpPick = k;
     if (state.gpick.excl && !state.gpick.done.includes(k)) state.gpick.done.push(k);
     save(); gpBusy = false; $('#gpGo').disabled = false;
-    gpRender(null, k); $('#gpRes').innerHTML = `🎉 ${k + 1}모둠 발표 차례!`; $('#gpMem').style.display = '';
+    gpRender(null, k); sfxWin(); $('#gpRes').innerHTML = `🎉 ${gpNum(k)}모둠 발표 차례!`; $('#gpMem').style.display = '';
     const el = $('#gpGrid').querySelector('.gp-card.win'); if (el) el.classList.remove('done');
   });
 }
@@ -5020,18 +5076,21 @@ function gpMember(){
   const ids = gpPresent(state.lastGroups.groups[gpPick]); if (!ids.length) return;
   gpBusy = true; $('#gpGo').disabled = true; $('#gpMem').disabled = true;
   const wi = Math.floor(Math.random() * ids.length), k = gpPick;
-  const show = j => { $('#gpRes').innerHTML = `${k + 1}모둠 발표 차례!<small>👤 ${esc(nameOf(ids[j]))}</small>`; };
+  sfxGet();
+  const show = (j, pr) => { $('#gpRes').innerHTML = `${gpNum(k)}모둠 발표 차례!<small>👤 ${esc(nameOf(ids[j]))}</small>`; if (pr !== undefined) sfxTick(pr); };
   if (ids.length === 1){ show(0); gpBusy = false; $('#gpGo').disabled = false; $('#gpMem').disabled = false; return; }
-  gpSlow(ids.length, wi, show, () => { gpBusy = false; $('#gpGo').disabled = false; $('#gpMem').disabled = false; $('#gpRes').innerHTML = `${k + 1}모둠 발표 차례!<small>🎉 발표자는 ${esc(nameOf(ids[wi]))}</small>`; });
+  gpSlow(ids.length, wi, show, () => { gpBusy = false; $('#gpGo').disabled = false; $('#gpMem').disabled = false; $('#gpRes').innerHTML = `${gpNum(k)}모둠 발표 차례!<small>🎉 발표자는 ${esc(nameOf(ids[wi]))}</small>`; sfxChime(); });
 }
 $('#openGPick').onclick = () => {
   if (animating) return;
   clearTimeout(gpTm); gpBusy = false; gpPick = null; $('#gpGo').disabled = false; $('#gpMem').disabled = false; $('#gpMem').style.display = 'none'; $('#gpRes').innerHTML = '';
-  if (state.gpick.sig !== gpSig()){ state.gpick.sig = gpSig(); state.gpick.done = []; save(); }
+  gpSync(); save(); gpEdit = false;
   openSheet($('#dlgGPick')); gpRender();
 };
 $('#dlgGPick').addEventListener('close', () => { clearTimeout(gpTm); gpBusy = false; });
 $('#gpGo').onclick = gpGo; $('#gpMem').onclick = gpMember;
+$('#gpSnd').onchange = () => { state.sndOn = $('#gpSnd').checked; save(); if (state.sndOn) sfxChime(); };
+$('#gpNumBtn').onclick = () => { if (gpBusy) return; gpEdit = !gpEdit; gpRender(null, gpPick); };
 $('#gpExcl').onchange = () => { state.gpick.excl = $('#gpExcl').checked; save(); gpRender(null, gpPick); };
 $('#gpReset').onclick = () => { if (gpBusy) return; state.gpick.done = []; save(); gpPick = null; $('#gpRes').innerHTML = ''; $('#gpMem').style.display = 'none'; gpRender(); };
 
