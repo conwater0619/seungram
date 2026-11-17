@@ -327,6 +327,46 @@ body.fs .stage .notice-strip{font-size:2.6vh}
 body.hide-notice .notice-strip{display:none!important}
 #ntText{width:100%;font-size:clamp(18px,2vw,24px);line-height:1.5;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;resize:vertical;font-family:inherit}
 .nt-date{font-family:"Jua",sans-serif;font-size:22px;margin-bottom:8px;color:#6a4bc4}
+.nt-date{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nt-date .btn{font-size:15px;padding:3px 10px;font-family:inherit}
+.ev-strip{align-self:center;max-width:100%;display:flex;align-items:center;gap:10px;margin:-4px auto 10px;padding:6px 16px;border-radius:14px;background:#e8f4ff;border:1px solid #b9dcf5;cursor:pointer;font-size:clamp(15px,1.6vw,21px);line-height:1.35}
+.ev-strip[hidden]{display:none}
+.ev-strip b{font-family:"Jua",sans-serif;font-weight:400;color:#1d6fb8;flex:none}
+.ev-strip span{display:flex;flex-wrap:wrap;gap:2px 14px}
+body.hide-myev .ev-strip{display:none!important}
+.cal-wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.cal-main{flex:2 1 520px;min-width:0}
+.cal-day{flex:1 1 300px;min-width:280px}
+.cal-title{font-family:"Jua",sans-serif;font-size:22px;min-width:130px;text-align:center}
+.cal-dow,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-dow{margin-bottom:4px;text-align:center;font-weight:700;font-size:14px;color:var(--muted,#888)}
+.cal-dow span:first-child{color:#d6452b}.cal-dow span:last-child{color:#3b6fd6}
+.cal-c{position:relative;min-height:84px;padding:4px 5px;border-radius:10px;border:1px solid #e2d8c3;background:#fff;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:1px;overflow:hidden;font:inherit}
+.cal-c.out{opacity:.45}
+.cal-c.today{outline:3px solid #f59e0b;outline-offset:-2px}
+.cal-c.sel{background:#fff4d6;border-color:#e8a21c}
+.cal-c .cd{font-family:"Jua",sans-serif;font-size:16px;line-height:1.1}
+.cal-c.sun .cd{color:#d6452b}.cal-c.sat .cd{color:#3b6fd6}
+.cal-c .cbs{position:absolute;top:3px;right:4px;font-size:11px}
+.cal-c .ce{font-size:11px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-c .ce.mine{color:#1d6fb8;font-weight:700}
+.cal-c .ce.hol{color:#d6452b}
+.cal-c .ce.sch{color:#6b6458}
+.cal-c .ce.sch.off{color:#d6452b}
+.cal-c .ce.more{color:#999}
+.cal-day h3{margin:0 0 6px;font-family:"Jua",sans-serif;font-size:22px}
+.cal-note{font-size:14px;margin-bottom:8px;color:#8a5a2b}
+.cal-sec{margin-bottom:12px;padding:8px 10px;border-radius:12px;background:#faf6ec}
+.cal-sec h4{margin:0 0 6px;font-size:15px;display:flex;align-items:center;gap:8px}
+.cal-sec h4 .btn{font-size:13px;padding:2px 9px;margin-left:auto}
+.cal-ol{margin:0;padding-left:1.3em;line-height:1.55;font-size:15px}
+.cal-ul{list-style:none;margin:0 0 6px;padding:0;font-size:15px}
+.cal-ul li{display:flex;align-items:center;gap:6px;padding:2px 0}
+.cal-ul .ev-del,.cal-ul .ab-del2{margin-left:auto;border:0;background:transparent;color:#b55;cursor:pointer;font-size:14px}
+.cal-sec input,.cal-sec select{font:inherit;font-size:14px;padding:4px 6px;border:1px solid #d9cfba;border-radius:8px;background:#fff;min-width:0}
+.cal-sec .row input{flex:1}
+.cal-abadd{display:flex;flex-wrap:wrap;gap:5px}
+.cal-abadd #calAbReason{flex:1 1 120px}
 .nt-chips{margin-top:8px}
 .nt-day{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0;background:#fff}
 .nt-day h5{margin:0 0 4px;font-size:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -693,7 +733,8 @@ body.fs .stage .seat .bdtag{font-size:1.9vh}
 .seat.duty.bday .dutytag,.seat.duty.bday .bdtag{font-size:10px;padding:1px 4px;top:-10px;transform:none}
 .seat.duty.bday .dutytag{left:2px}
 .seat.duty.bday .bdtag{left:auto;right:2px}
-.stu .bd{width:84px;padding:6px 6px;text-align:center}
+.stu-bd{display:flex;align-items:center;gap:6px;font-size:14px}
+.stu .bd{width:120px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px}
 dialog.sheet.mid{width:min(980px,96vw)}
 .mini{display:grid;gap:5px;max-width:760px;margin:0 auto}
 .mini .mgap{min-height:6px}
@@ -1087,7 +1128,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn" id="openGroup">👥 모둠 만들기</button>
       <button class="btn" id="pinMode">📌 지정석</button>
       <button class="btn" id="openTT">🗓️ 시간표</button>
-      <button class="btn" id="openMeal">🍚 급식</button>
+      <button class="btn" id="openCal">📅 일정</button>
       <button class="btn" id="openLayout">교실 배치</button>
       <span class="spacer"></span>
       <button class="btn" id="fs">전체 화면</button>
@@ -1111,6 +1152,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openVac">🏖️ 방학 타이머 <span class="muted small" id="vacState"></span></button>
           <button class="mi" id="openTools">🧰 유용한 기능 (타이머·스톱워치·계산기)</button>
           <button class="mi" id="openQr">📱 QR코드 만들기</button>
+          <button class="mi" id="openMeal">🍚 급식</button>
           <button class="mi" id="openSched">📅 학교 행사 일정</button>
           <button class="mi" id="openAnnv">📌 기념일 · 계기교육 영상</button>
           <button class="mi" id="openForm">📄 서류 양식 (이름 자동 넣기)</button>
@@ -1150,6 +1192,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
+            <label class="chk"><input type="checkbox" data-show="myev"> 📌 오늘 일정</label>
             <label class="chk"><input type="checkbox" data-show="meal"> 🍚 오늘 급식</label>
             <label class="chk"><input type="checkbox" data-show="annv"> 📌 기념일</label>
             <label class="chk"><input type="checkbox" data-show="sched"> 📅 학교 행사</label>
@@ -1172,6 +1215,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="stage-head"><div class="now-card" id="nowCard" hidden></div><div class="clock" id="stageDate"></div><div class="head-right"><div class="vac-card" id="vacCard" hidden></div><div class="wx-card" id="wxCard" hidden></div><div class="task-card" id="taskCard"></div></div></div>
       <div class="task-bar" id="taskBar" hidden></div>
       <div class="meal-strip" id="mealStrip" hidden><b>🍚 오늘 급식</b><span id="mealStripText"></span></div>
+      <div class="ev-strip" id="evStrip" hidden title="눌러서 일정 보기"></div>
       <div class="notice-strip" id="noticeStrip" hidden title="눌러서 크게 보기"></div>
       <div class="board">칠 판</div>
       <div class="floor"><div class="lane" id="laneL"></div><div class="seats" id="seats"></div><div class="lane" id="laneR"></div></div>
@@ -1592,6 +1636,16 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
+        <h3>📅 일정 관리</h3>
+        <ul>
+          <li>위쪽 <b>📅 일정</b>을 누르면 달력이 떠요. 날짜를 누르면 오른쪽에서 그날의 <b>할 일 · 일정/행사 · 결석·조퇴 예정</b>을 적을 수 있어요. 공휴일과 나이스 학교 행사(🍚 급식에서 학교를 찾아 둔 경우)도 같이 보여요.</li>
+          <li><b>결석·조퇴 예정</b>을 미리 넣어 두면, 그날이 되었을 때 자리에 자동으로 결석·조퇴로 표시돼요. (날짜가 바뀌면 알아서 바뀌어요.)</li>
+          <li>그날 <b>일정·행사</b>가 있으면 메인 화면 시계 아래에 <b>📌 오늘 일정</b>이 한 줄로 떠요. ⋯ 더보기 → 화면 위에 보이기에서 끌 수 있어요.</li>
+          <li><b>📝 오늘 할 일</b> 창에서는 ◀ ▶ 로 날짜를 넘겨서 내일이나 이후 할 일도 미리 적을 수 있어요. 그날이 되면 메인 화면에 떠요.</li>
+          <li>🍚 급식 버튼은 <b>⋯ 더보기</b> 안으로 옮겼어요.</li>
+        </ul>
+      </div>
+      <div class="card">
         <h3>🏆 발표 모둠 뽑기</h3>
         <ul>
           <li>먼저 <b>모둠 만들기</b>로 모둠을 만들어 두세요. <b>🏆 발표 모둠 뽑기</b>를 누르면 모둠 친구들의 자리에 불빛이 돌다가 한 모둠에서 멈춰요.</li>
@@ -1874,15 +1928,32 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <p class="muted small" style="margin-bottom:0">날씨는 15분마다 새로 받아와요. (Open-Meteo 무료 날씨 정보)</p>
   </div>
 </dialog>
+<dialog class="sheet wide" id="dlgCal">
+  <div class="sheet-head">
+    <h2>📅 일정 관리</h2>
+    <div class="row" style="gap:6px"><button class="btn" id="calPrev">◀</button><b class="cal-title" id="calTitle"></b><button class="btn" id="calNext">▶</button><button class="btn" id="calToday">오늘</button></div>
+    <button class="btn x" data-close>닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="cal-wrap">
+      <div class="cal-main">
+        <div class="cal-dow"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <p class="muted small" style="margin-bottom:0">📝 할 일 · 파란 글씨는 내 일정 · 회색은 학교 행사(나이스) · 🚫는 결석·조퇴 예정이 있는 날이에요. 날짜를 누르면 오른쪽에서 적을 수 있어요.</p>
+      </div>
+      <div class="cal-day" id="calDay"></div>
+    </div>
+  </div>
+</dialog>
 <dialog class="sheet wide" id="dlgNotice">
   <div class="sheet-head">
     <h2>📝 오늘 할 일</h2>
-    <div class="seg" id="ntTab"><button data-t="today" class="on">✏️ 오늘</button><button data-t="log">🕘 지난 기록</button></div>
+    <div class="seg" id="ntTab"><button data-t="today" class="on">✏️ 작성</button><button data-t="log">🕘 지난 기록</button></div>
     <button class="btn x" data-close>닫기</button>
   </div>
   <div class="sheet-body">
     <div id="ntToday">
-      <div class="nt-date" id="ntDate"></div>
+      <div class="nt-date" id="ntDate"><button class="btn" id="ntPrev" title="하루 전">◀</button><span id="ntDateTx"></span><button class="btn" id="ntNext" title="하루 뒤">▶</button><button class="btn" id="ntGoToday">오늘로</button></div>
       <textarea id="ntText" rows="7" placeholder="아침 안내사항을 한 줄에 하나씩 적어요.&#10;예) 아침 독서 20분&#10;수학 익힘책 34쪽 내기&#10;3교시 체육 - 체육복 갈아입기"></textarea>
       <div class="pinlist nt-chips" id="ntChips"></div>
       <div class="row" style="margin-top:12px">
@@ -1983,6 +2054,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 17일</h3>
     <ul>
+      <li><span class="tm">13:40</span> <b>📅 일정 관리</b>: 위쪽 일정 버튼을 누르면 달력이 떠요. 날짜별로 할 일·일정/행사·결석 예정을 적을 수 있고, 미리 넣은 결석은 그날 자리에 자동으로 표시돼요. 그날 일정은 메인 화면에도 한 줄로 떠요.</li>
+      <li><span class="tm">13:40</span> <b>📝 오늘 할 일</b>: ◀ ▶ 로 날짜를 넘겨 내일·미래 할 일도 미리 쓸 수 있어요.</li>
+      <li><span class="tm">13:40</span> <b>🍚 급식</b>: 위쪽 버튼을 ⋯ 더보기 메뉴로 옮겼어요.</li>
       <li><span class="tm">10:01</span> <b>🏆 발표 모둠 뽑기</b>: 발표자 뽑기 옆 버튼을 누르면 모둠 친구들의 자리에 불빛이 돌다가 한 모둠에서 멈춰요. 발표한 모둠은 다음 뽑기에서 빠져요. (모둠을 먼저 만들어 두세요)</li>
       <li><span class="tm">10:01</span> <b>🍀 행운의 친구</b>: 메인 화면에서 ⋯ 더보기 메뉴로 옮겼어요.</li>
       <li><span class="tm">09:41</span> <b>🎡 룰렛</b>: 학생 이름이나 직접 쓴 목록을 돌려요(뽑힌 항목 빼기 선택 가능). 돌아가는 동안 효과음이 나요(끌 수 있어요). (더보기 메뉴)</li>
@@ -2659,11 +2733,11 @@ function renderStudents(){
       <div class="stu-main">
         <div class="stu-top">
           <input class="nm" placeholder="이름" value="${esc(s.name)}">
-          <input class="bd" placeholder="생일(선택)" title="생일 (선택) · 월/일로 써요. 예: 3/5" maxlength="6" value="${esc(bdText(s.bday))}">
           <select class="gd"><option value="">성별</option><option value="남">남</option><option value="여">여</option></select>
           <select class="lv" title="학습 수준"><option value="">수준</option><option value="상">상</option><option value="중">중</option><option value="하">하</option></select>
           <button class="del" title="삭제">✕</button>
         </div>
+        <label class="stu-bd">🎂 <input class="bd" placeholder="생일(선택)" title="생일 (선택) · 월/일로 써요. 예: 3/5" maxlength="6" value="${esc(bdText(s.bday))}"></label>
       </div>`;
     const nm = row.querySelector('.nm'), gd = row.querySelector('.gd');
     gd.value = s.gender || '';
@@ -3851,7 +3925,7 @@ function renderAbsLog(){
   if (abView === 'date'){
     box.innerHTML = `<p class="small" style="margin:10px 0">${label} ${sumTxt}</p>` + days.map(d => {
       const ids = Object.keys(state.absLog[d]).filter(nameOf); if (!ids.length) return '';
-      return `<div class="ps-day"><h5>${dayLabel(d)} <span class="muted small" style="font-family:inherit">${ids.length}명</span></h5>${ids.map(id => { const r = state.absLog[d][id]; return `<div class="ab-row"><span class="ab-who">${esc(nameOf(id))}</span>${typeBadge(d,id)}${kindSel(d,id,r.kind)}${reasonInp(d,id,r.reason)}${stp(d,id)}${delBtn(d,id)}</div>`; }).join('')}</div>`;
+      return `<div class="ps-day"><h5>${dayLabel(d)}${d > todayStr() ? ' <span class="muted small" style="font-family:inherit">예정</span>' : ''} <span class="muted small" style="font-family:inherit">${ids.length}명</span></h5>${ids.map(id => { const r = state.absLog[d][id]; return `<div class="ab-row"><span class="ab-who">${esc(nameOf(id))}</span>${typeBadge(d,id)}${kindSel(d,id,r.kind)}${reasonInp(d,id,r.reason)}${stp(d,id)}${delBtn(d,id)}</div>`; }).join('')}</div>`;
     }).join('');
     return;
   }
@@ -3886,7 +3960,7 @@ $('#abAddBtn').onclick = () => {
   $('#abReason').value = ''; save(); renderAbsLog(); renderStage(); toast(`${$('#abType').value === 'early' ? '조퇴' : '결석'} 기록을 추가했어요.`);
 };
 function prepAbsAdd(){
-  $('#abDate').value = todayStr(); $('#abDate').max = todayStr();
+  $('#abDate').value = todayStr(); $('#abDate').removeAttribute('max');
   $('#abWho').innerHTML = '<option value="">학생</option>' + state.students.filter(s => s.name.trim()).sort((a,b) => a.name.trim().localeCompare(b.name.trim(), 'ko')).map(s => `<option value="${s.id}">${esc(s.name.trim())}</option>`).join('');
   $('#abKind').innerHTML = '<option value="">종류</option>' + ABS_KINDS.map(k => `<option>${k}</option>`).join('');
 }
@@ -5394,7 +5468,7 @@ function renderNoticeStrip(){
   el.innerHTML = `<b>📝 오늘 할 일</b><ol>${L.map(x => `<li>${esc(x)}</li>`).join('')}</ol>`;
   el.hidden = false;
 }
-let ntTab = 'today', ntDirty = false;
+let ntTab = 'today', ntDirty = false, ntD = todayStr();
 function ntStampLine(n){
   if (!n) return '';
   const c = n.created, u = n.updated;
@@ -5404,8 +5478,12 @@ function renderNotice(){
   document.querySelectorAll('#ntTab button').forEach(b => b.classList.toggle('on', b.dataset.t === ntTab));
   $('#ntToday').hidden = ntTab !== 'today'; $('#ntLog').hidden = ntTab !== 'log';
   if (ntTab === 'today'){
-    $('#ntDate').textContent = dayLabel(todayStr());
-    const n = todayNotice();
+    const tdy = todayStr();
+    $('#ntDateTx').textContent = dayLabel(ntD) + (ntD === tdy ? ' · 오늘' : ntD > tdy ? ' · 미리 쓰기' : ' · 지난 날');
+    $('#ntGoToday').style.visibility = ntD === tdy ? 'hidden' : '';
+    $('#ntClear').textContent = ntD === tdy ? '오늘 것 지우기' : '이 날 것 지우기';
+    $('#ntCopyPrev').textContent = ntD === tdy ? '어제 것 가져오기' : '이전 기록 가져오기';
+    const n = state.notices[ntD] || null;
     if (!ntDirty) $('#ntText').value = n ? n.text : '';
     $('#ntStamp').innerHTML = ntStampLine(n);
     $('#ntChips').innerHTML = NT_CHIPS.map(c => `<button>${esc(c)}</button>`).join('');
@@ -5422,49 +5500,140 @@ function renderNotice(){
   }).join('') : '<p class="muted small">아직 기록이 없어요. ‘✏️ 오늘’에서 적고 저장하면 날짜·시간·과목과 함께 여기에 쌓여요.</p>';
 }
 function saveNotice(silent){
-  const txt = noticeLines($('#ntText').value).join('\n'), d = todayStr(), st = stampNow();
+  const txt = noticeLines($('#ntText').value).join('\n'), d = ntD, st = stampNow();
   const n = state.notices[d];
   if (!txt){ if (n){ delete state.notices[d]; save(); } ntDirty = false; renderNoticeStrip(); renderNotice(); return; }
   if (n && n.text === txt){ ntDirty = false; if (!silent) toast('바뀐 내용이 없어요.'); return; }
   if (n){ n.text = txt; n.updated = st; (n.edits = n.edits || []).push(st); }
   else state.notices[d] = {text: txt, created: st, updated: st, edits: [st]};
   ntDirty = false; save(); renderNoticeStrip(); renderNotice();
-  toast(`오늘 할 일을 저장했어요. (${stampTxt(st)})`);
+  toast(d === todayStr() ? `오늘 할 일을 저장했어요. (${stampTxt(st)})` : `${dayLabel(d)} 할 일을 저장했어요. 그날 메인 화면에 떠요.`);
 }
-function showNoticeBig(){
-  const n = todayNotice(), L = n ? noticeLines(n.text) : noticeLines($('#ntText').value);
+function showNoticeBig(d){
+  d = d || todayStr();
+  const n = state.notices[d], L = n ? noticeLines(n.text) : ($('#dlgNotice').open ? noticeLines($('#ntText').value) : []);
   if (!L.length){ toast('먼저 오늘 할 일을 적어 주세요.'); return; }
   const ov = document.createElement('div'); ov.className = 'notice-ov';
-  ov.innerHTML = `<h2>📝 ${esc(dayLabel(todayStr()))} 오늘 할 일</h2><ol>${L.map(x => `<li>${esc(x)}</li>`).join('')}</ol><div class="hint2">화면을 누르거나 Esc를 누르면 닫혀요</div>`;
+  ov.innerHTML = `<h2>📝 ${esc(dayLabel(d))} ${d === todayStr() ? '오늘 할 일' : '할 일'}</h2><ol>${L.map(x => `<li>${esc(x)}</li>`).join('')}</ol><div class="hint2">화면을 누르거나 Esc를 누르면 닫혀요</div>`;
   const close = () => { ov.remove(); document.removeEventListener('keydown', k, true); };
   const k = e => { if (e.key === 'Escape' || e.key === 'Enter'){ e.preventDefault(); e.stopPropagation(); close(); } };
   ov.onclick = close; document.addEventListener('keydown', k, true);
   document.body.appendChild(ov);
 }
-$('#openNotice').onclick = () => { if (animating) return; ntTab = 'today'; ntDirty = false; renderNotice(); openSheet($('#dlgNotice')); setTimeout(() => $('#ntText').focus(), 60); };
+function openNoticeFor(d){ if (animating) return; ntTab = 'today'; ntD = d || todayStr(); ntDirty = false; renderNotice(); openSheet($('#dlgNotice')); setTimeout(() => $('#ntText').focus(), 60); }
+$('#openNotice').onclick = () => { if (animating) return; ntTab = 'today'; ntD = todayStr(); ntDirty = false; renderNotice(); openSheet($('#dlgNotice')); setTimeout(() => $('#ntText').focus(), 60); };
 document.querySelectorAll('#ntTab button').forEach(b => b.onclick = () => { ntTab = b.dataset.t; renderNotice(); });
 $('#ntText').oninput = () => { ntDirty = true; };
 $('#ntSave').onclick = () => saveNotice(false);
-$('#ntShow').onclick = () => { if (ntDirty) saveNotice(true); $('#dlgNotice').close(); showNoticeBig(); };
+$('#ntShow').onclick = () => { const d = ntD; if (ntDirty) saveNotice(true); $('#dlgNotice').close(); showNoticeBig(d); };
 $('#ntClear').onclick = async () => {
-  if (!todayNotice() && !$('#ntText').value.trim()) return;
-  if (!await askConfirm('오늘 할 일을 지울까요? 오늘 기록도 함께 지워져요.')) return;
-  delete state.notices[todayStr()]; $('#ntText').value = ''; ntDirty = false; save(); renderNoticeStrip(); renderNotice();
+  if (!state.notices[ntD] && !$('#ntText').value.trim()) return;
+  if (!await askConfirm(ntD === todayStr() ? '오늘 할 일을 지울까요? 오늘 기록도 함께 지워져요.' : `${dayLabel(ntD)} 할 일을 지울까요?`)) return;
+  delete state.notices[ntD]; $('#ntText').value = ''; ntDirty = false; save(); renderNoticeStrip(); renderNotice();
 };
 $('#ntCopyPrev').onclick = () => {
-  const prev = Object.keys(state.notices).filter(d => d < todayStr()).sort().pop();
+  const prev = Object.keys(state.notices).filter(d => d < ntD).sort().pop();
   if (!prev){ toast('가져올 지난 기록이 없어요.'); return; }
   $('#ntText').value = state.notices[prev].text; ntDirty = true; toast(`${dayLabel(prev)} 것을 가져왔어요. 고친 뒤 저장해 주세요.`);
 };
 $('#ntLog').addEventListener('click', async e => {
   const c = e.target.closest('[data-copy]'), dl = e.target.closest('[data-del]');
-  if (c){ ntTab = 'today'; ntDirty = true; renderNotice(); $('#ntText').value = state.notices[c.dataset.copy].text; toast('가져왔어요. 고친 뒤 저장해 주세요.'); return; }
+  if (c){ ntTab = 'today'; ntD = todayStr(); ntDirty = true; renderNotice(); $('#ntText').value = state.notices[c.dataset.copy].text; toast('가져왔어요. 고친 뒤 저장해 주세요.'); return; }
   if (dl){ if (!await askConfirm(`${dayLabel(dl.dataset.del)} 기록을 지울까요?`)) return; delete state.notices[dl.dataset.del]; save(); renderNotice(); renderNoticeStrip(); }
 });
-$('#dlgNotice').addEventListener('close', () => { if (ntDirty && $('#ntText').value.trim()) saveNotice(true); });
+$('#dlgNotice').addEventListener('close', () => { if (ntDirty && $('#ntText').value.trim()) saveNotice(true); if ($('#dlgCal').open) renderCal(); });
+const ntShift = n => { if (ntDirty && $('#ntText').value.trim()) saveNotice(true); ntDirty = false; const dt = parseDay(ntD); dt.setDate(dt.getDate() + n); ntD = todayStr(dt); renderNotice(); };
+$('#ntPrev').onclick = () => ntShift(-1);
+$('#ntNext').onclick = () => ntShift(1);
+$('#ntGoToday').onclick = () => { if (ntDirty && $('#ntText').value.trim()) saveNotice(true); ntDirty = false; ntD = todayStr(); renderNotice(); };
 $('#noticeStrip').onclick = () => { if (!animating) showNoticeBig(); };
 renderNoticeStrip();
 setInterval(() => { renderNoticeStrip(); }, 60000);
+
+/* ---------- 일정 관리 (달력) ---------- */
+state.events = state.events || {};
+let calSel = todayStr(), calY = new Date().getFullYear(), calM = new Date().getMonth();
+function evsOf(d){ return state.events[d] || []; }
+function holiOf(d){ return KR_HOLI[d] || ''; }
+function calSchedOf(d){ return state.meal && state.meal.code ? schedRows().filter(r => r.d === d && !r.hol && forGrade(r)) : []; }
+function calAbIds(d){ return Object.keys(state.absLog[d] || {}).filter(nameOf); }
+function relLabel(d){ const diff = Math.round((parseDay(d) - parseDay(todayStr())) / 864e5); return diff === 0 ? '오늘' : diff === 1 ? '내일' : diff === -1 ? '어제' : diff > 0 ? `${diff}일 뒤` : `${-diff}일 전`; }
+function renderEvStrip(){
+  const el = $('#evStrip'), L = evsOf(todayStr());
+  if (!L.length){ el.hidden = true; return; }
+  el.innerHTML = `<b>📌 오늘 일정</b><span>${L.map(e => `<i style="font-style:normal">${esc(e.t)}</i>`).join('')}</span>`;
+  el.hidden = false;
+}
+function renderCal(){
+  const lead = new Date(calY, calM, 1).getDay(), days = new Date(calY, calM + 1, 0).getDate(), rows = Math.ceil((lead + days) / 7), t = todayStr();
+  $('#calTitle').textContent = `${calY}년 ${calM + 1}월`;
+  let h = '';
+  for (let i = 0; i < rows * 7; i++){
+    const dt = new Date(calY, calM, 1 - lead + i), d = todayStr(dt), wd = dt.getDay(), hol = holiOf(d);
+    const lines = [];
+    if (hol) lines.push(`<div class="ce hol">${esc(hol)}</div>`);
+    evsOf(d).forEach(e => lines.push(`<div class="ce mine">${esc(e.t)}</div>`));
+    calSchedOf(d).forEach(r => lines.push(`<div class="ce sch${r.off ? ' off' : ''}">${esc(r.n)}</div>`));
+    const shown = lines.slice(0, 3), more = lines.length - shown.length, ab = calAbIds(d).length;
+    h += `<button class="cal-c${dt.getMonth() !== calM ? ' out' : ''}${d === t ? ' today' : ''}${d === calSel ? ' sel' : ''}${wd === 0 || hol ? ' sun' : wd === 6 ? ' sat' : ''}" data-d="${d}"><span class="cd">${dt.getDate()}</span><span class="cbs">${state.notices[d] ? '📝' : ''}${ab ? `🚫${ab}` : ''}</span>${shown.join('')}${more > 0 ? `<div class="ce more">+${more}</div>` : ''}</button>`;
+  }
+  $('#calGrid').innerHTML = h;
+  renderCalDay();
+}
+function renderCalDay(){
+  const d = calSel, hol = holiOf(d), an = ANNV.filter(a => a[0] === d.slice(5)).map(a => a[1]);
+  const nt = state.notices[d], L = nt ? noticeLines(nt.text) : [], evs = evsOf(d), sc = calSchedOf(d), D = state.absLog[d] || {}, ids = Object.keys(D).filter(nameOf);
+  const stu = state.students.filter(s => s.name.trim() && !D[s.id]).sort((a, b) => a.name.trim().localeCompare(b.name.trim(), 'ko'));
+  $('#calDay').innerHTML = `<h3>${esc(dayLabel(d))} <span class="muted small" style="font-family:inherit">${relLabel(d)}</span></h3>`
+    + (hol || an.length ? `<div class="cal-note">${hol ? `🎌 ${esc(hol)}` : ''}${hol && an.length ? ' · ' : ''}${an.length ? `📌 ${esc(an.join(', '))}` : ''}</div>` : '')
+    + `<section class="cal-sec"><h4>📝 할 일 <button class="btn" id="calNt">✏️ ${L.length ? '고치기' : '쓰기'}</button></h4>${L.length ? `<ol class="cal-ol">${L.map(x => `<li>${esc(x)}</li>`).join('')}</ol>` : '<div class="muted small">아직 없어요. 미리 써 두면 그날 메인 화면에 떠요.</div>'}</section>`
+    + `<section class="cal-sec"><h4>📌 일정·행사</h4>${evs.length ? `<ul class="cal-ul">${evs.map(e => `<li>${esc(e.t)}<button class="ev-del" data-id="${e.id}" title="지우기">✕</button></li>`).join('')}</ul>` : ''}<div class="row" style="gap:6px"><input id="calEvTx" maxlength="60" placeholder="예) 현장체험학습, 학부모 상담 14:00"><button class="btn" id="calEvAdd">추가</button></div></section>`
+    + (sc.length ? `<section class="cal-sec"><h4>🏫 학교 행사 <span class="muted small">(나이스)</span></h4><ul class="cal-ul">${sc.map(r => `<li>${esc(r.n)}${r.off ? ' <span class="muted small">(쉬는 날)</span>' : ''}</li>`).join('')}</ul></section>` : '')
+    + `<section class="cal-sec"><h4>🚫 결석·조퇴 ${d > todayStr() ? '<span class="muted small">예정</span>' : ''}</h4>${ids.length ? `<ul class="cal-ul">${ids.map(id => { const r = D[id]; return `<li>${esc(nameOf(id))} · ${absType(r) === 'early' ? '조퇴' : '결석'}${r.kind ? ` (${esc(r.kind)})` : ''}${r.reason ? ` · ${esc(r.reason)}` : ''}<button class="ab-del2" data-id="${id}" title="지우기">✕</button></li>`; }).join('')}</ul>` : ''}`
+    + (stu.length ? `<div class="cal-abadd"><select id="calAbWho"><option value="">학생</option>${stu.map(s => `<option value="${s.id}">${esc(s.name.trim())}</option>`).join('')}</select><select id="calAbType"><option value="abs">결석</option><option value="early">조퇴</option></select><select id="calAbKind"><option value="">종류</option>${ABS_KINDS.map(k => `<option>${k}</option>`).join('')}</select><input id="calAbReason" maxlength="100" placeholder="사유 (선택)"><button class="btn" id="calAbAdd">추가</button></div>` : '')
+    + `<div class="muted small" style="margin-top:6px">미리 넣어 두면 그날 자동으로 자리에 결석으로 보여요.</div></section>`;
+}
+function calAddEv(){
+  const inp = $('#calEvTx'), t = inp.value.trim(); if (!t) return;
+  (state.events[calSel] = state.events[calSel] || []).push({id: Math.random().toString(36).slice(2, 9), t});
+  save(); renderCal(); renderEvStrip(); $('#calEvTx').focus();
+}
+function openCal(d){
+  if (animating) return;
+  calSel = d || todayStr(); const dt = parseDay(calSel); calY = dt.getFullYear(); calM = dt.getMonth();
+  renderCal(); openSheet($('#dlgCal'));
+}
+$('#openCal').onclick = () => openCal();
+$('#evStrip').onclick = () => openCal();
+$('#calPrev').onclick = () => { calM--; if (calM < 0){ calM = 11; calY--; } renderCal(); };
+$('#calNext').onclick = () => { calM++; if (calM > 11){ calM = 0; calY++; } renderCal(); };
+$('#calToday').onclick = () => { calSel = todayStr(); const dt = new Date(); calY = dt.getFullYear(); calM = dt.getMonth(); renderCal(); };
+$('#calGrid').onclick = e => { const c = e.target.closest('.cal-c'); if (!c) return; calSel = c.dataset.d; const dt = parseDay(calSel); calY = dt.getFullYear(); calM = dt.getMonth(); renderCal(); };
+$('#calDay').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'calEvTx'){ e.preventDefault(); calAddEv(); } });
+$('#calDay').addEventListener('click', async e => {
+  if (e.target.closest('#calNt')){ openNoticeFor(calSel); return; }
+  if (e.target.closest('#calEvAdd')){ calAddEv(); return; }
+  const ed = e.target.closest('.ev-del');
+  if (ed){ state.events[calSel] = evsOf(calSel).filter(x => x.id !== ed.dataset.id); if (!state.events[calSel].length) delete state.events[calSel]; save(); renderCal(); renderEvStrip(); return; }
+  if (e.target.closest('#calAbAdd')){
+    const id = $('#calAbWho').value; if (!id){ toast('학생을 골라 주세요.'); return; }
+    const D = state.absLog[calSel] = state.absLog[calSel] || {}; if (D[id]) return;
+    const type = $('#calAbType').value; D[id] = {type, kind: $('#calAbKind').value, reason: $('#calAbReason').value.trim()};
+    save(); renderCal(); renderStage();
+    toast(`${nameOf(id)} 학생의 ${type === 'early' ? '조퇴' : '결석'}을 ${dayLabel(calSel)}에 넣었어요.${calSel > todayStr() ? ' 그날 자동으로 표시돼요.' : ''}`);
+    return;
+  }
+  const ad = e.target.closest('.ab-del2');
+  if (ad){
+    const id = ad.dataset.id;
+    if (!await askConfirm(`${dayLabel(calSel)} ${nameOf(id)} 학생의 ${absType(state.absLog[calSel][id]) === 'early' ? '조퇴' : '결석'} 기록을 지울까요?`)) return;
+    delete state.absLog[calSel][id]; if (!Object.keys(state.absLog[calSel]).length) delete state.absLog[calSel];
+    save(); renderCal(); renderStage();
+  }
+});
+renderEvStrip();
+
+
 
 
 /* ---------- 알림장 (칠판) ---------- */
@@ -6428,7 +6597,7 @@ async function renderDay(){
   $('#dvDate').className = 'dv-date' + (diff < 0 ? ' past' : diff > 0 ? ' future' : '');
   $('#dvDate').innerHTML = `${dd.getFullYear()}년 ${dd.getMonth()+1}월 ${dd.getDate()}일 (${wdOf(d)})<small>${diff === 0 ? '오늘' : diff === -1 ? '어제' : diff === 1 ? '내일' : diff < 0 ? `${-diff}일 전` : `${diff}일 뒤`}${KR_HOLI[d] ? ' · ' + KR_HOLI[d] : ''}</small>`;
   $('#dvPick').value = d;
-  const an = annvOn(d).map(a => `<li>📌 ${esc(a.name)}</li>`);
+  const an = ((state.events || {})[d] || []).map(e => `<li>🗒️ ${esc(e.t)}</li>`).concat(annvOn(d).map(a => `<li>📌 ${esc(a.name)}</li>`));
   const base = (evH, mealH) => dvCard('📅 학교 행사 · 기념일', (evH || an.length) ? `<ul>${an.join('')}${evH || ''}</ul>` : dvEmpty(state.meal && state.meal.code ? '등록된 행사가 없어요.' : '🍚 급식에서 학교를 찾아 두면 학교 행사도 보여요.'))
     + dvCard('🗓️ 시간표', dvTimetable(d)) + dvCard('🍚 급식', mealH)
     + dvCard('📝 오늘 할 일', dvNotice(d)) + dvCard('✅ 과제 확인', dvTasks(d)) + dvCard('🏆 칭찬', dvPraise(d)) + dvCard('😢 경고', dvWarn(d));
@@ -7023,9 +7192,9 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, bday:true, exitask:true, tlstart:true, task:true, notice:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, bday:true, exitask:true, tlstart:true, task:true, notice:true, myev:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
-  ['tt','date','wx','task','notice','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
+  ['tt','date','wx','task','notice','myev','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
   wxFxApply();
 }
@@ -7249,7 +7418,7 @@ lineModeUi();
 let lastDay = todayStr();
 setInterval(() => {
   const t = todayStr();
-  if (t !== lastDay){ lastDay = t; checkId = null; renderTasks(); renderMealStrip(); resetPraiseIfNewDay(); updatePraiseBtn(); if (!animating) renderStage(); if ($('#dlgLine').open) renderLine(); }
+  if (t !== lastDay){ lastDay = t; checkId = null; renderTasks(); renderMealStrip(); renderEvStrip(); resetPraiseIfNewDay(); updatePraiseBtn(); if (!animating) renderStage(); if ($('#dlgLine').open) renderLine(); }
 }, 60000);
 
 setTool('desk');
