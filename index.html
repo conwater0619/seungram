@@ -863,6 +863,8 @@ dialog.sheet.small{width:min(560px,94vw)}
 .seat.milk .desk::after{content:"🥛";position:absolute;right:-7px;bottom:-11px;font-size:22px;line-height:1;z-index:4;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));pointer-events:none}
 body.fs .stage .seat.milk .desk::after{font-size:3vh}
 html.milk-on #seats .seat .desk{box-shadow:0 0 0 3px #7ec8ff,0 4px 0 #a07240;cursor:pointer}
+html.milk-on #seats .seat.milk-no .desk{box-shadow:0 4px 0 #a07240;cursor:default;opacity:.75}
+.mkchips{display:flex;flex-wrap:wrap;gap:6px}.mkchips button{padding:5px 10px;border-radius:999px;border:1.5px solid var(--line,#d8cfc0);background:#fff;font:inherit;font-size:14px;cursor:pointer}.mkchips button.on{background:#fde8e6;border-color:#e0746a;color:#a23a30;font-weight:700}
 #milkBtn.on{background:#e6f4ff;border-color:#4aa3e8;color:#1b5e94;font-weight:700}
 #milkBar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:30;background:#e6f4ff;border:2px solid #4aa3e8;color:#1b5e94;border-radius:999px;padding:8px 22px;font-family:"Jua",sans-serif;font-size:20px;box-shadow:0 6px 18px rgba(0,0,0,.18);display:none;white-space:nowrap;pointer-events:none}
 html.milk-on #milkBar{display:block}
@@ -1238,7 +1240,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="board">칠 판</div>
       <div class="floor"><div class="lane" id="laneL"></div><div class="seats" id="seats"></div><div class="lane" id="laneR"></div></div>
     </div>
-    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 19일 11:24</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
+    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 19일 12:11</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
     <div class="demo-pill" id="demoPill" hidden>🧪 체험 중 <button id="demoEnd">체험 끝내기</button></div>
   </main>
 </div>
@@ -1720,7 +1722,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li>교실 배치 옆 <b>🥛 우유</b> 버튼을 선생님이 누르면 우유 모드가 켜져요. 우유를 다 먹은 친구가 <b>자기 책상을 터치</b>하면 🥛 표시가 붙고, 한 번 더 누르면 지워져요.</li>
           <li>우유 모드에서는 터치 잠금이 걸려 있어도 <b>책상 터치만</b> 돼요. 다른 버튼과 칭찬·결석 같은 동작은 막혀 있어요. 끝낼 때는 <b>🥛 우유 끝</b> 버튼을 눌러 다시 잠가요. (선생님은 마우스로 눌러요)</li>
           <li>⋯ 더보기 → <b>🥛 우유 시간 설정</b>에서 우유 먹는 시간을 정해 두면, 그 시간에만 자동으로 우유 모드가 켜졌다가 끝나면 다시 잠겨요.</li>
-          <li>같은 창에서 오늘 먹은 친구와 아직 안 먹은 친구를 볼 수 있어요. 🥛 표시는 다음 날이면 사라져요. 우유 버튼이 필요 없으면 ⋯ 더보기의 화면 표시에서 끌 수 있어요.</li>
+          <li>같은 창에서 오늘 먹은 친구와 아직 안 먹은 친구를 볼 수 있고, <b>우유를 안 먹는 친구</b>를 골라 두면 그 친구는 체크와 인원 수에서 빠져요. 🥛 표시는 다음 날이면 사라져요. 우유 버튼이 필요 없으면 ⋯ 더보기의 화면 표시에서 끌 수 있어요.</li>
         </ul>
       </div>
       <div class="card">
@@ -2089,7 +2091,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 19일</h3>
     <ul>
-      <li><span class="tm">11:24</span> <b>🥛 우유 체크</b>: 교실 배치 옆 🥛 우유 버튼을 누르면 터치 잠금 중에도 학생이 자기 책상을 터치해서 우유 먹었어요 체크를 할 수 있어요. 다시 누르면 잠겨요. ⋯ 더보기 → 우유 시간 설정에서 시간을 정하면 그 시간에만 자동으로 켜지고 끝나면 잠겨요.</li>
+      <li><span class="tm">12:11</span> <b>🥛 우유 체크</b>: 교실 배치 옆 🥛 우유 버튼을 누르면 터치 잠금 중에도 학생이 자기 책상을 터치해서 우유 먹었어요 체크를 할 수 있어요. 다시 누르면 잠겨요. ⋯ 더보기 → 우유 시간 설정에서 시간을 정하면 그 시간에만 자동으로 켜지고 끝나면 잠겨요. 우유를 안 먹는 친구는 같은 창에서 따로 빼 둘 수 있어요.</li>
       <li><span class="tm">11:16</span> <b>📁 카메라 저장 폴더</b>: 카메라 화면 아래 <b>📁 저장 폴더</b>로 사진·녹화가 저장될 폴더를 정할 수 있어요. 정하지 않으면 예전처럼 다운로드 폴더에 저장돼요. (크롬·엣지)</li>
       <li><span class="tm">11:07</span> <b>🕘 지난 배치 기록 고침</b>: 자리를 바꿀 때 바로 전 자리 기록이 새 자리로 덮어써지던 문제를 고쳤어요. 이제 자리를 바꿀 때마다 지난 배치 기록에 하나씩 차곡차곡 쌓여요. (이미 덮어써진 예전 기록은 되살릴 수 없어요.)</li>
       <li><span class="tm">10:57</span> <b>🌟 오늘의 도우미 다시 정하기</b>: 자리를 바꾸면 새 자리 기준으로 오늘의 1번(도우미)이 바뀌어요. 전에는 ‘오늘은 랜덤 줄 서기!’를 눌러 둔 날엔 자리를 바꿔도 도우미가 그대로였어요.</li>
@@ -2396,6 +2398,9 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <div class="small" id="milkSum" style="margin:8px 0 14px"></div>
     <h4 style="margin:10px 0 4px">오늘 우유 먹은 친구</h4>
     <div class="small" id="milkList"></div>
+    <h4 style="margin:14px 0 4px">우유를 안 먹는 친구</h4>
+    <div class="small muted" style="margin-bottom:6px">눌러서 고르면 그 친구는 우유 체크와 인원 수에서 빠져요. 다시 누르면 돌아와요.</div>
+    <div class="mkchips" id="milkExcl"></div>
     <div style="margin-top:12px"><button class="btn" id="milkClear">오늘 체크 모두 지우기</button></div>
   </div>
 </dialog>
@@ -3417,6 +3422,7 @@ function renderStage(spinning){
       if (selected === i) el.classList.add('sel');
       if (dutyCi === i) el.classList.add('duty');
       if (!spinning && sitId && S.show && S.show.milk !== false && (state.milk && state.milk[todayStr()] || {})[sitId]) el.classList.add('milk');
+      if (!spinning && sitId && state.milkExcl && state.milkExcl[sitId]) el.classList.add('milk-no');
       const bdSt = bdOn && sitId ? state.students.find(x => x.id === sitId) : null, isBd = !!(bdSt && bdSt.bday === bdKey);
       if (isBd) el.classList.add('bday');
       el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${dutyCi === i ? '<span class="dutytag">🌟 오늘의 도우미</span>' : ''}${isBd ? '<span class="bdtag">🎂 생일 축하해!</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
@@ -6112,7 +6118,8 @@ window.addEventListener('keydown', e => {
 /* ---------- 우유 먹었어요 체크 (우유 시간에는 학생이 자기 책상만 터치할 수 있어요) ---------- */
 let milkOn = false, milkAutoSt = null;
 function milkDay(){ state.milk = state.milk || {}; return state.milk[todayStr()] || {}; }
-function milkSeated(){ const ab = absentSet(); return Object.values(state.current || {}).filter(id => id && nameOf(id) && !ab.has(id)); }
+function milkNo(){ state.milkExcl = state.milkExcl || {}; return state.milkExcl; }   /* 우유를 안 먹는 친구 */
+function milkSeated(){ const ab = absentSet(), no = milkNo(); return Object.values(state.current || {}).filter(id => id && nameOf(id) && !ab.has(id) && !no[id]); }
 function milkUi(){
   const done = milkDay(), ids = milkSeated(), n = ids.filter(id => done[id]).length;
   document.documentElement.classList.toggle('milk-on', milkOn);
@@ -6148,6 +6155,7 @@ $('#seats').addEventListener('click', e => {
   const el = e.target.closest('.seat'); if (!el || animating) return;
   const id = state.current && state.current[+el.dataset.i]; if (!id || !nameOf(id)) return;
   if (absentSet().has(id)){ toast('오늘 결석한 친구예요.'); return; }
+  if (milkNo()[id]){ toast('우유를 안 먹는 친구예요.'); return; }
   state.milk = state.milk || {};
   const k = todayStr(), m = state.milk[k] = state.milk[k] || {};
   if (m[id]){ delete m[id]; beep(300, .06, .04); } else { m[id] = hhmm(); sfxPop(); }
@@ -6157,7 +6165,18 @@ $('#seats').addEventListener('click', e => {
   milkUi();
 }, true);
 ['pointerdown','pointerup','contextmenu','dblclick'].forEach(t => $('#seats').addEventListener(t, e => { if (milkOn) e.stopImmediatePropagation(); }, true));
+function milkExclRender(){
+  const no = milkNo(), list = state.students.filter(x => x.name.trim());
+  $('#milkExcl').innerHTML = list.length ? list.map(x => `<button type="button" data-id="${x.id}" class="${no[x.id] ? 'on' : ''}">${no[x.id] ? '🚫 ' : ''}${esc(x.name.trim())}</button>`).join('') : '<span class="muted">먼저 학생 이름을 넣어 주세요.</span>';
+}
+$('#milkExcl').onclick = e => {
+  const b = e.target.closest('button[data-id]'); if (!b) return;
+  const id = b.dataset.id, no = milkNo();
+  if (no[id]) delete no[id]; else { no[id] = true; const m = state.milk && state.milk[todayStr()]; if (m) delete m[id]; }
+  save(); milkDlgRender(); milkUi(); renderStage();
+};
 function milkDlgRender(){
+  milkExclRender();
   $('#milkStart').value = S.milkStart || ''; $('#milkEnd').value = S.milkEnd || '';
   const a = S.milkStart, z = S.milkEnd;
   $('#milkSum').textContent = (!a && !z) ? '정해 둔 시간이 없어요. 🥛 우유 버튼으로 직접 켜고 꺼요.'
