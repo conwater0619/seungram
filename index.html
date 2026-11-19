@@ -101,6 +101,9 @@ main{padding:8px 16px 12px}
 @media (max-width:1600px) and (min-width:761px){.controls{gap:5px}.controls > .btn:not(.big), .controls .rt > .btn:not(.big), .controls .more > .btn{padding:7px 8px;font-size:14px}.controls > .btn.big{padding:9px 14px!important;font-size:18px!important}}
 #pickBtn{font-size:17px!important;padding:10px 14px!important}
 #gpickBtn{font-size:16px!important;padding:10px 6px!important}
+/* 우유 버튼이 늘어나서 위쪽 버튼 줄이 한 줄에 들어가도록 조금씩 줄임 */
+@media (min-width:1601px){.controls > .btn:not(.big), .controls .more > .btn{padding:8px 9px;font-size:14.5px}}
+@media (max-width:1600px) and (min-width:761px){.controls > .btn:not(.big), .controls .more > .btn{padding:7px 6px;font-size:13.5px}#pickBtn,#gpickBtn{padding:9px 8px!important;font-size:16px!important}.controls > .btn.big{padding:9px 12px!important}}
 .pick-mem{font-family:"Jua",sans-serif;font-size:clamp(20px,2.6vw,36px);color:var(--ink);margin-top:10px;max-width:70vw;line-height:1.4}
 #go{font-size:21px;padding:11px 22px}
 .stage{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 18px 22px;display:flex;flex-direction:column;min-height:calc(100vh - 178px);min-height:calc(100dvh - 178px)}
@@ -857,6 +860,13 @@ dialog.sheet.small{width:min(560px,94vw)}
 .seat.sel{transform:scale(1.04)}
 .seat.sel .desk{outline:3px solid var(--accent);outline-offset:2px}
 .seat.pop{animation:pop .35s ease-out}
+.seat.milk .desk::after{content:"🥛";position:absolute;right:-7px;bottom:-11px;font-size:22px;line-height:1;z-index:4;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));pointer-events:none}
+body.fs .stage .seat.milk .desk::after{font-size:3vh}
+html.milk-on #seats .seat .desk{box-shadow:0 0 0 3px #7ec8ff,0 4px 0 #a07240;cursor:pointer}
+#milkBtn.on{background:#e6f4ff;border-color:#4aa3e8;color:#1b5e94;font-weight:700}
+#milkBar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:30;background:#e6f4ff;border:2px solid #4aa3e8;color:#1b5e94;border-radius:999px;padding:8px 22px;font-family:"Jua",sans-serif;font-size:20px;box-shadow:0 6px 18px rgba(0,0,0,.18);display:none;white-space:nowrap;pointer-events:none}
+html.milk-on #milkBar{display:block}
+body.hide-milk #milkBtn{display:none}
 .seat.hl .desk{outline:4px solid #ffc83d;outline-offset:2px;box-shadow:0 0 0 9px rgba(255,200,61,.4),0 4px 0 #a07240;transform:scale(1.06);transition:transform .08s}
 .seat.chosen .desk{outline:5px solid var(--accent);outline-offset:2px;animation:glow .6s ease-in-out infinite alternate}
 @keyframes glow{from{box-shadow:0 0 0 4px rgba(226,103,59,.25),0 4px 0 #a07240}to{box-shadow:0 0 0 16px rgba(226,103,59,.3),0 4px 0 #a07240}}
@@ -941,6 +951,9 @@ dialog.cam-dlg::backdrop{background:#111}
 .doc-dlg.panning .doc-stage{cursor:grabbing;transition:none}
 .doc-bar{opacity:.55;gap:5px;padding:6px 8px}
 .doc-bar button,.doc-bar select{padding:7px 11px;font-size:15px}
+.doc-bar [hidden]{display:none!important}
+#docDir{max-width:12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#docDirX{padding:7px 8px!important}
 .doc-bar .sep{width:1px;background:rgba(255,255,255,.25);margin:4px 2px}
 .doc-bar .pc{width:34px;padding:0;background:var(--pc)!important;border:3px solid rgba(255,255,255,.7)}
 .doc-dlg.barhidden .doc-bar{transform:translateX(-50%) translateY(170%);opacity:0;pointer-events:none}
@@ -1132,6 +1145,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <button class="btn" id="openTT">🗓️ 시간표</button>
       <button class="btn" id="openCal">📅 일정</button>
       <button class="btn" id="openLayout">교실 배치</button>
+      <button class="btn" id="milkBtn">🥛 우유</button>
       <span class="spacer"></span>
       <button class="btn" id="fs">전체 화면</button>
       <div class="more">
@@ -1146,6 +1160,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <button class="mi" id="openMusic">🎵 음악 <span class="muted small">(유튜브 링크 · 수업별 추천)</span></button>
           <button class="mi" id="praiseAll">😎 반 전체 칭찬 (+1)</button>
           <button class="mi" id="openTLock">🔒 터치 잠금 <span class="muted small">(마우스는 되고 터치만 막기 · L 키)</span></button>
+          <button class="mi" id="openMilkSet">🥛 우유 시간 설정 <span class="muted small">(먹는 시간 · 오늘 기록)</span></button>
           <button class="mi" id="openTLockAll">🔒 전체 잠금 <span class="muted small">(마우스·터치 모두 막기)</span></button>
           <button class="mi" id="openCurtain">🎭 화면 가리기 <span class="muted small">(H 키)</span></button>
           <button class="mi" id="openLadder">🪜 사다리 타기</button>
@@ -1191,6 +1206,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
             <label class="chk"><input type="checkbox" data-show="exitask"> 🚪 창을 닫을 때 확인창 띄우기</label>
             <label class="chk"><input type="checkbox" data-show="duty"> 🌟 오늘의 도우미 표시 (노란 테두리와 표)</label>
             <label class="chk"><input type="checkbox" data-show="bday"> 🎂 생일 표시 (분홍 테두리와 표)</label>
+            <label class="chk"><input type="checkbox" data-show="milk"> 🥛 우유 버튼 (먹은 친구 표시)</label>
             <label class="chk"><input type="checkbox" data-show="tlstart"> 🔒 켤 때마다 터치 잠금으로 시작</label>
             <label class="chk"><input type="checkbox" data-show="task"> ✅ 과제 확인</label>
             <label class="chk"><input type="checkbox" data-show="notice"> 📝 오늘 할 일</label>
@@ -1222,7 +1238,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div class="board">칠 판</div>
       <div class="floor"><div class="lane" id="laneL"></div><div class="seats" id="seats"></div><div class="lane" id="laneR"></div></div>
     </div>
-    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 19일 11:07</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
+    <div class="hint" id="hint"></div> <div class="hint" id="tlNote"></div> <div class="hint" id="updNote">🆕 최종 업데이트 <b id="updDate">11월 19일 11:24</b> · 업데이트 내역은 ⋯ 더보기 → 업데이트 내역에서 확인할 수 있어요.</div>
     <div class="demo-pill" id="demoPill" hidden>🧪 체험 중 <button id="demoEnd">체험 끝내기</button></div>
   </main>
 </div>
@@ -1699,6 +1715,15 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
         </ul>
       </div>
       <div class="card">
+        <h3>🥛 우유 체크</h3>
+        <ul>
+          <li>교실 배치 옆 <b>🥛 우유</b> 버튼을 선생님이 누르면 우유 모드가 켜져요. 우유를 다 먹은 친구가 <b>자기 책상을 터치</b>하면 🥛 표시가 붙고, 한 번 더 누르면 지워져요.</li>
+          <li>우유 모드에서는 터치 잠금이 걸려 있어도 <b>책상 터치만</b> 돼요. 다른 버튼과 칭찬·결석 같은 동작은 막혀 있어요. 끝낼 때는 <b>🥛 우유 끝</b> 버튼을 눌러 다시 잠가요. (선생님은 마우스로 눌러요)</li>
+          <li>⋯ 더보기 → <b>🥛 우유 시간 설정</b>에서 우유 먹는 시간을 정해 두면, 그 시간에만 자동으로 우유 모드가 켜졌다가 끝나면 다시 잠겨요.</li>
+          <li>같은 창에서 오늘 먹은 친구와 아직 안 먹은 친구를 볼 수 있어요. 🥛 표시는 다음 날이면 사라져요. 우유 버튼이 필요 없으면 ⋯ 더보기의 화면 표시에서 끌 수 있어요.</li>
+        </ul>
+      </div>
+      <div class="card">
         <h3>📌 지정석</h3>
         <ul>
           <li>버튼을 누른 뒤 책상을 눌러 학생을 고르면, 자리를 바꿔도 그 학생은 항상 그 자리에 앉아요. (예: 시력이 나쁜 학생)</li>
@@ -1722,6 +1747,7 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
           <li><b>😎 반 전체 칭찬</b>(⋯ 더보기): 누르면 자리에 앉은 친구들을 <b>한 번에 한 단계씩</b> 칭찬해요(결석한 친구는 빼요). 학급 온도계도 함께 올라가고, 칭찬 횟수에는 제한이 없지만, 온도계 점수는 한 친구당 하루 3점까지만 올라가요. 우리 반이 다 함께 잘했을 때 쓰기 좋아요.</li>
           <li><b>🌡️ 학급 온도계</b>: 학생 얼굴을 눌러 칭찬할 때마다 <b>반 전체 점수가 1점씩</b> 올라가요. 오른쪽 클릭(길게 누르기)으로 <b>경고</b>를 주면 1점 내려가요(칭찬·경고를 되돌리면 점수도 되돌아와요). 칭찬 횟수에는 제한이 없지만, <b>한 친구가 하루에 올릴 수 있는 온도계 점수는 3점까지</b>예요(그날 칭찬 횟수에서 경고 횟수를 뺀 값이 기준이고, 올렸다 내렸다 해도 넘지 않아요). 다음 날이 되면 다시 올릴 수 있어요. 보상을 하나라도 정하면 맨 위 교실 이름 옆에 <b>가로 온도계</b>가 실시간으로 떠서, 지금 몇 점인지·다음 보상이 뭔지 바로 보여요(눌러서 큰 온도계를 열 수 있어요). ⋯ 더보기 → 🌡️ 학급 온도계를 열면 세로 온도계 그림으로 크게 볼 수 있어요. ‘🎁 보상 정하기’에서 ‘50점 사탕 파티’처럼 점수와 보상을 정하면 온도계에 눈금으로 표시되고, 그 점수를 넘으면 자동으로 축하 창이 떠요. 점수는 ＋1·＋5·－1로 손봐도 되고 ‘0점으로’ 되돌릴 수 있어요. 쓰지 않을 거면 그냥 열지 않으면 돼요(메인 화면에는 안 나와요).</li>
           <li><b>🔊 소음 측정기</b>: 마이크로 교실 소리 크기를 재서 0~100 숫자와 신호등(초록·노랑·빨강), 표정으로 크게 보여 줘요. 기준선을 넘으면 화면이 빨갛게 깜빡여서 ‘조금 조용히’ 신호를 줘요. 아래 막대에서 민감도(마이크·교실마다 달라요)와 기준선을 맞추고, ⛶ 크게로 전체 화면으로 띄워요. 실제 데시벨(dB)을 정확히 재는 건 아니고, 교실 안에서 비교하는 상대적인 크기예요. 소리는 측정에만 쓰이고 저장·전송되지 않아요.</li>
+          <li><b>📁 저장 폴더</b>: 카메라 화면 아래 <b>📁 저장 폴더</b>(크롬·엣지)를 눌러 폴더를 정하면 사진과 녹화가 그 폴더에 바로 저장돼요. ✕를 누르면 폴더 지정이 풀려서 다운로드 폴더로 돌아가요. 브라우저를 껐다 켜면 처음 한 번 브라우저가 폴더 사용 허용을 물어볼 수 있어요.</li>
           <li><b>🔴 녹화</b>: 카메라 화면 아래 <b>🔴 녹화</b>를 누르면 실험 과정·발표 같은 수업 장면을 녹화해요. 녹화하는 동안 화면 왼쪽 위에 빨간 <b>🔴 녹화 중</b>과 시간이 크게 떠서 아이들도 녹화 중인 걸 알 수 있어요. <b>⏹ 녹화 끝</b>을 누르면 영상 파일로 바로 내려받아요(이 컴퓨터에만 저장돼요). <b>소리(마이크)도 함께 녹음돼요.</b> 처음 한 번 마이크 허용을 눌러 주세요. 소리가 녹음될 때는 녹화 표시 옆에 <b>🔊 소리</b>가 같이 떠요. 교실 대화가 함께 녹음되니, 아이들 모르게 몰래 녹화하지 않도록 녹화 표시는 끌 수 없게 해 두었어요.</li>
           <li><b>📷 카메라 비추기</b>: 🎤 발표자 뽑기 카드의 <b>📷 카메라로 비추기</b>를 누르면 전자칠판(웹캠) 카메라 화면이 크게 뜨고, 위에 ‘🎤 ○○의 발표’와 발표 시간이 나와요. 아래 단추로 좌우 반전, 확대(＋/－), 화면 멈춤(스페이스), 카메라 고르기를 할 수 있고 <kbd>Esc</kbd>나 ✕로 닫아요. 처음 한 번 ‘카메라 허용’을 눌러 주세요. 영상은 화면에만 보이고 저장되거나 어디로 보내지지 않아요.</li>
           <li><b>🎭 화면 가리기</b>: 시간표에 점심시간이 있으면 <b>점심시간이 시작될 때 자동으로 커튼이 닫히고, 끝나면 자동으로 열려요</b>(⋯ 더보기에서 끌 수 있어요). 점심시간 중에 직접 열었다 다시 닫은 커튼은 자동으로 열리지 않아요. 키보드 <kbd>H</kbd>를 누르면(한글 상태여도 돼요) 빨간 커튼이 닫히며 화면을 다 가려요. 다른 반 친구가 지나갈 때 자리·이름이 보이지 않게 할 수 있어요. 다시 <kbd>H</kbd>를 누르거나 화면을 두 번 누르면 열려요. 교사용 설정 같은 창이 열려 있어도 함께 가려져요.</li>
@@ -2063,6 +2089,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
   <div class="sheet-body upd-log">
     <h3>2026년 11월 19일</h3>
     <ul>
+      <li><span class="tm">11:24</span> <b>🥛 우유 체크</b>: 교실 배치 옆 🥛 우유 버튼을 누르면 터치 잠금 중에도 학생이 자기 책상을 터치해서 우유 먹었어요 체크를 할 수 있어요. 다시 누르면 잠겨요. ⋯ 더보기 → 우유 시간 설정에서 시간을 정하면 그 시간에만 자동으로 켜지고 끝나면 잠겨요.</li>
+      <li><span class="tm">11:16</span> <b>📁 카메라 저장 폴더</b>: 카메라 화면 아래 <b>📁 저장 폴더</b>로 사진·녹화가 저장될 폴더를 정할 수 있어요. 정하지 않으면 예전처럼 다운로드 폴더에 저장돼요. (크롬·엣지)</li>
       <li><span class="tm">11:07</span> <b>🕘 지난 배치 기록 고침</b>: 자리를 바꿀 때 바로 전 자리 기록이 새 자리로 덮어써지던 문제를 고쳤어요. 이제 자리를 바꿀 때마다 지난 배치 기록에 하나씩 차곡차곡 쌓여요. (이미 덮어써진 예전 기록은 되살릴 수 없어요.)</li>
       <li><span class="tm">10:57</span> <b>🌟 오늘의 도우미 다시 정하기</b>: 자리를 바꾸면 새 자리 기준으로 오늘의 1번(도우미)이 바뀌어요. 전에는 ‘오늘은 랜덤 줄 서기!’를 눌러 둔 날엔 자리를 바꿔도 도우미가 그대로였어요.</li>
       <li><span class="tm">10:47</span> <b>🎲 같은 자리 안 앉기</b>: 자리 바꾸기를 하면 지난번에 앉았던 책상에는 다시 앉지 않아요. 교실 배치 → 배치 규칙의 ‘지난번과 같은 자리에 앉지 않게’에서 끌 수 있어요. (지정석 학생은 예외)</li>
@@ -2213,6 +2241,8 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
     <button id="docFreeze" title="화면 멈추기 (스페이스)">⏸ 멈춤</button>
     <button id="docShot" title="지금 화면을 사진으로 저장">📸 사진</button>
     <button id="docRec" title="수업 녹화 시작·멈춤">🔴 녹화</button>
+    <span class="sep" id="docDirSep"></span>
+    <button id="docDir" title="사진·녹화를 저장할 폴더 정하기">📁 저장 폴더</button><button id="docDirX" title="저장 폴더 지우기 (다운로드 폴더로 되돌리기)">✕</button>
     <span class="sep"></span>
     <button id="docHideBar" title="도구 막대 숨기기">▾ 숨기기</button>
     <button id="docClose" class="cx">✕ 닫기</button>
@@ -2351,6 +2381,22 @@ textarea.bulk{width:100%;min-height:70px;padding:10px;border:1px solid var(--lin
       <div id="hbList"></div>
     </div>
     <p class="muted small" style="margin-bottom:0">칭찬·경고 횟수와 한 줄 메모에서 어떤 면이 두드러지는지만 읽어서, 통지표에 쓸 수 있는 순화된 일반 문장(~함 / ~할 수 있음)으로 새로 만들어요. 기록 내용은 인터넷으로 보내지지 않아요. 고친 문장은 자동으로 저장돼요.</p>
+  </div>
+</dialog>
+<div id="milkBar"></div>
+<dialog class="sheet" id="dlgMilk">
+  <div class="sheet-head"><h2>🥛 우유 시간</h2><button class="btn x" data-close>닫기</button></div>
+  <div class="sheet-body">
+    <p class="muted small" style="margin-top:0">우유 먹는 시간을 정해 두면 그 시간 동안만 자동으로 우유 모드(학생이 자기 책상을 눌러 체크)가 켜졌다가, 끝나는 시간이 되면 다시 잠겨요. 시간을 비워 두면 <b>🥛 우유</b> 버튼을 눌러서 직접 켜고 꺼요.</p>
+    <div class="row" style="gap:14px;align-items:center">
+      <label>시작 <input type="time" id="milkStart"></label>
+      <label>끝 <input type="time" id="milkEnd"></label>
+      <button class="btn" id="milkNoTime">시간 지우기</button>
+    </div>
+    <div class="small" id="milkSum" style="margin:8px 0 14px"></div>
+    <h4 style="margin:10px 0 4px">오늘 우유 먹은 친구</h4>
+    <div class="small" id="milkList"></div>
+    <div style="margin-top:12px"><button class="btn" id="milkClear">오늘 체크 모두 지우기</button></div>
   </div>
 </dialog>
 <dialog class="tlock" id="tLock" aria-label="터치 잠금"><button id="tLockBtn" aria-label="2초간 눌러서 잠금 해제"><span>🔒</span></button></dialog>
@@ -3370,6 +3416,7 @@ function renderStage(spinning){
       const sitId = spinning ? pid : (state.current && nameOf(state.current[i]) ? state.current[i] : null);
       if (selected === i) el.classList.add('sel');
       if (dutyCi === i) el.classList.add('duty');
+      if (!spinning && sitId && S.show && S.show.milk !== false && (state.milk && state.milk[todayStr()] || {})[sitId]) el.classList.add('milk');
       const bdSt = bdOn && sitId ? state.students.find(x => x.id === sitId) : null, isBd = !!(bdSt && bdSt.bday === bdKey);
       if (isBd) el.classList.add('bday');
       el.innerHTML = `<div class="desk"><span class="nmw"><span class="nm" style="background:${plate}">${esc(txt)}</span>${tags}</span>${pid ? '<span class="pin">📌</span>' : ''}${numMap[i] ? `<span class="no">${numMap[i]}</span>` : ''}${firstCi === i ? '<span class="star" title="오늘 1번">⭐</span>' : ''}${dutyCi === i ? '<span class="dutytag">🌟 오늘의 도우미</span>' : ''}${isBd ? '<span class="bdtag">🎂 생일 축하해!</span>' : ''}${occ ? '<button class="prbtn" title="서류 인쇄">🖨</button>' : ''}${occ ? `<button class="absbtn" title="${isEarly ? '누르면 취소' : isAbs ? '한 번 더 누르면 조퇴' : '오늘 결석 (두 번 누르면 조퇴)'}">${isEarly ? '조퇴' : isAbs ? '결석' : '✕'}</button>` : ''}</div><div class="chair">${sitId ? `<div class="sitter" style="--c:${faceColor(i, sitId, sizes)}">${spinning ? EYES : accHtml(sitId)}</div>` : ''}</div>`;
@@ -6039,6 +6086,7 @@ const tlIsTouch = e => e.pointerType ? e.pointerType !== 'mouse' : (/^touch/.tes
 ['touchstart','touchmove','touchend','touchcancel','pointerdown','pointermove','pointerup','click','dblclick','contextmenu'].forEach(t => window.addEventListener(t, e => {
   if (!tlT || !tlIsTouch(e)) return;
   if (tlA && e.target && e.target.closest && e.target.closest('#tLockBtn')) return;   /* 전체 잠금 해제 버튼만 터치 가능 */
+  if (milkOn && e.target && e.target.closest && e.target.closest('#seats .seat')) return;   /* 우유 시간에는 책상 터치만 통과 */
   if (e.cancelable) e.preventDefault(); e.stopImmediatePropagation();
 }, {capture: true, passive: false}));
 /* 전체 잠금 중에는 키보드도 L 키(풀기)만 받아요. 터치 잠금은 키보드는 그대로 써요 */
@@ -6060,6 +6108,75 @@ window.addEventListener('keydown', e => {
     tlSet('touch', !tlT);
   }
 }, true);
+
+/* ---------- 우유 먹었어요 체크 (우유 시간에는 학생이 자기 책상만 터치할 수 있어요) ---------- */
+let milkOn = false, milkAutoSt = null;
+function milkDay(){ state.milk = state.milk || {}; return state.milk[todayStr()] || {}; }
+function milkSeated(){ const ab = absentSet(); return Object.values(state.current || {}).filter(id => id && nameOf(id) && !ab.has(id)); }
+function milkUi(){
+  const done = milkDay(), ids = milkSeated(), n = ids.filter(id => done[id]).length;
+  document.documentElement.classList.toggle('milk-on', milkOn);
+  const b = $('#milkBtn'); b.classList.toggle('on', milkOn);
+  b.textContent = milkOn ? '🥛 우유 끝' : '🥛 우유';
+  $('#milkBar').textContent = `🥛 우유를 다 먹었으면 내 책상을 눌러요! (${n}/${ids.length})`;
+}
+function milkSet(on, auto){
+  if (on === milkOn) return;
+  if (on && !state.current){ if (!auto) toast('먼저 자리를 바꿔 주세요.'); return; }
+  if (on && animating){ if (!auto) toast('자리 바꾸기가 끝난 뒤에 눌러 주세요.'); return; }
+  milkOn = on; milkUi();
+  toast(on ? '🥛 우유 시간! 친구들이 자기 책상을 눌러 체크할 수 있어요.' : '🔒 우유 시간이 끝났어요. 다시 잠갔어요.');
+}
+$('#milkBtn').onclick = () => milkSet(!milkOn);
+function milkAuto(){
+  const a = S.milkStart, z = S.milkEnd; if (!a || !z) return;
+  const d = new Date(), w = d.getDay(), n = hhmm(d);
+  const inW = !(S.skipWeekend && (w === 0 || w === 6)) && n >= a && n < z;
+  if (inW && milkAutoSt !== 'in'){
+    if (milkOn){ milkAutoSt = 'in'; return; }
+    if (animating || !state.current) return;
+    milkAutoSt = 'in'; milkSet(true, true);
+  } else if (!inW && milkAutoSt === 'in'){
+    milkAutoSt = 'out'; if (milkOn) milkSet(false, true);
+  }
+}
+setInterval(milkAuto, 5000); setTimeout(milkAuto, 2000);
+/* 우유 모드에서는 책상을 누르는 것만 우유 체크로 처리하고, 다른 책상 동작(칭찬·결석 등)은 막아요 */
+$('#seats').addEventListener('click', e => {
+  if (!milkOn) return;
+  e.stopImmediatePropagation(); e.preventDefault();
+  const el = e.target.closest('.seat'); if (!el || animating) return;
+  const id = state.current && state.current[+el.dataset.i]; if (!id || !nameOf(id)) return;
+  if (absentSet().has(id)){ toast('오늘 결석한 친구예요.'); return; }
+  state.milk = state.milk || {};
+  const k = todayStr(), m = state.milk[k] = state.milk[k] || {};
+  if (m[id]){ delete m[id]; beep(300, .06, .04); } else { m[id] = hhmm(); sfxPop(); }
+  Object.keys(state.milk).sort().slice(0, -60).forEach(d => delete state.milk[d]);
+  save(); el.classList.toggle('milk', !!m[id]);
+  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  milkUi();
+}, true);
+['pointerdown','pointerup','contextmenu','dblclick'].forEach(t => $('#seats').addEventListener(t, e => { if (milkOn) e.stopImmediatePropagation(); }, true));
+function milkDlgRender(){
+  $('#milkStart').value = S.milkStart || ''; $('#milkEnd').value = S.milkEnd || '';
+  const a = S.milkStart, z = S.milkEnd;
+  $('#milkSum').textContent = (!a && !z) ? '정해 둔 시간이 없어요. 🥛 우유 버튼으로 직접 켜고 꺼요.'
+    : (!a || !z) ? '시작과 끝 시간을 둘 다 넣어 주세요.'
+    : (a >= z) ? '끝나는 시간이 시작 시간보다 늦어야 해요.'
+    : `${S.skipWeekend ? '평일' : '매일'} ${a} ~ ${z} 에 자동으로 우유 모드가 켜지고, 끝나면 다시 잠겨요.`;
+  const done = milkDay(), ids = milkSeated(), eat = ids.filter(id => done[id]), left = ids.filter(id => !done[id]);
+  $('#milkList').innerHTML = `<div>🥛 먹었어요 ${eat.length}명: ${eat.length ? eat.map(id => `${esc(nameOf(id))} <span class="muted">${done[id]}</span>`).join(' · ') : '아직 없어요'}</div>`
+    + `<div style="margin-top:4px">아직 ${left.length}명: ${left.length ? left.map(id => esc(nameOf(id))).join(' · ') : '모두 먹었어요 🎉'}</div>`;
+}
+$('#openMilkSet').onclick = () => { $('#moreMenu').hidden = true; milkDlgRender(); openSheet($('#dlgMilk')); };
+['milkStart','milkEnd'].forEach(id => $('#' + id).onchange = () => { S.milkStart = $('#milkStart').value; S.milkEnd = $('#milkEnd').value; milkAutoSt = null; save(); milkDlgRender(); milkAuto(); });
+$('#milkNoTime').onclick = () => { S.milkStart = S.milkEnd = ''; milkAutoSt = null; save(); milkDlgRender(); };
+$('#milkClear').onclick = async () => {
+  if (!Object.keys(milkDay()).length){ toast('지울 체크가 없어요.'); return; }
+  if (!await askConfirm('오늘 우유 체크를 모두 지울까요?')) return;
+  delete state.milk[todayStr()]; save(); milkDlgRender(); milkUi(); renderStage();
+};
+milkUi();
 
 /* 창을 닫거나 새로고침하기 전에 확인창 (실수로 닫기 방지). 앱이 스스로 새로고침할 때는 묻지 않아요 */
 let allowUnload = false;
@@ -6918,10 +7035,8 @@ async function startDocRec(){
   docRec.onstop = () => {
     clearInterval(docRecTick); docRecDrawStop(); docMicStop(); docRecUpdate();
     if (!docRecChunks.length){ toast('녹화된 내용이 없어요.'); return; }
-    const blob = new Blob(docRecChunks, {type: docRec.mimeType || 'video/webm'}), url = URL.createObjectURL(blob), a = document.createElement('a');
-    a.href = url; a.download = docRecName; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
-    toast('녹화를 저장했어요. 내려받기 폴더를 확인해 주세요.');
+    const blob = new Blob(docRecChunks, {type: docRec.mimeType || 'video/webm'});
+    camSaveBlob(blob, docRecName).then(fd => toast(fd ? `녹화를 ‘${fd}’ 폴더에 저장했어요.` : '녹화를 저장했어요. 내려받기 폴더를 확인해 주세요.'));
   };
   docRec.start();
   docRecT0 = Date.now();
@@ -6988,15 +7103,52 @@ function docCompose(cv, v, k){
     g.drawImage(pen, v.crop.x * px, v.crop.y * py, v.crop.w * px, v.crop.h * py, 0, 0, cv.width, cv.height); g.restore();
   }
 }
+/* ---------- 카메라 저장 폴더 (크롬·엣지) — 안 정하면 다운로드 폴더 ---------- */
+const CAMDIR_OK = typeof window.showDirectoryPicker === 'function';
+let camDir = null;
+function camDirDb(){ return new Promise((res, rej) => { const q = indexedDB.open('classroom-camdir', 1); q.onupgradeneeded = () => q.result.createObjectStore('h'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function camDirLoad(){
+  try { const db = await camDirDb(); camDir = await new Promise(r => { const t = db.transaction('h').objectStore('h').get('dir'); t.onsuccess = () => r(t.result || null); t.onerror = () => r(null); }); } catch(e){ camDir = null; }
+  camDirUi();
+}
+async function camDirStore(h){
+  try { const db = await camDirDb(); await new Promise((res, rej) => { const t = db.transaction('h', 'readwrite'); if (h) t.objectStore('h').put(h, 'dir'); else t.objectStore('h').delete('dir'); t.oncomplete = res; t.onerror = () => rej(t.error); }); } catch(e){}
+}
+function camDirUi(){
+  const b = $('#docDir'), x = $('#docDirX'), s = $('#docDirSep');
+  b.hidden = x.hidden = s.hidden = !CAMDIR_OK; if (!camDir) x.hidden = true;
+  b.textContent = camDir ? '📁 ' + camDir.name : '📁 저장 폴더';
+  b.title = camDir ? '사진·녹화를 저장하는 폴더예요. 눌러서 다른 폴더로 바꿔요' : '사진·녹화를 저장할 폴더 정하기 (안 정하면 다운로드 폴더에 저장돼요)';
+}
+$('#docDir').onclick = async () => {
+  try { const h = await window.showDirectoryPicker({id: 'classroom-cam', mode: 'readwrite', startIn: 'pictures'}); camDir = h; await camDirStore(h); camDirUi(); toast(`저장 폴더를 ‘${h.name}’(으)로 정했어요.`); } catch(e){ /* 취소 */ }
+};
+$('#docDirX').onclick = async () => { camDir = null; await camDirStore(null); camDirUi(); toast('저장 폴더를 지웠어요. 다운로드 폴더에 저장돼요.'); };
+/* 정한 폴더에 저장, 안 되면 예전처럼 다운로드. 폴더에 저장했으면 폴더 이름을, 아니면 null을 돌려줘요 */
+async function camSaveBlob(blob, name){
+  if (camDir){
+    try {
+      let ok = (await camDir.queryPermission({mode: 'readwrite'})) === 'granted';
+      if (!ok) ok = (await camDir.requestPermission({mode: 'readwrite'})) === 'granted';
+      if (ok){ const fh = await camDir.getFileHandle(name, {create: true}), w = await fh.createWritable(); await w.write(blob); await w.close(); return camDir.name; }
+    } catch(e){}
+  }
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  return null;
+}
+camDirLoad();
+
 $('#docShot').onclick = () => {
   const v = docView();
   if (!v){ toast('아직 화면이 없어요.'); return; }
   const k = Math.max(1, Math.min(1 / Math.min(v.W0 / (v.src.videoWidth || v.src.width), v.H0 / (v.src.videoHeight || v.src.height)), 3840 / v.crop.w, 2160 / v.crop.h));
   const cv = document.createElement('canvas'); cv.width = Math.round(v.crop.w * k); cv.height = Math.round(v.crop.h * k);
   docCompose(cv, v, k);
-  const d = new Date(), p2 = n => String(n).padStart(2, '0'), a = document.createElement('a');
-  a.download = `카메라_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
-  a.href = cv.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); toast('지금 화면을 사진으로 저장했어요.');
+  const d = new Date(), p2 = n => String(n).padStart(2, '0');
+  const name = `카메라_${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.png`;
+  cv.toBlob(blob => { if (!blob){ toast('사진을 저장하지 못했어요.'); return; } camSaveBlob(blob, name).then(fd => toast(fd ? `사진을 ‘${fd}’ 폴더에 저장했어요.` : '지금 화면을 사진으로 저장했어요.')); }, 'image/png');
 };
 /* 펜 */
 const penPt = e => { const c = $('#docPen'), r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.width / r.width, (e.clientY - r.top) * c.height / r.height]; };
@@ -7237,9 +7389,9 @@ $('#tempAdd').onclick = () => {
 };
 $('#tempName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tempAdd').click(); });
 $('#tempRewards').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; state.temp.rewards = tempRewards().filter((_, k) => k !== +b.dataset.del); save(); renderTemp(); });
-S.show = Object.assign({tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, bday:true, exitask:true, tlstart:true, task:true, notice:true, myev:true, annv:true, sched:true}, S.show || {});
+S.show = Object.assign({milk:true, tt:true, date:true, wx:true, wxfx:true, annvface:true, duty:true, bday:true, exitask:true, tlstart:true, task:true, notice:true, myev:true, annv:true, sched:true}, S.show || {});
 function applyShow(){
-  ['tt','date','wx','task','notice','myev','annv','sched'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
+  ['tt','date','wx','task','notice','myev','annv','sched','milk'].forEach(k => document.body.classList.toggle('hide-' + k, !S.show[k]));
   document.querySelectorAll('[data-show]').forEach(c => c.checked = c.dataset.show === 'meal' ? !!state.meal.show : !!S.show[c.dataset.show]);
   wxFxApply();
 }
@@ -7252,7 +7404,8 @@ document.querySelectorAll('[data-show]').forEach(c => c.onchange = () => {
   }
   S.show[k] = c.checked;
   if (k === 'task' && !c.checked && checkId){ checkId = null; renderStage(); renderTasks(); }
-  if (k === 'annvface' || k === 'duty' || k === 'bday') renderStage();
+  if (k === 'annvface' || k === 'duty' || k === 'bday' || k === 'milk') renderStage();
+  if (k === 'milk' && !c.checked && milkOn) milkSet(false, true);
   save(); applyShow();
 });
 applyShow();
